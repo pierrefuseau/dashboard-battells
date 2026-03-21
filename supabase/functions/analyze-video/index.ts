@@ -64,7 +64,7 @@ Deno.serve(async (req) => {
       }],
       generationConfig: {
         temperature: 0.7,
-        maxOutputTokens: 1024,
+        maxOutputTokens: 8192,
         responseMimeType: 'application/json',
       }
     }
@@ -82,7 +82,10 @@ Deno.serve(async (req) => {
     }
 
     const geminiData = await geminiRes.json()
-    const rawText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text ?? '{}'
+    // Gemini 2.5 Pro thinking model may return parts with thought + text
+    const parts = geminiData.candidates?.[0]?.content?.parts ?? []
+    const textPart = parts.find((p: { text?: string }) => p.text) ?? parts[0]
+    const rawText = textPart?.text ?? '{}'
 
     let analysis
     try {
