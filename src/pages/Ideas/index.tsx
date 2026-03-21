@@ -18,7 +18,7 @@ export default function Ideas() {
   const triggerAnalysis = useCallback(async (detectedVideoId: number) => {
     try {
       const { data: { session } } = await supabase.auth.getSession()
-      await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/analyze-video`, {
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/analyze-video`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -27,7 +27,9 @@ export default function Ideas() {
         },
         body: JSON.stringify({ detected_video_id: detectedVideoId }),
       })
-      // Refetch ideas to pick up the AI analysis
+      if (!response.ok) {
+        console.error('Analysis failed:', response.status, await response.text())
+      }
       refetch()
     } catch (err) {
       console.error('Analysis trigger failed:', err)
@@ -35,18 +37,26 @@ export default function Ideas() {
   }, [refetch])
 
   const handleSelectDetectedVideo = useCallback(async (video: DetectedVideo) => {
+    // Reset state to avoid stale content flash
+    setSelectedIdea(null)
     setSelectedDetectedVideo(video)
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('video_ideas')
       .select('*')
       .eq('detected_video_id', video.id)
-      .single()
+      .maybeSingle()
+
+    if (error) {
+      console.error('Failed to fetch idea:', error)
+      setPanelOpen(true)
+      return
+    }
 
     if (data) {
       setSelectedIdea(data as VideoIdea)
     } else {
-      const { data: newIdea } = await supabase
+      const { data: newIdea, error: insertError } = await supabase
         .from('video_ideas')
         .insert({
           title: video.title,
@@ -58,8 +68,13 @@ export default function Ideas() {
         .select()
         .single()
 
+      if (insertError || !newIdea) {
+        console.error('Failed to create idea:', insertError)
+        setPanelOpen(true)
+        return
+      }
+
       setSelectedIdea(newIdea as VideoIdea)
-      // Refetch so Kanban sees the new idea immediately
       refetch()
       triggerAnalysis(video.id)
     }
@@ -99,7 +114,7 @@ export default function Ideas() {
 
   const handleAddLink = useCallback(async (url: string) => {
     const platform = url.includes('tiktok') ? 'tiktok' : 'youtube'
-    const { data: video } = await supabase
+    const { data: video, error } = await supabase
       .from('detected_videos')
       .insert({
         platform,
@@ -107,16 +122,22 @@ export default function Ideas() {
         title: 'Analyse en cours...',
         channel_name: 'Inconnu',
         heat_score: 0.5,
+        views: 0,
+        likes: 0,
+        comments: 0,
+        overperformance_ratio: 1,
       })
       .select()
       .single()
 
-    if (video) {
-      const detected = video as DetectedVideo
-      handleSelectDetectedVideo(detected)
-      triggerAnalysis(detected.id)
+    if (error || !video) {
+      console.error('Failed to insert video:', error)
+      return
     }
-  }, [handleSelectDetectedVideo, triggerAnalysis])
+
+    // handleSelectDetectedVideo already calls triggerAnalysis internally
+    await handleSelectDetectedVideo(video as DetectedVideo)
+  }, [handleSelectDetectedVideo])
 
   return (
     <motion.div

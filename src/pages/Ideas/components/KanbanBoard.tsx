@@ -40,13 +40,21 @@ export default function KanbanBoard({ ideas, loading, onCardClick, onUpdateIdea 
     const { active, over } = event
     if (!over) return
 
-    const newStatus = over.id as VideoIdea['status']
     const idea = ideas.find((i) => i.id === active.id)
-    if (!idea || idea.status === newStatus) return
+    if (!idea) return
 
-    const isColumn = COLUMNS.some((c) => c.id === newStatus)
-    if (!isColumn) return
+    // Resolve target column: over.id can be a column ID or a card ID
+    let targetColumn = COLUMNS.find((c) => c.id === over.id)
+    if (!targetColumn) {
+      // Dropped onto a card — find which column that card belongs to
+      const targetIdea = ideas.find((i) => i.id === over.id)
+      if (targetIdea) {
+        targetColumn = COLUMNS.find((c) => c.id === targetIdea.status)
+      }
+    }
+    if (!targetColumn || idea.status === targetColumn.id) return
 
+    const newStatus = targetColumn.id as VideoIdea['status']
     await onUpdateIdea(idea.id, { status: newStatus })
     if (newStatus === 'published') {
       celebratePublished()
