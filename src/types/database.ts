@@ -130,8 +130,51 @@ export interface VideoIdea {
   rationale: string | null
   estimated_views: number | null
   is_long_form: boolean
-  status: 'backlog' | 'approved' | 'rejected' | 'in_calendar'
+  status: 'backlog' | 'approved' | 'writing' | 'filmed' | 'editing' | 'published' | 'rejected' | 'in_calendar'
+  detected_video_id: number | null
+  ai_analysis: {
+    why_it_works?: string[]
+    battells_adaptation?: string
+    suggested_title?: string
+    suggested_hook?: string
+    gustavo_role?: string
+    estimated_views?: number
+    format_recommendation?: string
+  } | null
+  user_notes: string | null
   created_at: string
+}
+
+export interface WatchedChannel {
+  id: number
+  platform: 'youtube' | 'tiktok'
+  channel_id: string
+  channel_name: string
+  channel_url: string | null
+  avg_views_30d: number
+  category: 'food_fr' | 'food_intl' | 'shorts_food' | 'entertainment' | null
+  is_active: boolean
+  created_at: string
+}
+
+export interface DetectedVideo {
+  id: number
+  platform: 'youtube' | 'tiktok'
+  video_url: string
+  video_id: string | null
+  title: string
+  channel_name: string
+  channel_id: string | null
+  thumbnail_url: string | null
+  views: number
+  likes: number
+  comments: number
+  duration_seconds: number | null
+  published_at: string | null
+  overperformance_ratio: number
+  heat_score: number
+  detected_at: string
+  is_dismissed: boolean
 }
 
 /** Video with computed stats from yt_daily_stats join */

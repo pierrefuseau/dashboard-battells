@@ -43,6 +43,7 @@ export const NAV_SECTIONS = [
   {
     label: 'PRODUCTION',
     items: [
+      { id: 'ideas', label: 'Boite a idees', icon: 'lightbulb', path: '/idees' },
       { id: 'calendar', label: 'Calendrier', icon: 'calendar', path: '/calendrier' },
     ],
   },
