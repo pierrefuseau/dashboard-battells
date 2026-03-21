@@ -37,10 +37,9 @@ export default function Overview() {
   const subscribersPrev = 0
   const subscribersSparkline: number[] = []
 
-  // CTR: not available from YouTube Analytics API at channel level
-  const ctrValue = kpis.avgCTR
-  const ctrPrev = kpis.prevAvgCTR
-  const ctrSparkline = kpis.ctrSparkline
+  // RPM moyen (revenu / 1000 vues)
+  const rpmValue = kpis.totalViews > 0 ? (kpis.totalRevenue / kpis.totalViews) * 1000 : 0
+  const rpmPrev = kpis.prevTotalViews > 0 ? (kpis.prevTotalRevenue / kpis.prevTotalViews) * 1000 : 0
 
   // Compute real DarkCard content from KPIs
   const rpm = kpis.totalViews > 0 ? (kpis.totalRevenue / kpis.totalViews) * 1000 : 0
@@ -107,11 +106,11 @@ export default function Overview() {
               sparklineData={subscribersSparkline}
             />
             <KpiCard
-              label="CTR moyen"
-              value={ctrValue}
-              previousValue={ctrPrev}
-              format="percent"
-              sparklineData={ctrSparkline}
+              label="RPM moyen"
+              value={rpmValue}
+              previousValue={rpmPrev}
+              format="euros"
+              sparklineData={[]}
             />
           </>
         )}
