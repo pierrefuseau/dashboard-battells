@@ -1,0 +1,188 @@
+@import "tailwindcss";
+
+/* ── BATTELLS Design System ───────────────────────────────────── */
+
+@theme {
+  /* Colors - Primary */
+  --color-primary: #FF6B00;
+  --color-primary-light: #FF8A33;
+  --color-primary-dark: #E05A00;
+  --color-primary-50: #FFF3E8;
+  --color-primary-100: #FFE0C2;
+
+  /* Colors - Secondary */
+  --color-secondary: #FFB800;
+  --color-secondary-light: #FFCA33;
+  --color-secondary-dark: #E0A200;
+  --color-secondary-50: #FFF8E5;
+
+  /* Colors - Error */
+  --color-error: #E53935;
+  --color-error-light: #EF5350;
+  --color-error-dark: #C62828;
+  --color-error-50: #FFEBEE;
+
+  /* Colors - Success */
+  --color-success: #43A047;
+  --color-success-light: #66BB6A;
+  --color-success-dark: #2E7D32;
+  --color-success-50: #E8F5E9;
+
+  /* Colors - Warning / Info */
+  --color-warning: #FF9800;
+  --color-warning-50: #FFF3E0;
+  --color-info: #2196F3;
+  --color-info-50: #E3F2FD;
+
+  /* Colors - Dark */
+  --color-dark: #1A1A2E;
+  --color-dark-secondary: #16213E;
+  --color-dark-tertiary: #0F3460;
+
+  /* Colors - Surfaces */
+  --color-page: #FAFAF8;
+  --color-surface: #FFFFFF;
+
+  /* Colors - Text */
+  --color-text-primary: #1E1E1E;
+  --color-text-secondary: #6B7280;
+  --color-text-tertiary: #9CA3AF;
+
+  /* Colors - Border */
+  --color-border: #E5E7EB;
+  --color-border-light: #F3F4F6;
+  --color-border-dark: #374151;
+
+  /* Fonts */
+  --font-clash: "Clash Display", "Inter", system-ui, sans-serif;
+  --font-satoshi: "Satoshi", "Inter", system-ui, sans-serif;
+  --font-space-grotesk: "Space Grotesk", "Roboto Mono", monospace;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+
+  /* Border Radius */
+  --radius-card: 16px;
+  --radius-card-lg: 20px;
+  --radius-button: 10px;
+  --radius-badge: 12px;
+  --radius-input: 8px;
+  --radius-tooltip: 8px;
+  --radius-nav: 10px;
+
+  /* Shadows */
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-card-dark: 0 8px 32px rgba(26, 26, 46, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-sidebar: 2px 0 8px rgba(0, 0, 0, 0.04);
+  --shadow-modal: 0 24px 48px rgba(0, 0, 0, 0.16);
+  --shadow-tooltip: 0 4px 16px rgba(0, 0, 0, 0.2);
+  --shadow-toast: 0 4px 16px rgba(0, 0, 0, 0.16);
+  --shadow-panel-left: -8px 0 32px rgba(0, 0, 0, 0.08);
+  --shadow-button-primary: 0 1px 2px rgba(255, 107, 0, 0.3);
+  --shadow-button-primary-hover: 0 4px 12px rgba(255, 107, 0, 0.3);
+
+  /* Spacing */
+  --spacing-sidebar: 260px;
+  --spacing-sidebar-collapsed: 72px;
+  --spacing-header: 64px;
+  --spacing-detail-panel: 480px;
+  --spacing-chat-panel: 400px;
+
+  /* Z-Index */
+  --z-header: 30;
+  --z-sidebar: 40;
+  --z-panel: 45;
+  --z-modal: 50;
+  --z-toast: 55;
+  --z-tooltip: 60;
+
+  /* Animations */
+  --animate-gradient-shift: gradient-shift 8s linear infinite;
+  --animate-shimmer: shimmer 1.5s linear infinite;
+  --animate-fade-in-up: fade-in-up 0.4s ease-out;
+  --animate-slide-in-right: slide-in-right 0.3s ease-out;
+  --animate-scale-in: scale-in 0.2s ease-out;
+  --animate-pulse-slow: pulse-glow 3s ease-in-out infinite;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes fade-in-up {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-right {
+  0% { transform: translateX(100%); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes scale-in {
+  0% { transform: scale(0.95); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+/* ── Component Layers ──────────────────────────────────────────── */
+
+@layer components {
+  .card {
+    @apply bg-surface rounded-[var(--radius-card)] border border-border shadow-[var(--shadow-card)];
+  }
+  .card-hover {
+    @apply transition-all duration-200 hover:shadow-[var(--shadow-card-hover)] hover:scale-[1.01];
+  }
+  .card-dark {
+    @apply bg-dark rounded-[var(--radius-card-lg)] shadow-[var(--shadow-card-dark)] border border-white/5 overflow-hidden;
+  }
+  .btn-primary {
+    @apply h-10 px-5 rounded-[var(--radius-button)] bg-primary text-white font-[var(--font-satoshi)] font-medium text-sm
+           shadow-[var(--shadow-button-primary)] transition-all duration-200 cursor-pointer
+           hover:bg-primary-light hover:shadow-[var(--shadow-button-primary-hover)] hover:-translate-y-px
+           active:bg-primary-dark active:scale-[0.98]
+           disabled:bg-primary-100 disabled:cursor-not-allowed disabled:shadow-none;
+  }
+  .btn-secondary {
+    @apply h-10 px-5 rounded-[var(--radius-button)] bg-transparent border-[1.5px] border-primary text-primary
+           font-[var(--font-satoshi)] font-medium text-sm transition-all duration-200 cursor-pointer
+           hover:bg-primary-50 hover:border-primary-light
+           active:bg-primary-100 active:scale-[0.98]
+           disabled:border-border disabled:text-text-tertiary disabled:cursor-not-allowed;
+  }
+  .badge {
+    @apply h-6 px-2.5 rounded-[var(--radius-badge)] inline-flex items-center text-xs font-medium;
+  }
+  .skeleton {
+    @apply bg-border-light rounded animate-[shimmer_1.5s_linear_infinite] bg-[length:200%_100%];
+    background-image: linear-gradient(90deg, var(--color-border-light) 0%, var(--color-border) 50%, var(--color-border-light) 100%);
+  }
+}
+
+/* ── Reduced Motion ─────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── Focus visible ──────────────────────────────────────────── */
+
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #FF6B00;
+}
