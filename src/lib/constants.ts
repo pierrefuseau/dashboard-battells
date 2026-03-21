@@ -30,38 +30,20 @@ export const NAV_SECTIONS = [
     items: [
       { id: 'overview', label: 'Vue d\'ensemble', icon: 'home', path: '/' },
       { id: 'videos', label: 'Vidéos', icon: 'video', path: '/videos' },
-      { id: 'platforms', label: 'Plateformes', icon: 'bar-chart-3', path: '/compare' },
       { id: 'quadrant', label: 'Quadrant', icon: 'scatter-chart', path: '/quadrant' },
     ],
   },
   {
-    label: 'CRÉATION',
+    label: 'AUDIENCE',
     items: [
-      { id: 'planner', label: 'Calendrier', icon: 'calendar', path: '/planner' },
-      { id: 'ideas', label: 'Idées', icon: 'lightbulb', path: '/ideas' },
-      { id: 'thumbnails', label: 'Thumbnails', icon: 'image', path: '/thumbnails' },
-      { id: 'recycler', label: 'Recycler', icon: 'recycle', path: '/recycler' },
+      { id: 'audience', label: 'Audience', icon: 'users', path: '/audience' },
+      { id: 'traffic', label: 'Sources de trafic', icon: 'trending-up', path: '/trafic' },
     ],
   },
   {
-    label: 'INTELLIGENCE',
+    label: 'OUTILS',
     items: [
-      { id: 'advisor', label: 'Conseiller IA', icon: 'message-circle', path: '/advisor' },
-      { id: 'comments', label: 'Commentaires', icon: 'message-square', path: '/comments' },
-      { id: 'trends', label: 'Tendances', icon: 'trending-up', path: '/trends' },
-      { id: 'competitors', label: 'Concurrents', icon: 'users', path: '/competitors' },
-    ],
-  },
-  {
-    label: 'BUSINESS',
-    items: [
-      { id: 'sponsors', label: 'Sponsors', icon: 'handshake', path: '/sponsors' },
-      { id: 'simulator', label: 'Simulateur', icon: 'calculator', path: '/simulator' },
-    ],
-  },
-  {
-    label: 'DONNÉES',
-    items: [
+      { id: 'simulator', label: 'Simulateur', icon: 'calculator', path: '/simulateur' },
       { id: 'import', label: 'Import CSV', icon: 'upload', path: '/import' },
     ],
   },

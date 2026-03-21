@@ -5,7 +5,6 @@ import { X, Home, Video, BarChart3, Calendar, Lightbulb, Image, Recycle,
   Calculator, Upload, ScatterChart,
 } from 'lucide-react'
 import { NAV_SECTIONS } from '@/lib/constants'
-import mascotImg from '@/assets/battells-mascot.png'
 
 const iconMap: Record<string, React.ElementType> = {
   home: Home, video: Video, 'bar-chart-3': BarChart3, calendar: Calendar,
@@ -43,20 +42,15 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         <X size={18} />
       </button>
 
-      {/* Logo + Mascot */}
+      {/* Titre */}
       <div className="px-2 mb-6">
-        <div className="flex items-center gap-3 mb-2">
-          <img src={mascotImg} alt="BATTELLS" className="w-11 h-11 object-contain" />
-          <div>
-            <span className="title-display !text-[36px] text-primary leading-none block">
-              BATTELLS
-            </span>
-            <span className="text-[9px] font-[var(--font-bebas)] tracking-[0.2em] text-white/35 block mt-0.5">
-              CENTRE DE COMMANDE
-            </span>
-          </div>
-        </div>
-        <div className="h-[3px] w-full bg-gradient-to-r from-primary to-transparent rounded-full mt-2" />
+        <span className="title-display !text-[36px] text-primary leading-none block">
+          BATTELLS
+        </span>
+        <span className="text-[9px] font-[var(--font-bebas)] tracking-[0.2em] text-white/35 block mt-1">
+          CENTRE DE COMMANDE
+        </span>
+        <div className="h-[3px] w-full bg-gradient-to-r from-primary to-transparent rounded-full mt-3" />
       </div>
 
       {/* Nav Sections */}

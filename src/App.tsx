@@ -6,14 +6,10 @@ import Header from '@/components/layout/Header'
 import Overview from '@/pages/Overview'
 import Videos from '@/pages/Videos'
 import Import from '@/pages/Import'
-import Planner from '@/pages/Planner'
-import Sponsors from '@/pages/Sponsors'
 import Simulator from '@/pages/Simulator'
-import Advisor from '@/pages/Advisor'
-import Platforms from '@/pages/Platforms'
 import Quadrant from '@/pages/Quadrant'
-import Trends from '@/pages/Trends'
-import Ideas from '@/pages/Ideas'
+import Audience from '@/pages/Audience'
+import Traffic from '@/pages/Traffic'
 
 export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -52,15 +48,11 @@ export default function App() {
             <Routes>
               <Route path="/" element={<Overview />} />
               <Route path="/videos" element={<Videos />} />
-              <Route path="/import" element={<Import />} />
-              <Route path="/planner" element={<Planner />} />
-              <Route path="/sponsors" element={<Sponsors />} />
-              <Route path="/simulateur" element={<Simulator />} />
-              <Route path="/advisor" element={<Advisor />} />
-              <Route path="/plateformes" element={<Platforms />} />
               <Route path="/quadrant" element={<Quadrant />} />
-              <Route path="/tendances" element={<Trends />} />
-              <Route path="/idees" element={<Ideas />} />
+              <Route path="/audience" element={<Audience />} />
+              <Route path="/trafic" element={<Traffic />} />
+              <Route path="/simulateur" element={<Simulator />} />
+              <Route path="/import" element={<Import />} />
             </Routes>
           </AnimatePresence>
         </main>

@@ -2,8 +2,8 @@ import { Bell, Download, Menu, Search } from 'lucide-react'
 
 const MARQUEE_ITEMS = [
   'BATTELLS', '◆', '543K ABONNÉS', '◆', 'CENTRE DE COMMANDE', '◆',
-  'YOUTUBE FOOD CREATOR', '◆', 'DINGUERIE', '◆', 'BANGER MODE', '◆',
-  'ANALYTICS', '◆', 'CRÉATION', '◆', 'INTELLIGENCE', '◆', 'BUSINESS', '◆',
+  'CRÉATEUR FOOD YOUTUBE', '◆', 'DINGUERIE', '◆', 'MODE BANGER', '◆',
+  'ANALYTICS', '◆', 'AUDIENCE', '◆', 'SIMULATEUR', '◆', 'QUADRANT', '◆',
 ]
 
 function MarqueeStrip() {
