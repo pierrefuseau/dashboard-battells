@@ -179,7 +179,7 @@ export default function FilterBar({ filters, onChange }: FilterBarProps) {
             onFocus={() => setSearchFocused(true)}
             onBlur={() => setSearchFocused(false)}
             placeholder="Rechercher une vidéo..."
-            className="h-full px-2 bg-transparent text-sm font-[var(--font-satoshi)] text-text-primary placeholder:text-text-tertiary outline-none w-48"
+            className="h-full px-2 bg-transparent text-sm font-[var(--font-satoshi)] text-text-primary placeholder:text-text-tertiary outline-none w-32 sm:w-48"
           />
           {filters.search && (
             <button

@@ -25,17 +25,17 @@ export default function Advisor() {
       {/* Page Title */}
       <motion.h1
         variants={fadeUp}
-        className="title-display text-[56px] text-text-primary mb-6"
+        className="title-display text-text-primary mb-6"
       >
         CONSEILLER IA
       </motion.h1>
 
-      {/* 2-column layout: 8/4 split */}
-      <motion.div variants={fadeUp} className="grid grid-cols-12 gap-6">
-        <div className="col-span-8">
+      {/* 2-column layout: stacked mobile, 8/4 desktop */}
+      <motion.div variants={fadeUp} className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
+        <div className="lg:col-span-8">
           <ChatPanel />
         </div>
-        <div className="col-span-4">
+        <div className="lg:col-span-4">
           <RecommendationsPanel />
         </div>
       </motion.div>

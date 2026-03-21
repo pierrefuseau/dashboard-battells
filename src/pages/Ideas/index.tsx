@@ -47,18 +47,18 @@ export default function Ideas() {
       transition={{ duration: 0.4, ease: 'easeOut' as const }}
     >
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="title-display text-[56px] text-text-primary">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
+        <h1 className="title-display text-text-primary">
           IDÉES DE VIDÉOS
         </h1>
-        <button className="btn-primary flex items-center gap-2">
+        <button className="btn-primary flex items-center gap-2 self-start sm:self-auto">
           <Plus size={16} />
           Nouvelle idée
         </button>
       </div>
 
-      {/* Filter tabs */}
-      <div className="flex items-center gap-2 mb-6">
+      {/* Filter tabs — scrollable on mobile */}
+      <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-1">
         {STATUS_TABS.map((tab) => (
           <button
             key={tab.key}
@@ -75,7 +75,7 @@ export default function Ideas() {
       </div>
 
       {/* Ideas grid */}
-      <div className="grid grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
         {filtered.map((idea, i) => {
           const formatInfo = idea.format_tag
             ? FORMAT_TAGS[idea.format_tag as keyof typeof FORMAT_TAGS]

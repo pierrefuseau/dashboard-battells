@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import {
   ScatterChart,
@@ -13,8 +13,9 @@ import {
   Label,
   ReferenceLine,
 } from 'recharts'
-import { quadrantVideos, type QuadrantVideo } from './mockData'
+import { type QuadrantVideo } from './mockData'
 import { formatCompact, formatEuros } from '@/lib/formatters'
+import { supabase } from '@/lib/supabase'
 
 const FORMAT_COLORS: Record<string, string> = {
   challenge: '#FF6B00',
@@ -72,21 +73,69 @@ function renderLegend() {
   )
 }
 
+function determineFormat(isShort: boolean, durationSeconds: number | null): string {
+  if (isShort) return 'short'
+  if (durationSeconds == null) return 'other'
+  if (durationSeconds <= 600) return 'challenge'
+  return 'vlog'
+}
+
 export default function Quadrant() {
+  const [videos, setVideos] = useState<QuadrantVideo[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchVideos() {
+      setLoading(true)
+      const { data, error } = await supabase
+        .from('yt_videos')
+        .select('id, title, is_short, duration_seconds, yt_daily_stats(views, estimated_revenue, likes)')
+        .order('published_at', { ascending: false })
+
+      if (error) {
+        console.error('Error fetching quadrant data:', error)
+        setLoading(false)
+        return
+      }
+
+      const transformed: QuadrantVideo[] = (data ?? [])
+        .map((v: any) => {
+          const stats = v.yt_daily_stats?.[0]
+          const views = stats?.views ?? 0
+          const revenue = stats?.estimated_revenue ?? 0
+          const likes = stats?.likes ?? 0
+          const engagement = views > 0 ? Math.round((likes / views) * 100 * 100) / 100 : 0
+          return {
+            id: v.id,
+            title: v.title ?? 'Sans titre',
+            views,
+            revenue,
+            format: determineFormat(v.is_short ?? false, v.duration_seconds),
+            engagement,
+          }
+        })
+        .filter((v: QuadrantVideo) => v.views > 50_000)
+
+      setVideos(transformed)
+      setLoading(false)
+    }
+    fetchVideos()
+  }, [])
+
   const { chartData, medianViews, medianRevenue } = useMemo(() => {
-    const data = quadrantVideos.map((v) => ({
+    const data = videos.map((v) => ({
       ...v,
       dotSize: Math.max(40, v.engagement * 12),
     }))
-    const sortedViews = [...quadrantVideos].sort((a, b) => a.views - b.views)
-    const sortedRevenue = [...quadrantVideos].sort((a, b) => a.revenue - b.revenue)
-    const mid = Math.floor(quadrantVideos.length / 2)
+    const sortedViews = [...videos].sort((a, b) => a.views - b.views)
+    const sortedRevenue = [...videos].sort((a, b) => a.revenue - b.revenue)
+    const mid = Math.floor(videos.length / 2)
     return {
       chartData: data,
-      medianViews: sortedViews[mid].views,
-      medianRevenue: sortedRevenue[mid].revenue,
+      medianViews: sortedViews[mid]?.views ?? 0,
+      medianRevenue: sortedRevenue[mid]?.revenue ?? 0,
     }
-  }, [])
+  }, [videos])
 
   // Group data by format for legend
   const groupedByFormat = useMemo(() => {
@@ -105,39 +154,51 @@ export default function Quadrant() {
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.4, ease: 'easeOut' as const }}
     >
-      <h1 className="title-display text-[56px] text-text-primary mb-8">
+      <h1 className="title-display text-text-primary mb-6 sm:mb-8">
         QUADRANT DE CONTENU
       </h1>
 
+      {loading ? (
+        <div className="card p-6 flex items-center justify-center" style={{ height: 'clamp(320px, 50vw, 560px)' }}>
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-8 h-8 border-2 border-text-secondary/30 border-t-text-primary rounded-full animate-spin" />
+            <span className="text-sm text-text-secondary font-[var(--font-satoshi)]">Chargement des vidéos...</span>
+          </div>
+        </div>
+      ) : videos.length === 0 ? (
+        <div className="card p-6 flex items-center justify-center" style={{ height: 'clamp(320px, 50vw, 560px)' }}>
+          <span className="text-sm text-text-secondary font-[var(--font-satoshi)]">Aucune vidéo avec plus de 50K vues trouvée.</span>
+        </div>
+      ) : (
       <motion.div
-        className="card p-6"
+        className="card p-3 sm:p-6"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.15, ease: 'easeOut' as const }}
       >
-        <div className="relative w-full" style={{ height: 560 }}>
-          {/* Quadrant labels */}
-          <div className="absolute inset-0 pointer-events-none z-10 flex">
+        <div className="relative w-full" style={{ height: 'clamp(320px, 50vw, 560px)' }}>
+          {/* Quadrant labels — hidden on small screens */}
+          <div className="absolute inset-0 pointer-events-none z-10 hidden sm:flex">
             <div className="flex-1 flex flex-col">
               <div className="flex-1 flex items-start justify-start pl-16 pt-12">
-                <span className="text-lg font-[var(--font-satoshi)] text-text-tertiary/40 select-none">
+                <span className="text-sm lg:text-lg font-[var(--font-satoshi)] text-text-tertiary/40 select-none">
                   Pépites cachées
                 </span>
               </div>
               <div className="flex-1 flex items-end justify-start pl-16 pb-16">
-                <span className="text-lg font-[var(--font-satoshi)] text-text-tertiary/40 select-none">
+                <span className="text-sm lg:text-lg font-[var(--font-satoshi)] text-text-tertiary/40 select-none">
                   Sous-performeurs
                 </span>
               </div>
             </div>
             <div className="flex-1 flex flex-col">
               <div className="flex-1 flex items-start justify-end pr-8 pt-12">
-                <span className="text-lg font-[var(--font-satoshi)] text-text-tertiary/40 select-none">
+                <span className="text-sm lg:text-lg font-[var(--font-satoshi)] text-text-tertiary/40 select-none">
                   Étoiles
                 </span>
               </div>
               <div className="flex-1 flex items-end justify-end pr-8 pb-16">
-                <span className="text-lg font-[var(--font-satoshi)] text-text-tertiary/40 select-none">
+                <span className="text-sm lg:text-lg font-[var(--font-satoshi)] text-text-tertiary/40 select-none">
                   Faiseurs de reach
                 </span>
               </div>
@@ -150,7 +211,7 @@ export default function Quadrant() {
               <XAxis
                 type="number"
                 dataKey="views"
-                domain={[0, 10_000_000]}
+                domain={['auto', 'auto']}
                 tickFormatter={(v: number) => formatCompact(v)}
                 tick={{ fontSize: 12, fontFamily: 'var(--font-space-grotesk)', fill: 'var(--color-text-secondary)' }}
                 stroke="var(--color-border)"
@@ -165,7 +226,7 @@ export default function Quadrant() {
               <YAxis
                 type="number"
                 dataKey="revenue"
-                domain={[0, 3200]}
+                domain={['auto', 'auto']}
                 tickFormatter={(v: number) => `${v}€`}
                 tick={{ fontSize: 12, fontFamily: 'var(--font-space-grotesk)', fill: 'var(--color-text-secondary)' }}
                 stroke="var(--color-border)"
@@ -202,6 +263,7 @@ export default function Quadrant() {
           </ResponsiveContainer>
         </div>
       </motion.div>
+      )}
     </motion.div>
   )
 }

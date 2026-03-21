@@ -32,7 +32,7 @@ function AnimatedValue({ value, format }: { value: number; format: FormatType })
   })
 
   return (
-    <animated.span className="text-[36px] font-bold font-[var(--font-space-grotesk)] text-text-primary leading-none">
+    <animated.span className="text-[24px] sm:text-[36px] font-bold font-[var(--font-space-grotesk)] text-text-primary leading-none">
       {spring.val.to((v) => formatValue(Math.round(v), format))}
     </animated.span>
   )

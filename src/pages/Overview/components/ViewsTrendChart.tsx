@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import {
   AreaChart,
   Area,
@@ -9,23 +9,10 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import TimePeriodToggle from '@/components/ui/TimePeriodToggle'
-import { viewsTrendData } from '../mockData'
+import { useChannelStats } from '@/hooks'
 import { formatNumber, formatEuros } from '@/lib/formatters'
 
-const PERIODS = ['7j', '30j', '90j', '1an']
-
-function sliceByPeriod(period: string) {
-  switch (period) {
-    case '7j':
-      return viewsTrendData.slice(-7)
-    case '90j':
-    case '1an':
-      // Mock only has 30 days, return all for now
-      return viewsTrendData
-    default:
-      return viewsTrendData
-  }
-}
+const PERIODS = ['7j', '30j']
 
 interface TooltipPayloadItem {
   value: number
@@ -57,7 +44,18 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
 
 export default function ViewsTrendChart() {
   const [period, setPeriod] = useState('30j')
-  const data = sliceByPeriod(period)
+  const { stats, loading } = useChannelStats({ days: 30 })
+
+  const chartData = useMemo(() => {
+    return stats.map(s => ({
+      date: s.date,
+      dateLabel: new Date(s.date + 'T00:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }),
+      views: s.views,
+      revenue: s.estimated_revenue,
+    }))
+  }, [stats])
+
+  const data = period === '7j' ? chartData.slice(-7) : chartData
 
   return (
     <div className="card p-6 h-full">
@@ -69,6 +67,15 @@ export default function ViewsTrendChart() {
       </div>
 
       <div className="h-[280px]">
+        {loading ? (
+          <div className="flex items-center justify-center h-full text-text-secondary font-[var(--font-satoshi)]">
+            Chargement...
+          </div>
+        ) : data.length === 0 ? (
+          <div className="flex items-center justify-center h-full text-text-tertiary font-[var(--font-satoshi)]">
+            Aucune donnée disponible
+          </div>
+        ) : (
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 4, right: 4, bottom: 0, left: -20 }}>
             <defs>
@@ -113,6 +120,7 @@ export default function ViewsTrendChart() {
             />
           </AreaChart>
         </ResponsiveContainer>
+        )}
       </div>
     </div>
   )

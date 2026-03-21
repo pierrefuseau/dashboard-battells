@@ -1,10 +1,11 @@
-import { useState, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { motion } from 'framer-motion'
-import { Play, Youtube, ArrowUpDown } from 'lucide-react'
+import { Play, Youtube, ArrowUpDown, Loader2 } from 'lucide-react'
 import DetailPanel from '@/components/ui/DetailPanel.tsx'
 import { FORMAT_TAGS } from '@/lib/constants.ts'
 import { formatCompact, formatEuros, formatDuration, formatDate } from '@/lib/formatters.ts'
-import { MOCK_VIDEOS, type MockVideo } from './mockData.ts'
+import { supabase } from '@/lib/supabase.ts'
+import type { MockVideo } from './mockData.ts'
 import FilterBar, { DEFAULT_FILTERS, type Filters } from './components/FilterBar.tsx'
 import VideoDetail from './components/VideoDetail.tsx'
 
@@ -56,10 +57,66 @@ export default function Videos() {
   const [sortKey, setSortKey] = useState<SortKey>('published_at')
   const [sortDir, setSortDir] = useState<SortDir>('desc')
   const [selectedVideo, setSelectedVideo] = useState<MockVideo | null>(null)
+  const [videos, setVideos] = useState<MockVideo[]>([])
+  const [loading, setLoading] = useState(true)
+
+  // ── Fetch real data from Supabase ─────────────────────────
+  useEffect(() => {
+    async function fetchVideos() {
+      setLoading(true)
+      const { data, error } = await supabase
+        .from('yt_videos')
+        .select('*, yt_daily_stats(views, estimated_revenue, likes, comments, shares, avg_view_duration_seconds)')
+        .order('published_at', { ascending: false })
+
+      if (error) {
+        console.error('Error fetching videos:', error)
+        setLoading(false)
+        return
+      }
+
+      const mapped: MockVideo[] = (data ?? []).map((v: any) => {
+        const stats = v.yt_daily_stats?.[0]
+        const totalViews = stats?.views ?? 0
+        const totalRevenue = stats?.estimated_revenue ?? 0
+        const totalLikes = stats?.likes ?? 0
+        const comments = stats?.comments ?? 0
+        const rpm = totalViews > 0 ? (totalRevenue / totalViews) * 1000 : 0
+        const engagement = totalViews > 0 ? ((totalLikes + comments) / totalViews) * 100 : 0
+
+        return {
+          id: v.id,
+          title: v.title,
+          published_at: v.published_at,
+          duration_seconds: v.duration_seconds,
+          is_short: v.is_short,
+          format_tag: v.format_tag,
+          language: v.language,
+          thumbnail_url: v.thumbnail_url,
+          description: v.description,
+          tags: v.tags ?? [],
+          created_at: v.created_at ?? v.published_at,
+          platform: 'youtube' as const,
+          totalViews,
+          totalLikes,
+          totalRevenue,
+          ctr: 0,
+          rpm: +rpm.toFixed(2),
+          engagement: +engagement.toFixed(2),
+          dailyStats: [],
+        }
+      })
+
+      setVideos(mapped)
+      setLoading(false)
+    }
+
+    fetchVideos()
+  }, [])
 
   // ── Filter + sort ───────────────────────────────────────────
   const filteredVideos = useMemo(() => {
-    let result = MOCK_VIDEOS.filter((v) => {
+    let result = videos.filter((v) => {
       if (filters.platform && v.platform !== filters.platform) return false
       if (filters.format && v.format_tag !== filters.format) return false
       if (filters.type) {
@@ -98,7 +155,7 @@ export default function Videos() {
     })
 
     return result
-  }, [filters, sortKey, sortDir])
+  }, [videos, filters, sortKey, sortDir])
 
   // ── Sort handler ────────────────────────────────────────────
   const handleSort = (key: SortKey) => {
@@ -134,7 +191,7 @@ export default function Videos() {
     >
       {/* ── Header ───────────────────────────────────────────── */}
       <div className="space-y-4">
-        <h1 className="title-display text-[56px] text-text-primary">
+        <h1 className="title-display text-text-primary">
           EXPLORATEUR VIDÉOS
         </h1>
         <FilterBar filters={filters} onChange={setFilters} />
@@ -173,7 +230,17 @@ export default function Videos() {
 
             {/* Body */}
             <tbody>
-              {filteredVideos.map((video, i) => (
+              {loading && (
+                <tr>
+                  <td colSpan={COLUMNS.length} className="py-16">
+                    <div className="flex flex-col items-center justify-center text-text-tertiary">
+                      <Loader2 size={32} className="mb-3 animate-spin opacity-50" />
+                      <p className="text-sm font-[var(--font-satoshi)]">Chargement des vidéos...</p>
+                    </div>
+                  </td>
+                </tr>
+              )}
+              {!loading && filteredVideos.map((video, i) => (
                 <motion.tr
                   key={video.id}
                   initial={{ opacity: 0, y: 8 }}
@@ -261,7 +328,7 @@ export default function Videos() {
           </table>
 
           {/* Empty state */}
-          {filteredVideos.length === 0 && (
+          {!loading && filteredVideos.length === 0 && (
             <div className="flex flex-col items-center justify-center py-16 text-text-tertiary">
               <Play size={40} className="mb-3 opacity-30" />
               <p className="text-sm font-[var(--font-satoshi)]">Aucune vidéo trouvée</p>
@@ -272,7 +339,7 @@ export default function Videos() {
         {/* Footer */}
         <div className="px-4 py-3 border-t border-border flex items-center justify-between">
           <span className="text-xs font-[var(--font-satoshi)] text-text-tertiary">
-            {filteredVideos.length} vidéo{filteredVideos.length !== 1 ? 's' : ''} sur {MOCK_VIDEOS.length}
+            {filteredVideos.length} vidéo{filteredVideos.length !== 1 ? 's' : ''} sur {videos.length}
           </span>
         </div>
       </div>

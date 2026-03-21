@@ -194,12 +194,18 @@
     background-image: linear-gradient(90deg, var(--color-border-light) 0%, var(--color-border) 50%, var(--color-border-light) 100%);
   }
 
-  /* ── Bebas display title (portfolio-style) ── */
+  /* ── Bebas display title (portfolio-style) — fluid sizing ── */
   .title-display {
     font-family: var(--font-bebas);
     letter-spacing: 0.03em;
     line-height: 0.9;
     text-transform: uppercase;
+    font-size: clamp(32px, 6vw, 72px);
+  }
+
+  /* ── Sidebar overlay for mobile ── */
+  .sidebar-overlay {
+    @apply fixed inset-0 bg-black/50 z-[39] transition-opacity duration-300;
   }
 
   /* ── Marquee ticker strip ── */
@@ -234,6 +240,12 @@
     animation: blob-float 12s ease-in-out infinite;
     filter: blur(60px);
   }
+}
+
+/* ── Responsive: hide blobs on mobile ── */
+@media (max-width: 767px) {
+  .blob-decorator { display: none; }
+  .marquee-strip { font-size: 11px; height: 28px; }
 }
 
 /* ── Simulator Sliders ──────────────────────────────────────── */

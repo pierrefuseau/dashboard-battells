@@ -5,8 +5,10 @@ import ViewsTrendChart from './components/ViewsTrendChart'
 import TopVideos from './components/TopVideos'
 import MonthlyGoals from './components/MonthlyGoals'
 import AlertsFeed from './components/AlertsFeed'
-import { kpiData, darkCardData } from './mockData'
+import { kpiData as mockKpiData, darkCardData } from './mockData'
 import DarkCard from '@/components/ui/DarkCard'
+import { useChannelStats } from '@/hooks'
+import { YOUTUBE_CONFIG } from '@/lib/youtube'
 
 const stagger = {
   hidden: { opacity: 0 },
@@ -22,6 +24,27 @@ const fadeUp = {
 }
 
 export default function Overview() {
+  const { kpis, loading } = useChannelStats({ days: 30 })
+
+  // Use real data when available, fall back to mock for fields with no real data
+  const viewsValue = kpis.totalViews > 0 ? kpis.totalViews : mockKpiData.views.value
+  const viewsPrev = kpis.prevTotalViews > 0 ? kpis.prevTotalViews : mockKpiData.views.previousValue
+  const viewsSparkline = kpis.viewsSparkline.length > 0 ? kpis.viewsSparkline : mockKpiData.views.sparkline
+
+  const revenueValue = kpis.totalRevenue > 0 ? kpis.totalRevenue : mockKpiData.revenue.value
+  const revenuePrev = kpis.prevTotalRevenue > 0 ? kpis.prevTotalRevenue : mockKpiData.revenue.previousValue
+  const revenueSparkline = kpis.revenueSparkline.length > 0 ? kpis.revenueSparkline : mockKpiData.revenue.sparkline
+
+  // Subscribers: yt_channel_daily has 0, use constant from config
+  const subscribersValue = kpis.latestSubscribers > 0 ? kpis.latestSubscribers : YOUTUBE_CONFIG.subscriberCount
+  const subscribersPrev = kpis.prevLatestSubscribers > 0 ? kpis.prevLatestSubscribers : mockKpiData.subscribers.previousValue
+  const subscribersSparkline = kpis.subscribersSparkline.some(v => v > 0) ? kpis.subscribersSparkline : mockKpiData.subscribers.sparkline
+
+  // CTR: may be 0 if no impressions data, fall back to mock
+  const ctrValue = kpis.avgCTR > 0 ? kpis.avgCTR : mockKpiData.ctr.value
+  const ctrPrev = kpis.prevAvgCTR > 0 ? kpis.prevAvgCTR : mockKpiData.ctr.previousValue
+  const ctrSparkline = kpis.ctrSparkline.some(v => v > 0) ? kpis.ctrSparkline : mockKpiData.ctr.sparkline
+
   return (
     <motion.div
       variants={stagger}
@@ -29,7 +52,7 @@ export default function Overview() {
       animate="show"
       className="relative"
     >
-      {/* Decorative blobs (inspired by Sebas Baldeon) */}
+      {/* Decorative blobs — hidden on mobile via CSS */}
       <div className="blob-decorator w-[400px] h-[400px] -top-32 -right-32" />
       <div className="blob-decorator w-[250px] h-[250px] top-[600px] -left-24" style={{ animationDelay: '4s' }} />
 
@@ -38,63 +61,71 @@ export default function Overview() {
         <ChannelHeader />
       </motion.div>
 
-      {/* Page Title — MASSIVE Bebas Neue style like the portfolios */}
-      <motion.div variants={fadeUp} className="mb-8">
-        <h1 className="title-display text-[72px] text-text-primary">
+      {/* Page Title — fluid via .title-display clamp() */}
+      <motion.div variants={fadeUp} className="mb-6 sm:mb-8">
+        <h1 className="title-display text-text-primary">
           VUE D'ENSEMBLE
         </h1>
         <div className="flex items-center gap-3 mt-1">
-          <div className="h-1 w-16 bg-primary rounded-full" />
-          <span className="text-sm font-[var(--font-satoshi)] text-text-secondary">
+          <div className="h-1 w-12 sm:w-16 bg-primary rounded-full" />
+          <span className="text-xs sm:text-sm font-[var(--font-satoshi)] text-text-secondary">
             Tableau de bord analytique
           </span>
         </div>
       </motion.div>
 
-      {/* ── Section 1: KPI Row ─────────────────────────── */}
-      <motion.div variants={fadeUp} className="grid grid-cols-4 gap-5 mb-8">
-        <KpiCard
-          label="Vues 30j"
-          value={kpiData.views.value}
-          previousValue={kpiData.views.previousValue}
-          format="compact"
-          sparklineData={kpiData.views.sparkline}
-        />
-        <KpiCard
-          label="Revenu"
-          value={kpiData.revenue.value}
-          previousValue={kpiData.revenue.previousValue}
-          format="euros"
-          sparklineData={kpiData.revenue.sparkline}
-        />
-        <KpiCard
-          label="Abonnés"
-          value={kpiData.subscribers.value}
-          previousValue={kpiData.subscribers.previousValue}
-          format="compact"
-          sparklineData={kpiData.subscribers.sparkline}
-        />
-        <KpiCard
-          label="CTR moyen"
-          value={kpiData.ctr.value}
-          previousValue={kpiData.ctr.previousValue}
-          format="percent"
-          sparklineData={kpiData.ctr.sparkline}
-        />
+      {/* KPI Row — 2 cols mobile, 4 cols desktop */}
+      <motion.div variants={fadeUp} className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 mb-6 sm:mb-8">
+        {loading ? (
+          <div className="col-span-2 lg:col-span-4 text-center py-8 text-text-secondary font-[var(--font-satoshi)]">
+            Chargement...
+          </div>
+        ) : (
+          <>
+            <KpiCard
+              label="Vues 30j"
+              value={viewsValue}
+              previousValue={viewsPrev}
+              format="compact"
+              sparklineData={viewsSparkline}
+            />
+            <KpiCard
+              label="Revenu"
+              value={revenueValue}
+              previousValue={revenuePrev}
+              format="euros"
+              sparklineData={revenueSparkline}
+            />
+            <KpiCard
+              label="Abonnés"
+              value={subscribersValue}
+              previousValue={subscribersPrev}
+              format="compact"
+              sparklineData={subscribersSparkline}
+            />
+            <KpiCard
+              label="CTR moyen"
+              value={ctrValue}
+              previousValue={ctrPrev}
+              format="percent"
+              sparklineData={ctrSparkline}
+            />
+          </>
+        )}
       </motion.div>
 
-      {/* ── Section 2: Charts (8/4 split) ─────────────── */}
-      <motion.div variants={fadeUp} className="grid grid-cols-12 gap-5 mb-8">
-        <div className="col-span-8">
+      {/* Charts — stacked on mobile, 8/4 on desktop */}
+      <motion.div variants={fadeUp} className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 mb-6 sm:mb-8">
+        <div className="lg:col-span-8">
           <ViewsTrendChart />
         </div>
-        <div className="col-span-4">
+        <div className="lg:col-span-4">
           <TopVideos />
         </div>
       </motion.div>
 
-      {/* ── Section 3: Dark Card + Monthly Goals ──────── */}
-      <motion.div variants={fadeUp} className="grid grid-cols-2 gap-5 mb-8">
+      {/* Dark Card + Monthly Goals — stacked on mobile */}
+      <motion.div variants={fadeUp} className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 mb-6 sm:mb-8">
         <DarkCard
           emoji={darkCardData.emoji}
           title={darkCardData.title}
@@ -104,7 +135,7 @@ export default function Overview() {
         <MonthlyGoals />
       </motion.div>
 
-      {/* ── Section 4: Alerts Feed ────────────────────── */}
+      {/* Alerts Feed */}
       <motion.div variants={fadeUp}>
         <AlertsFeed />
       </motion.div>

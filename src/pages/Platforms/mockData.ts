@@ -12,6 +12,8 @@ export interface PlatformData {
   }[]
 }
 
+// Métriques réalistes cross-platform pour BATTELLS
+// YouTube = plateforme principale | TikTok = croissance rapide | Instagram = vitrine
 export const platforms: PlatformData[] = [
   {
     id: 'youtube',
@@ -19,13 +21,13 @@ export const platforms: PlatformData[] = [
     icon: 'youtube',
     color: '#FF0000',
     accent: '#FF0000',
-    subscribers: '543.8K',
+    subscribers: '543K',
     subscriberLabel: 'abonnés',
     metrics: [
-      { label: 'Vues totales', value: '127.4M' },
-      { label: 'Moy. vues/vidéo', value: '385K' },
-      { label: 'Taux engagement', value: '6.8%' },
-      { label: 'Top vidéo', value: '4.2M vues' },
+      { label: 'Vues totales', value: '321M' },
+      { label: 'Moy. vues/vidéo', value: '1.15M' },
+      { label: 'Taux engagement', value: '5.8%' },
+      { label: 'RPM moyen', value: '3.50€' },
     ],
   },
   {
@@ -34,13 +36,13 @@ export const platforms: PlatformData[] = [
     icon: 'tiktok',
     color: '#000000',
     accent: '#000000',
-    subscribers: '127.3K',
+    subscribers: '218K',
     subscriberLabel: 'followers',
     metrics: [
-      { label: 'Vues totales', value: '89.1M' },
-      { label: 'Moy. vues/vidéo', value: '142K' },
-      { label: 'Taux engagement', value: '9.2%' },
-      { label: 'Top vidéo', value: '7.8M vues' },
+      { label: 'Vues totales', value: '145M' },
+      { label: 'Moy. vues/vidéo', value: '420K' },
+      { label: 'Taux engagement', value: '8.4%' },
+      { label: 'Top vidéo', value: '12.3M vues' },
     ],
   },
   {
@@ -49,21 +51,21 @@ export const platforms: PlatformData[] = [
     icon: 'instagram',
     color: '#E1306C',
     accent: '#E1306C',
-    subscribers: '89.2K',
+    subscribers: '94.7K',
     subscriberLabel: 'followers',
     metrics: [
-      { label: 'Vues totales', value: '32.6M' },
-      { label: 'Moy. vues/vidéo', value: '58K' },
-      { label: 'Taux engagement', value: '4.5%' },
-      { label: 'Top vidéo', value: '1.9M vues' },
+      { label: 'Vues Reels', value: '48.2M' },
+      { label: 'Moy. vues/reel', value: '82K' },
+      { label: 'Taux engagement', value: '4.2%' },
+      { label: 'Top reel', value: '2.8M vues' },
     ],
   },
 ]
 
 export const radarData = [
-  { axis: 'Vues moyennes', youtube: 85, tiktok: 62, instagram: 40 },
-  { axis: 'Engagement', youtube: 68, tiktok: 92, instagram: 45 },
-  { axis: 'Croissance abonnés', youtube: 55, tiktok: 78, instagram: 42 },
-  { axis: 'Régularité', youtube: 90, tiktok: 65, instagram: 50 },
-  { axis: 'Monétisation', youtube: 95, tiktok: 35, instagram: 30 },
+  { axis: 'Vues moyennes', youtube: 92, tiktok: 68, instagram: 35 },
+  { axis: 'Engagement', youtube: 58, tiktok: 84, instagram: 42 },
+  { axis: 'Croissance', youtube: 48, tiktok: 82, instagram: 38 },
+  { axis: 'Régularité', youtube: 95, tiktok: 60, instagram: 45 },
+  { axis: 'Monétisation', youtube: 98, tiktok: 25, instagram: 15 },
 ]

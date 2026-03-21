@@ -13,11 +13,11 @@ export default function Simulator() {
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.4, ease: 'easeOut' }}
     >
-      <h1 className="title-display text-[56px] text-text-primary mb-8">
+      <h1 className="title-display text-text-primary mb-6 sm:mb-8">
         SIMULATEUR DE REVENUS
       </h1>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         {/* Left: Sliders */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}

@@ -1,7 +1,6 @@
 import { useLocation, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import {
-  Home, Video, BarChart3, Calendar, Lightbulb, Image, Recycle,
+import { X, Home, Video, BarChart3, Calendar, Lightbulb, Image, Recycle,
   MessageCircle, MessageSquare, TrendingUp, Users, Handshake,
   Calculator, Upload, ScatterChart,
 } from 'lucide-react'
@@ -16,20 +15,40 @@ const iconMap: Record<string, React.ElementType> = {
   calculator: Calculator, upload: Upload, 'scatter-chart': ScatterChart,
 }
 
-export default function Sidebar() {
+interface SidebarProps {
+  isOpen: boolean
+  onClose: () => void
+}
+
+export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const location = useLocation()
 
   return (
     <nav
       aria-label="Navigation principale"
-      className="fixed left-0 top-0 h-screen w-[var(--spacing-sidebar)] bg-dark z-[var(--z-sidebar)] flex flex-col py-6 px-5 shadow-[var(--shadow-sidebar)]"
+      className={`
+        fixed left-0 top-0 h-screen w-[var(--spacing-sidebar)] bg-dark z-[var(--z-sidebar)]
+        flex flex-col py-6 px-5 shadow-[var(--shadow-sidebar)]
+        transition-transform duration-300 ease-out
+        ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+        lg:translate-x-0
+      `}
     >
-      {/* Logo + Mascot — portfolio-style branding */}
+      {/* Close button — mobile only */}
+      <button
+        onClick={onClose}
+        className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full bg-white/10 text-white/60 hover:text-white lg:hidden"
+        aria-label="Fermer le menu"
+      >
+        <X size={18} />
+      </button>
+
+      {/* Logo + Mascot */}
       <div className="px-2 mb-6">
         <div className="flex items-center gap-3 mb-2">
           <img src={mascotImg} alt="BATTELLS" className="w-11 h-11 object-contain" />
           <div>
-            <span className="title-display text-[36px] text-primary leading-none block">
+            <span className="title-display !text-[36px] text-primary leading-none block">
               BATTELLS
             </span>
             <span className="text-[9px] font-[var(--font-bebas)] tracking-[0.2em] text-white/35 block mt-0.5">
@@ -37,7 +56,6 @@ export default function Sidebar() {
             </span>
           </div>
         </div>
-        {/* Orange accent line */}
         <div className="h-[3px] w-full bg-gradient-to-r from-primary to-transparent rounded-full mt-2" />
       </div>
 
@@ -59,7 +77,7 @@ export default function Sidebar() {
                   <Link
                     key={item.id}
                     to={item.path}
-                    className="relative flex items-center h-10 px-3 rounded-[var(--radius-nav)] transition-all duration-200 group"
+                    className="relative flex items-center h-11 px-3 rounded-[var(--radius-nav)] transition-all duration-200 group"
                   >
                     {isActive && (
                       <motion.div
@@ -93,19 +111,19 @@ export default function Sidebar() {
         ))}
       </div>
 
-      {/* User area — dark style */}
+      {/* User area */}
       <div className="border-t border-white/10 pt-4 px-2 space-y-3">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-sm font-bold text-white">B</div>
-          <div>
-            <p className="text-sm font-medium text-white/90">Baptiste</p>
+          <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-sm font-bold text-white shrink-0">B</div>
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-white/90 truncate">Baptiste</p>
             <p className="text-[10px] text-white/40 uppercase tracking-wider font-[var(--font-bebas)]">Créateur</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-sm font-bold text-white/70">P</div>
-          <div>
-            <p className="text-sm font-medium text-white/90">Pierrot</p>
+          <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-sm font-bold text-white/70 shrink-0">P</div>
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-white/90 truncate">Pierrot</p>
             <p className="text-[10px] text-white/40 uppercase tracking-wider font-[var(--font-bebas)]">Stratège</p>
           </div>
         </div>

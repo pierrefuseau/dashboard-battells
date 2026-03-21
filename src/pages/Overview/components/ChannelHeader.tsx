@@ -50,44 +50,44 @@ export default function ChannelHeader() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, ease: 'easeOut' }}
     >
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:justify-between">
         {/* Left: Avatar + Name + Handle */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 sm:gap-4">
           {/* Channel avatar placeholder */}
-          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/20">
-            <span className="text-2xl font-bold text-white font-[var(--font-clash)]">B</span>
+          <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/20 shrink-0">
+            <span className="text-lg sm:text-2xl font-bold text-white font-[var(--font-clash)]">B</span>
           </div>
 
-          <div className="flex flex-col gap-0.5">
-            <h2 className="text-2xl font-bold text-text-primary font-[var(--font-clash)]">
+          <div className="flex flex-col gap-0.5 min-w-0">
+            <h2 className="text-lg sm:text-2xl font-bold text-text-primary font-[var(--font-clash)] truncate">
               {YOUTUBE_CONFIG.channelName}
             </h2>
-            <span className="text-sm text-text-secondary font-[var(--font-satoshi)]">
+            <span className="text-xs sm:text-sm text-text-secondary font-[var(--font-satoshi)]">
               {YOUTUBE_CONFIG.channelHandle}
             </span>
           </div>
         </div>
 
-        {/* Center: Mini stats */}
-        <div className="flex items-center gap-6">
+        {/* Center: Mini stats — scrollable on mobile */}
+        <div className="flex items-center gap-4 sm:gap-6 overflow-x-auto pb-1 sm:pb-0">
           <StatPill
             label="abonnés"
             value={formatSubscriberCount(channelInfo.subscriberCount)}
           />
-          <div className="w-px h-6 bg-border" />
+          <div className="w-px h-5 sm:h-6 bg-border shrink-0" />
           <StatPill
             label="vues"
             value={formatViewCount(channelInfo.viewCount)}
           />
-          <div className="w-px h-6 bg-border" />
+          <div className="w-px h-5 sm:h-6 bg-border shrink-0" />
           <StatPill
             label="vidéos"
             value={YOUTUBE_CONFIG.videoCount.toString()}
           />
         </div>
 
-        {/* Right: Sync status */}
-        <div className="flex flex-col items-end gap-1">
+        {/* Right: Sync status — hidden on mobile, shown on sm+ */}
+        <div className="hidden sm:flex flex-col items-end gap-1">
           <SyncIndicator
             status={syncIndicatorStatus}
             lastSync={syncStatus.lastSync}
@@ -105,11 +105,11 @@ export default function ChannelHeader() {
 
 function StatPill({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-baseline gap-1.5">
-      <span className="text-lg font-bold text-text-primary font-[var(--font-space-grotesk)]">
+    <div className="flex items-baseline gap-1 sm:gap-1.5 shrink-0">
+      <span className="text-sm sm:text-lg font-bold text-text-primary font-[var(--font-space-grotesk)]">
         {value}
       </span>
-      <span className="text-xs text-text-tertiary font-[var(--font-satoshi)]">{label}</span>
+      <span className="text-[10px] sm:text-xs text-text-tertiary font-[var(--font-satoshi)]">{label}</span>
     </div>
   )
 }

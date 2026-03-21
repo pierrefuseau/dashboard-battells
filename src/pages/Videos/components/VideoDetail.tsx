@@ -116,44 +116,50 @@ export default function VideoDetail({ video }: VideoDetailProps) {
         <h3 className="text-sm font-semibold font-[var(--font-satoshi)] text-text-primary">
           Vues par jour
         </h3>
-        <div className="h-40">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData}>
-              <XAxis
-                dataKey="date"
-                tick={{ fontSize: 10, fill: 'var(--color-text-tertiary)' }}
-                tickLine={false}
-                axisLine={false}
-                interval="preserveStartEnd"
-              />
-              <YAxis
-                tick={{ fontSize: 10, fill: 'var(--color-text-tertiary)' }}
-                tickLine={false}
-                axisLine={false}
-                tickFormatter={(v: number) => formatCompact(v)}
-                width={45}
-              />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: 'var(--color-surface)',
-                  border: '1px solid var(--color-border)',
-                  borderRadius: 'var(--radius-tooltip)',
-                  fontSize: 12,
-                  fontFamily: 'var(--font-space-grotesk)',
-                }}
-                formatter={(value) => [formatCompact(Number(value ?? 0)), 'Vues']}
-              />
-              <Line
-                type="monotone"
-                dataKey="vues"
-                stroke="var(--color-primary)"
-                strokeWidth={2}
-                dot={false}
-                activeDot={{ r: 4, fill: 'var(--color-primary)' }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
+        {chartData.length > 0 ? (
+          <div className="h-40">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={chartData}>
+                <XAxis
+                  dataKey="date"
+                  tick={{ fontSize: 10, fill: 'var(--color-text-tertiary)' }}
+                  tickLine={false}
+                  axisLine={false}
+                  interval="preserveStartEnd"
+                />
+                <YAxis
+                  tick={{ fontSize: 10, fill: 'var(--color-text-tertiary)' }}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={(v: number) => formatCompact(v)}
+                  width={45}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: 'var(--color-surface)',
+                    border: '1px solid var(--color-border)',
+                    borderRadius: 'var(--radius-tooltip)',
+                    fontSize: 12,
+                    fontFamily: 'var(--font-space-grotesk)',
+                  }}
+                  formatter={(value) => [formatCompact(Number(value ?? 0)), 'Vues']}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="vues"
+                  stroke="var(--color-primary)"
+                  strokeWidth={2}
+                  dot={false}
+                  activeDot={{ r: 4, fill: 'var(--color-primary)' }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        ) : (
+          <div className="h-40 flex items-center justify-center text-text-tertiary">
+            <p className="text-sm font-[var(--font-satoshi)]">Donnees detaillees non disponibles</p>
+          </div>
+        )}
       </motion.div>
 
       {/* Metrics grid */}

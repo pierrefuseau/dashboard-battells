@@ -11,13 +11,13 @@ export default function Trends() {
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.4, ease: 'easeOut' as const }}
     >
-      <h1 className="title-display text-[56px] text-text-primary mb-8">
+      <h1 className="title-display text-text-primary mb-6 sm:mb-8">
         TENDANCES
       </h1>
 
-      <div className="grid grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
         <motion.div
-          className="col-span-8"
+          className="lg:col-span-8"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.4, delay: 0.1, ease: 'easeOut' as const }}
@@ -26,7 +26,7 @@ export default function Trends() {
         </motion.div>
 
         <motion.div
-          className="col-span-4"
+          className="lg:col-span-4"
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.4, delay: 0.2, ease: 'easeOut' as const }}

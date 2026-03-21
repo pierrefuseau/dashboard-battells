@@ -25,13 +25,13 @@ export default function Platforms() {
     >
       {/* Header */}
       <motion.div variants={fadeUp}>
-        <h1 className="title-display text-[56px] text-text-primary">
+        <h1 className="title-display text-text-primary">
           COMPARAISON PLATEFORMES
         </h1>
       </motion.div>
 
       {/* Platform Cards */}
-      <motion.div variants={fadeUp} className="flex gap-6">
+      <motion.div variants={fadeUp} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {platforms.map((platform) => (
           <PlatformCard key={platform.id} platform={platform} />
         ))}

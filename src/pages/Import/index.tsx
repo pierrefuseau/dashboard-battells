@@ -38,14 +38,14 @@ export default function Import() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="flex flex-col gap-10"
+      className="flex flex-col gap-6 sm:gap-10"
     >
       {/* Page title */}
       <motion.h1
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="title-display text-[56px] text-text-primary"
+        className="title-display text-text-primary"
       >
         IMPORT CSV
       </motion.h1>

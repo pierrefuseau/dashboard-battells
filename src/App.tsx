@@ -1,4 +1,5 @@
-import { Routes, Route } from 'react-router-dom'
+import { useState, useCallback, useEffect } from 'react'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import Sidebar from '@/components/layout/Sidebar'
 import Header from '@/components/layout/Header'
@@ -15,12 +16,38 @@ import Trends from '@/pages/Trends'
 import Ideas from '@/pages/Ideas'
 
 export default function App() {
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const location = useLocation()
+
+  // Close sidebar on navigation (mobile)
+  useEffect(() => {
+    setSidebarOpen(false)
+  }, [location.pathname])
+
+  // Close sidebar on resize to desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) setSidebarOpen(false)
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  const toggleSidebar = useCallback(() => setSidebarOpen((v) => !v), [])
+  const closeSidebar = useCallback(() => setSidebarOpen(false), [])
+
   return (
     <div className="flex min-h-screen bg-page">
-      <Sidebar />
-      <div className="flex-1 ml-[var(--spacing-sidebar)]">
-        <Header />
-        <main className="px-8 py-6 relative overflow-hidden">
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div className="sidebar-overlay lg:hidden" onClick={closeSidebar} />
+      )}
+
+      <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
+
+      <div className="flex-1 ml-0 lg:ml-[var(--spacing-sidebar)] min-w-0">
+        <Header onMenuToggle={toggleSidebar} />
+        <main className="px-4 py-4 sm:px-6 sm:py-5 lg:px-8 lg:py-6 relative overflow-hidden">
           <AnimatePresence mode="wait">
             <Routes>
               <Route path="/" element={<Overview />} />

@@ -26,11 +26,11 @@ export default function Sponsors() {
       className="space-y-6"
     >
       {/* Header */}
-      <motion.div variants={fadeUp} className="flex items-center justify-between">
-        <h1 className="title-display text-[56px] text-text-primary">
+      <motion.div variants={fadeUp} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h1 className="title-display text-text-primary">
           SPONSORS & PARTENARIATS
         </h1>
-        <button className="btn-primary inline-flex items-center gap-2">
+        <button className="btn-primary inline-flex items-center gap-2 self-start sm:self-auto">
           <Plus size={18} />
           Nouveau sponsor
         </button>
