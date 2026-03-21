@@ -41,6 +41,12 @@ export const NAV_SECTIONS = [
     ],
   },
   {
+    label: 'PRODUCTION',
+    items: [
+      { id: 'calendar', label: 'Calendrier', icon: 'calendar', path: '/calendrier' },
+    ],
+  },
+  {
     label: 'OUTILS',
     items: [
       { id: 'simulator', label: 'Simulateur', icon: 'calculator', path: '/simulateur' },
