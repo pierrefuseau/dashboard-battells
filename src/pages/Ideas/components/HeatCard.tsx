@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { useSpring, animated } from '@react-spring/web'
-import { X } from 'lucide-react'
+import { X, ExternalLink } from 'lucide-react'
 import { formatCompact } from '@/lib/formatters'
 import type { DetectedVideo } from '@/types/database'
 
@@ -86,6 +86,16 @@ export default function HeatCard({ video, index, onSelect, onDismiss }: HeatCard
               +{overPerf}%
             </span>
           )}
+          <a
+            href={video.video_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ml-auto flex items-center gap-1 text-white/40 hover:text-white transition-colors"
+            onClick={(e) => e.stopPropagation()}
+            aria-label="Voir la video source"
+          >
+            <ExternalLink size={12} />
+          </a>
         </div>
       </div>
     </motion.div>
