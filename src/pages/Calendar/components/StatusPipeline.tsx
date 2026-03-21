@@ -1,18 +1,21 @@
 import { motion } from 'framer-motion'
+import {
+  Lightbulb, ClipboardList, PenLine, Film, Scissors, CalendarCheck, Rocket,
+} from 'lucide-react'
 import type { ContentCalendarItem } from '@/types/database'
 
 interface StatusPipelineProps {
   items: ContentCalendarItem[]
 }
 
-const PIPELINE: { status: ContentCalendarItem['status']; label: string; color: string; emoji: string }[] = [
-  { status: 'idea', label: 'Idées', color: '#9CA3AF', emoji: '💡' },
-  { status: 'planned', label: 'Planifié', color: '#3B82F6', emoji: '📋' },
-  { status: 'scripted', label: 'Scripté', color: '#8B5CF6', emoji: '📝' },
-  { status: 'filmed', label: 'Tourné', color: '#F59E0B', emoji: '🎬' },
-  { status: 'editing', label: 'Montage', color: '#EC4899', emoji: '✂️' },
-  { status: 'scheduled', label: 'Programmé', color: '#06B6D4', emoji: '📅' },
-  { status: 'published', label: 'Publié', color: '#43A047', emoji: '🚀' },
+const PIPELINE: { status: ContentCalendarItem['status']; label: string; color: string; icon: typeof Lightbulb }[] = [
+  { status: 'idea', label: 'Idées', color: '#9CA3AF', icon: Lightbulb },
+  { status: 'planned', label: 'Planifié', color: '#3B82F6', icon: ClipboardList },
+  { status: 'scripted', label: 'Scripté', color: '#8B5CF6', icon: PenLine },
+  { status: 'filmed', label: 'Tourné', color: '#F59E0B', icon: Film },
+  { status: 'editing', label: 'Montage', color: '#EC4899', icon: Scissors },
+  { status: 'scheduled', label: 'Programmé', color: '#06B6D4', icon: CalendarCheck },
+  { status: 'published', label: 'Publié', color: '#43A047', icon: Rocket },
 ]
 
 export default function StatusPipeline({ items }: StatusPipelineProps) {
@@ -50,17 +53,22 @@ export default function StatusPipeline({ items }: StatusPipelineProps) {
 
       {/* Steps grid */}
       <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
-        {counts.map((step) => (
-          <div key={step.status} className="text-center">
-            <span className="text-base">{step.emoji}</span>
-            <p className="text-lg font-bold font-[var(--font-space-grotesk)] text-text-primary leading-tight">
-              {step.count}
-            </p>
-            <p className="text-[9px] font-[var(--font-bebas)] tracking-wider text-text-tertiary">
-              {step.label.toUpperCase()}
-            </p>
-          </div>
-        ))}
+        {counts.map((step) => {
+          const Icon = step.icon
+          return (
+            <div key={step.status} className="text-center">
+              <div className="flex items-center justify-center mb-0.5">
+                <Icon size={16} style={{ color: step.color }} />
+              </div>
+              <p className="text-lg font-bold font-[var(--font-space-grotesk)] text-text-primary leading-tight">
+                {step.count}
+              </p>
+              <p className="text-[9px] font-[var(--font-bebas)] tracking-wider text-text-tertiary">
+                {step.label.toUpperCase()}
+              </p>
+            </div>
+          )
+        })}
       </div>
     </div>
   )
