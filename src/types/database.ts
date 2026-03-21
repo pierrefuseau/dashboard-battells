@@ -140,9 +140,9 @@ export interface VideoWithStats extends YtVideo {
   totalViews: number
   totalLikes: number
   totalRevenue: number
-  ctr: number
   rpm: number
   engagement: number
+  avgViewDuration: number
   dailyStats: YtDailyStat[]
 }
 

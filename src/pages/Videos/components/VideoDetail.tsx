@@ -195,10 +195,10 @@ export default function VideoDetail({ video }: VideoDetailProps) {
       <motion.div variants={fadeUp} className="grid grid-cols-2 gap-3">
         <MetricCard label="Vues" value={formatCompact(video.totalViews)} />
         <MetricCard label="Likes" value={formatCompact(video.totalLikes)} />
-        <MetricCard label="CTR" value={`${video.ctr}%`} />
+        <MetricCard label="Engagement" value={`${video.engagement}%`} />
         <MetricCard label="RPM" value={formatEuros(video.rpm)} />
         <MetricCard label="Revenu" value={formatEuros(video.totalRevenue)} />
-        <MetricCard label="Engagement" value={`${video.engagement}%`} />
+        <MetricCard label="Durée moy." value={`${video.avgViewDuration}s`} />
       </motion.div>
 
       {/* Tags */}

@@ -10,7 +10,7 @@ import FilterBar, { DEFAULT_FILTERS, type Filters } from './components/FilterBar
 import VideoDetail from './components/VideoDetail.tsx'
 
 // ── Types ─────────────────────────────────────────────────────
-type SortKey = 'totalViews' | 'ctr' | 'rpm' | 'totalRevenue' | 'published_at'
+type SortKey = 'totalViews' | 'engagement' | 'rpm' | 'totalRevenue' | 'published_at'
 type SortDir = 'asc' | 'desc'
 
 // ── Helper: period filter ─────────────────────────────────────
@@ -45,7 +45,7 @@ const COLUMNS: Column[] = [
   { key: 'format', label: 'Format', sortable: false, className: 'w-28' },
   { key: 'duration', label: 'Durée', sortable: false, className: 'w-20 text-right' },
   { key: 'views', label: 'Vues', sortable: true, sortKey: 'totalViews', className: 'w-24 text-right' },
-  { key: 'ctr', label: 'CTR', sortable: true, sortKey: 'ctr', className: 'w-20 text-right' },
+  { key: 'engagement', label: 'Engage.', sortable: true, sortKey: 'engagement', className: 'w-20 text-right' },
   { key: 'rpm', label: 'RPM', sortable: true, sortKey: 'rpm', className: 'w-20 text-right' },
   { key: 'revenue', label: 'Revenu', sortable: true, sortKey: 'totalRevenue', className: 'w-24 text-right' },
   { key: 'date', label: 'Date', sortable: true, sortKey: 'published_at', className: 'w-28 text-right' },
@@ -66,7 +66,7 @@ export default function Videos() {
       setLoading(true)
       const { data, error } = await supabase
         .from('yt_videos')
-        .select('*, yt_daily_stats(views, estimated_revenue, likes, comments, shares, avg_view_duration_seconds, impressions_ctr)')
+        .select('*, yt_daily_stats(views, estimated_revenue, likes, comments, shares, avg_view_duration_seconds)')
         .order('published_at', { ascending: false })
 
       if (error) {
@@ -84,8 +84,6 @@ export default function Videos() {
         const rpm = totalViews > 0 ? (totalRevenue / totalViews) * 1000 : 0
         const engagement = totalViews > 0 ? ((totalLikes + comments) / totalViews) * 100 : 0
 
-        const ctr = stats?.impressions_ctr ? +(stats.impressions_ctr * 100).toFixed(2) : 0
-
         return {
           id: v.id,
           title: v.title,
@@ -102,9 +100,9 @@ export default function Videos() {
           totalViews,
           totalLikes,
           totalRevenue,
-          ctr,
           rpm: +rpm.toFixed(2),
           engagement: +engagement.toFixed(2),
+          avgViewDuration: stats?.avg_view_duration_seconds ?? 0,
           dailyStats: [],
         }
       })
@@ -325,10 +323,10 @@ export default function Videos() {
                     </span>
                   </td>
 
-                  {/* CTR */}
+                  {/* Engagement */}
                   <td className="px-4 py-3 text-right">
                     <span className="text-sm font-[var(--font-space-grotesk)] text-text-secondary">
-                      {video.ctr}%
+                      {video.engagement}%
                     </span>
                   </td>
 
