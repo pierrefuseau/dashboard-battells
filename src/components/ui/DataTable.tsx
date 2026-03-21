@@ -63,6 +63,7 @@ export default function DataTable<T extends Record<string, unknown>>({
               {columns.map((col) => (
                 <th
                   key={col.key}
+                  scope="col"
                   style={col.width ? { width: col.width } : undefined}
                   className={`px-4 py-3 text-left text-[11px] uppercase tracking-wider text-text-tertiary font-semibold ${
                     col.sortable ? 'cursor-pointer select-none hover:text-text-primary' : ''
@@ -84,9 +85,16 @@ export default function DataTable<T extends Record<string, unknown>>({
               <tr
                 key={i}
                 onClick={onRowClick ? () => onRowClick(row) : undefined}
+                onKeyDown={onRowClick ? (e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    onRowClick(row)
+                  }
+                } : undefined}
+                tabIndex={onRowClick ? 0 : undefined}
                 className={`border-b border-border-light transition-colors duration-100 ${
                   i % 2 === 1 ? 'bg-[#F9FAFB]' : 'bg-surface'
-                } hover:bg-primary-50 ${onRowClick ? 'cursor-pointer' : ''}`}
+                } hover:bg-primary-50 focus:outline-none focus:bg-primary-50 ${onRowClick ? 'cursor-pointer' : ''}`}
               >
                 {columns.map((col) => (
                   <td key={col.key} className="px-4 py-3 text-text-primary">

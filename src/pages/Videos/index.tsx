@@ -207,6 +207,7 @@ export default function Videos() {
                 {COLUMNS.map((col) => (
                   <th
                     key={col.key}
+                    scope="col"
                     className={`px-4 py-3 text-left text-xs font-semibold font-[var(--font-satoshi)] text-text-tertiary uppercase tracking-wider ${col.className ?? ''} ${col.sortable ? 'cursor-pointer select-none hover:text-text-primary transition-colors' : ''}`}
                     onClick={col.sortable && col.sortKey ? () => handleSort(col.sortKey!) : undefined}
                   >
@@ -247,7 +248,14 @@ export default function Videos() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2, delay: i * 0.02 }}
                   onClick={() => setSelectedVideo(video)}
-                  className={`border-b border-border-light cursor-pointer transition-colors hover:bg-primary-50/40 ${
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      setSelectedVideo(video)
+                    }
+                  }}
+                  tabIndex={0}
+                  className={`border-b border-border-light cursor-pointer transition-colors hover:bg-primary-50/40 focus:outline-none focus:bg-primary-50/40 ${
                     selectedVideo?.id === video.id ? 'bg-primary-50/60' : ''
                   }`}
                 >

@@ -54,18 +54,27 @@ export default function Header({ onMenuToggle }: HeaderProps) {
             />
           </div>
           {/* Search icon only on small mobile */}
-          <button className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface transition-colors border border-border sm:hidden">
+          <button 
+            className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface transition-colors border border-border sm:hidden"
+            aria-label="Rechercher"
+          >
             <Search size={18} className="text-text-secondary" />
           </button>
 
           {/* Notifications */}
-          <button className="relative w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface transition-colors border border-border">
+          <button 
+            className="relative w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface transition-colors border border-border"
+            aria-label="Notifications"
+          >
             <Bell size={18} className="text-text-secondary" />
             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full" />
           </button>
 
           {/* Export — hidden on mobile */}
-          <button className="btn-primary hidden sm:flex items-center gap-2 h-9 px-4 text-sm rounded-full">
+          <button 
+            className="btn-primary hidden sm:flex items-center gap-2 h-9 px-4 text-sm rounded-full"
+            aria-label="Exporter les données"
+          >
             <Download size={15} />
             <span className="hidden md:inline">Exporter</span>
           </button>
