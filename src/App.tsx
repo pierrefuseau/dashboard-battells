@@ -5,6 +5,7 @@ import Header from '@/components/layout/Header'
 import Overview from '@/pages/Overview'
 import Videos from '@/pages/Videos'
 import Import from '@/pages/Import'
+import Planner from '@/pages/Planner'
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
               <Route path="/" element={<Overview />} />
               <Route path="/videos" element={<Videos />} />
               <Route path="/import" element={<Import />} />
+              <Route path="/planner" element={<Planner />} />
             </Routes>
           </AnimatePresence>
         </main>
