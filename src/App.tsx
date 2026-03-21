@@ -6,6 +6,9 @@ import Overview from '@/pages/Overview'
 import Videos from '@/pages/Videos'
 import Import from '@/pages/Import'
 import Planner from '@/pages/Planner'
+import Sponsors from '@/pages/Sponsors'
+import Simulator from '@/pages/Simulator'
+import Advisor from '@/pages/Advisor'
 
 export default function App() {
   return (
@@ -20,6 +23,9 @@ export default function App() {
               <Route path="/videos" element={<Videos />} />
               <Route path="/import" element={<Import />} />
               <Route path="/planner" element={<Planner />} />
+              <Route path="/sponsors" element={<Sponsors />} />
+              <Route path="/simulateur" element={<Simulator />} />
+              <Route path="/advisor" element={<Advisor />} />
             </Routes>
           </AnimatePresence>
         </main>
