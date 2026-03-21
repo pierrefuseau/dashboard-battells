@@ -12,7 +12,7 @@ const stagger = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: { staggerChildren: 0.1 },
+    transition: { staggerChildren: 0.08 },
   },
 }
 
@@ -27,22 +27,32 @@ export default function Overview() {
       variants={stagger}
       initial="hidden"
       animate="show"
+      className="relative"
     >
+      {/* Decorative blobs (inspired by Sebas Baldeon) */}
+      <div className="blob-decorator w-[400px] h-[400px] -top-32 -right-32" />
+      <div className="blob-decorator w-[250px] h-[250px] top-[600px] -left-24" style={{ animationDelay: '4s' }} />
+
       {/* Channel Header */}
       <motion.div variants={fadeUp}>
         <ChannelHeader />
       </motion.div>
 
-      {/* Page Title */}
-      <motion.h1
-        variants={fadeUp}
-        className="font-[var(--font-clash)] text-4xl font-bold text-text-primary mb-6"
-      >
-        Overview
-      </motion.h1>
+      {/* Page Title — MASSIVE Bebas Neue style like the portfolios */}
+      <motion.div variants={fadeUp} className="mb-8">
+        <h1 className="title-display text-[72px] text-text-primary">
+          VUE D'ENSEMBLE
+        </h1>
+        <div className="flex items-center gap-3 mt-1">
+          <div className="h-1 w-16 bg-primary rounded-full" />
+          <span className="text-sm font-[var(--font-satoshi)] text-text-secondary">
+            Tableau de bord analytique
+          </span>
+        </div>
+      </motion.div>
 
       {/* ── Section 1: KPI Row ─────────────────────────── */}
-      <motion.div variants={fadeUp} className="grid grid-cols-4 gap-6 mb-6">
+      <motion.div variants={fadeUp} className="grid grid-cols-4 gap-5 mb-8">
         <KpiCard
           label="Vues 30j"
           value={kpiData.views.value}
@@ -58,7 +68,7 @@ export default function Overview() {
           sparklineData={kpiData.revenue.sparkline}
         />
         <KpiCard
-          label="Abonnes"
+          label="Abonnés"
           value={kpiData.subscribers.value}
           previousValue={kpiData.subscribers.previousValue}
           format="compact"
@@ -74,7 +84,7 @@ export default function Overview() {
       </motion.div>
 
       {/* ── Section 2: Charts (8/4 split) ─────────────── */}
-      <motion.div variants={fadeUp} className="grid grid-cols-12 gap-6 mb-6">
+      <motion.div variants={fadeUp} className="grid grid-cols-12 gap-5 mb-8">
         <div className="col-span-8">
           <ViewsTrendChart />
         </div>
@@ -84,7 +94,7 @@ export default function Overview() {
       </motion.div>
 
       {/* ── Section 3: Dark Card + Monthly Goals ──────── */}
-      <motion.div variants={fadeUp} className="grid grid-cols-2 gap-6 mb-6">
+      <motion.div variants={fadeUp} className="grid grid-cols-2 gap-5 mb-8">
         <DarkCard
           emoji={darkCardData.emoji}
           title={darkCardData.title}

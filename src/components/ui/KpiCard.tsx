@@ -32,7 +32,7 @@ function AnimatedValue({ value, format }: { value: number; format: FormatType })
   })
 
   return (
-    <animated.span className="text-[32px] font-bold font-[var(--font-space-grotesk)] text-text-primary leading-tight">
+    <animated.span className="text-[36px] font-bold font-[var(--font-space-grotesk)] text-text-primary leading-none">
       {spring.val.to((v) => formatValue(Math.round(v), format))}
     </animated.span>
   )
@@ -41,7 +41,7 @@ function AnimatedValue({ value, format }: { value: number; format: FormatType })
 export default function KpiCard({ label, value, previousValue, format, sparklineData, loading = false }: KpiCardProps) {
   if (loading) {
     return (
-      <div className="card card-hover p-5">
+      <div className="card p-5">
         <div className="skeleton h-3 w-20 mb-3 rounded" />
         <div className="skeleton h-8 w-28 mb-2 rounded" />
         <div className="skeleton h-3 w-16 rounded" />
@@ -54,13 +54,14 @@ export default function KpiCard({ label, value, previousValue, format, sparkline
 
   return (
     <motion.div
-      className="card card-hover p-5 flex flex-col gap-1"
+      className="card p-5 flex flex-col gap-2 transition-all duration-200 hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-0.5"
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, ease: 'easeOut' }}
     >
-      <span className="text-[11px] uppercase tracking-wider text-text-tertiary font-medium font-[var(--font-satoshi)]">
-        {label}
+      {/* Label — Bebas Neue for section labels */}
+      <span className="text-[11px] font-[var(--font-bebas)] tracking-[0.12em] text-text-tertiary">
+        {label.toUpperCase()}
       </span>
 
       <div className="flex items-end justify-between gap-2">
@@ -70,13 +71,17 @@ export default function KpiCard({ label, value, previousValue, format, sparkline
         )}
       </div>
 
-      <div className="flex items-center gap-1 mt-1">
+      <div className="flex items-center gap-2 mt-1">
         <span
-          className={`text-xs font-medium ${isPositive ? 'text-success' : 'text-error'}`}
+          className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+            isPositive
+              ? 'text-success bg-success-50'
+              : 'text-error bg-error-50'
+          }`}
         >
           {isPositive ? '\u25B2' : '\u25BC'} {Math.abs(delta).toFixed(1)}%
         </span>
-        <span className="text-xs text-text-tertiary">vs période préc.</span>
+        <span className="text-[11px] text-text-tertiary">vs préc.</span>
       </div>
     </motion.div>
   )

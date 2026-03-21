@@ -45,9 +45,9 @@ export default function Import() {
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="font-[var(--font-clash)] text-4xl font-bold text-text-primary"
+        className="title-display text-[56px] text-text-primary"
       >
-        Import CSV
+        IMPORT CSV
       </motion.h1>
 
       {/* Drop zone section */}

@@ -62,7 +62,7 @@ export default function TrendList({ trends }: TrendListProps) {
 
               {/* Status badge */}
               {trend.status === 'opportunity' ? (
-                <Badge variant="warning">Opportunite</Badge>
+                <Badge variant="warning">Opportunité</Badge>
               ) : (
                 <Badge variant="success">Couvert</Badge>
               )}

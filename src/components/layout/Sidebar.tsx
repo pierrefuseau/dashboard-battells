@@ -6,6 +6,7 @@ import {
   Calculator, Upload, ScatterChart,
 } from 'lucide-react'
 import { NAV_SECTIONS } from '@/lib/constants'
+import mascotImg from '@/assets/battells-mascot.png'
 
 const iconMap: Record<string, React.ElementType> = {
   home: Home, video: Video, 'bar-chart-3': BarChart3, calendar: Calendar,
@@ -21,26 +22,35 @@ export default function Sidebar() {
   return (
     <nav
       aria-label="Navigation principale"
-      className="fixed left-0 top-0 h-screen w-[var(--spacing-sidebar)] bg-surface border-r border-border shadow-[var(--shadow-sidebar)] z-[var(--z-sidebar)] flex flex-col py-6 px-4"
+      className="fixed left-0 top-0 h-screen w-[var(--spacing-sidebar)] bg-dark z-[var(--z-sidebar)] flex flex-col py-6 px-5 shadow-[var(--shadow-sidebar)]"
     >
-      {/* Logo */}
-      <div className="h-16 flex items-center px-3 mb-4">
-        <span className="font-[var(--font-clash)] font-bold text-xl text-text-primary tracking-tight">
-          BATTELLS
-        </span>
-        <span className="ml-1.5 text-xs font-medium text-text-tertiary">Command Center</span>
+      {/* Logo + Mascot — portfolio-style branding */}
+      <div className="px-2 mb-6">
+        <div className="flex items-center gap-3 mb-2">
+          <img src={mascotImg} alt="BATTELLS" className="w-11 h-11 object-contain" />
+          <div>
+            <span className="title-display text-[36px] text-primary leading-none block">
+              BATTELLS
+            </span>
+            <span className="text-[9px] font-[var(--font-bebas)] tracking-[0.2em] text-white/35 block mt-0.5">
+              CENTRE DE COMMANDE
+            </span>
+          </div>
+        </div>
+        {/* Orange accent line */}
+        <div className="h-[3px] w-full bg-gradient-to-r from-primary to-transparent rounded-full mt-2" />
       </div>
 
       {/* Nav Sections */}
-      <div className="flex-1 overflow-y-auto space-y-2">
+      <div className="flex-1 overflow-y-auto space-y-1">
         {NAV_SECTIONS.map((section) => (
           <div key={section.label}>
-            <div className="px-3 mb-2 mt-4 first:mt-0">
-              <span className="text-[11px] font-bold tracking-[0.08em] uppercase text-text-tertiary">
+            <div className="px-2 mb-2 mt-5 first:mt-0">
+              <span className="text-[10px] font-[var(--font-bebas)] tracking-[0.15em] text-white/25">
                 {section.label}
               </span>
             </div>
-            <div className="space-y-1">
+            <div className="space-y-0.5">
               {section.items.map((item) => {
                 const Icon = iconMap[item.icon] || Home
                 const isActive = location.pathname === item.path
@@ -49,27 +59,28 @@ export default function Sidebar() {
                   <Link
                     key={item.id}
                     to={item.path}
-                    className="relative flex items-center h-11 px-3 rounded-[var(--radius-nav)] transition-all duration-200 group"
+                    className="relative flex items-center h-10 px-3 rounded-[var(--radius-nav)] transition-all duration-200 group"
                   >
                     {isActive && (
                       <motion.div
                         layoutId="sidebar-active"
-                        className="absolute inset-0 rounded-[var(--radius-nav)] border-l-[3px] border-primary"
+                        className="absolute inset-0 rounded-[var(--radius-nav)]"
                         style={{
-                          background: 'linear-gradient(90deg, rgba(255,107,0,0.1) 0%, transparent 100%)',
+                          background: 'linear-gradient(90deg, rgba(255,107,0,0.15) 0%, transparent 100%)',
+                          borderLeft: '3px solid var(--color-primary)',
                         }}
                         transition={{ duration: 0.2 }}
                       />
                     )}
                     <Icon
-                      size={20}
+                      size={18}
                       className={`relative z-10 transition-colors duration-200 ${
-                        isActive ? 'text-primary' : 'text-text-secondary group-hover:text-text-primary'
+                        isActive ? 'text-primary' : 'text-white/40 group-hover:text-white/70'
                       }`}
                     />
                     <span
-                      className={`relative z-10 ml-3 text-sm font-medium transition-colors duration-200 ${
-                        isActive ? 'text-primary' : 'text-text-secondary group-hover:text-text-primary'
+                      className={`relative z-10 ml-3 text-[13px] font-[var(--font-satoshi)] font-medium transition-colors duration-200 ${
+                        isActive ? 'text-primary' : 'text-white/50 group-hover:text-white/80'
                       }`}
                     >
                       {item.label}
@@ -82,20 +93,20 @@ export default function Sidebar() {
         ))}
       </div>
 
-      {/* User area */}
-      <div className="border-t border-border-light pt-4 px-3 space-y-2">
+      {/* User area — dark style */}
+      <div className="border-t border-white/10 pt-4 px-2 space-y-3">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-primary-50 flex items-center justify-center text-sm font-bold text-primary">B</div>
+          <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-sm font-bold text-white">B</div>
           <div>
-            <p className="text-sm font-medium text-text-primary">Baptiste</p>
-            <p className="text-xs text-text-tertiary">Createur</p>
+            <p className="text-sm font-medium text-white/90">Baptiste</p>
+            <p className="text-[10px] text-white/40 uppercase tracking-wider font-[var(--font-bebas)]">Créateur</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-secondary-50 flex items-center justify-center text-sm font-bold text-secondary-dark">P</div>
+          <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-sm font-bold text-white/70">P</div>
           <div>
-            <p className="text-sm font-medium text-text-primary">Pierrot</p>
-            <p className="text-xs text-text-tertiary">Stratege</p>
+            <p className="text-sm font-medium text-white/90">Pierrot</p>
+            <p className="text-[10px] text-white/40 uppercase tracking-wider font-[var(--font-bebas)]">Stratège</p>
           </div>
         </div>
       </div>

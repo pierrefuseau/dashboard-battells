@@ -25,9 +25,9 @@ export default function Advisor() {
       {/* Page Title */}
       <motion.h1
         variants={fadeUp}
-        className="font-[var(--font-clash)] text-4xl font-bold text-text-primary mb-6"
+        className="title-display text-[56px] text-text-primary mb-6"
       >
-        IA Advisor
+        CONSEILLER IA
       </motion.h1>
 
       {/* 2-column layout: 8/4 split */}

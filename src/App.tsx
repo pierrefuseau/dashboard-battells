@@ -20,7 +20,7 @@ export default function App() {
       <Sidebar />
       <div className="flex-1 ml-[var(--spacing-sidebar)]">
         <Header />
-        <main className="px-8 py-6">
+        <main className="px-8 py-6 relative overflow-hidden">
           <AnimatePresence mode="wait">
             <Routes>
               <Route path="/" element={<Overview />} />

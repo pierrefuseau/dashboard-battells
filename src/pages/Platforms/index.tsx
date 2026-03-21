@@ -25,8 +25,8 @@ export default function Platforms() {
     >
       {/* Header */}
       <motion.div variants={fadeUp}>
-        <h1 className="font-[var(--font-clash)] text-[36px] font-bold text-text-primary">
-          Comparaison Plateformes
+        <h1 className="title-display text-[56px] text-text-primary">
+          COMPARAISON PLATEFORMES
         </h1>
       </motion.div>
 

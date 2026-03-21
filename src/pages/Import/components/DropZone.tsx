@@ -137,7 +137,7 @@ export default function DropZone({
           </motion.div>
 
           <p className="font-[var(--font-satoshi)] text-base font-medium text-text-primary">
-            Depose tes fichiers CSV YouTube Studio ici
+            Dépose tes fichiers CSV YouTube Studio ici
           </p>
           <p className="font-[var(--font-satoshi)] text-sm text-text-tertiary">
             ou clique pour parcourir — 3 fichiers maximum
@@ -213,7 +213,7 @@ export default function DropZone({
               <CheckCircle className="text-success" size={20} />
             </motion.div>
             <span className="font-[var(--font-satoshi)] font-medium text-success-dark">
-              Import reussi !
+              Import réussi !
             </span>
           </motion.div>
         ) : files.length > 0 ? (

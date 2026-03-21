@@ -42,7 +42,7 @@ const COLUMNS: Column[] = [
   { key: 'title', label: 'Titre', sortable: false, className: 'min-w-[200px]' },
   { key: 'platform', label: 'Plateforme', sortable: false, className: 'w-24' },
   { key: 'format', label: 'Format', sortable: false, className: 'w-28' },
-  { key: 'duration', label: 'Duree', sortable: false, className: 'w-20 text-right' },
+  { key: 'duration', label: 'Durée', sortable: false, className: 'w-20 text-right' },
   { key: 'views', label: 'Vues', sortable: true, sortKey: 'totalViews', className: 'w-24 text-right' },
   { key: 'ctr', label: 'CTR', sortable: true, sortKey: 'ctr', className: 'w-20 text-right' },
   { key: 'rpm', label: 'RPM', sortable: true, sortKey: 'rpm', className: 'w-20 text-right' },
@@ -134,8 +134,8 @@ export default function Videos() {
     >
       {/* ── Header ───────────────────────────────────────────── */}
       <div className="space-y-4">
-        <h1 className="font-[var(--font-clash)] text-[36px] font-bold text-text-primary">
-          Videos Explorer
+        <h1 className="title-display text-[56px] text-text-primary">
+          EXPLORATEUR VIDÉOS
         </h1>
         <FilterBar filters={filters} onChange={setFilters} />
       </div>
@@ -264,7 +264,7 @@ export default function Videos() {
           {filteredVideos.length === 0 && (
             <div className="flex flex-col items-center justify-center py-16 text-text-tertiary">
               <Play size={40} className="mb-3 opacity-30" />
-              <p className="text-sm font-[var(--font-satoshi)]">Aucune video trouvee</p>
+              <p className="text-sm font-[var(--font-satoshi)]">Aucune vidéo trouvée</p>
             </div>
           )}
         </div>
@@ -272,7 +272,7 @@ export default function Videos() {
         {/* Footer */}
         <div className="px-4 py-3 border-t border-border flex items-center justify-between">
           <span className="text-xs font-[var(--font-satoshi)] text-text-tertiary">
-            {filteredVideos.length} video{filteredVideos.length !== 1 ? 's' : ''} sur {MOCK_VIDEOS.length}
+            {filteredVideos.length} vidéo{filteredVideos.length !== 1 ? 's' : ''} sur {MOCK_VIDEOS.length}
           </span>
         </div>
       </div>

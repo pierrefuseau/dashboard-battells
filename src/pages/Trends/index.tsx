@@ -11,8 +11,8 @@ export default function Trends() {
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.4, ease: 'easeOut' as const }}
     >
-      <h1 className="text-4xl font-bold font-[var(--font-clash)] text-text-primary mb-8">
-        Tendances
+      <h1 className="title-display text-[56px] text-text-primary mb-8">
+        TENDANCES
       </h1>
 
       <div className="grid grid-cols-12 gap-6">

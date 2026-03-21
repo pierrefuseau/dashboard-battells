@@ -1,9 +1,10 @@
 @import "tailwindcss";
 
-/* ── BATTELLS Design System ───────────────────────────────────── */
+/* ── BATTELLS Design System v2 — "Creator Studio Bold" ──────── */
+/* Inspired by: Benjamín Arriaza, Ical Zalfa, Sebas Baldeon      */
 
 @theme {
-  /* Colors - Primary */
+  /* Colors - Primary (more aggressive orange) */
   --color-primary: #FF6B00;
   --color-primary-light: #FF8A33;
   --color-primary-dark: #E05A00;
@@ -34,26 +35,27 @@
   --color-info: #2196F3;
   --color-info-50: #E3F2FD;
 
-  /* Colors - Dark */
-  --color-dark: #1A1A2E;
-  --color-dark-secondary: #16213E;
-  --color-dark-tertiary: #0F3460;
+  /* Colors - Dark (richer, deeper) */
+  --color-dark: #0D0D0D;
+  --color-dark-secondary: #1A1A1A;
+  --color-dark-tertiary: #2A2A2A;
 
   /* Colors - Surfaces */
-  --color-page: #FAFAF8;
+  --color-page: #F5F0EB;
   --color-surface: #FFFFFF;
 
   /* Colors - Text */
-  --color-text-primary: #1E1E1E;
-  --color-text-secondary: #6B7280;
+  --color-text-primary: #0D0D0D;
+  --color-text-secondary: #5C5C5C;
   --color-text-tertiary: #9CA3AF;
 
   /* Colors - Border */
-  --color-border: #E5E7EB;
-  --color-border-light: #F3F4F6;
+  --color-border: #E0D9D0;
+  --color-border-light: #F0EBE4;
   --color-border-dark: #374151;
 
-  /* Fonts */
+  /* Fonts — 5-font system */
+  --font-bebas: "Bebas Neue", "Impact", sans-serif;
   --font-clash: "Clash Display", "Inter", system-ui, sans-serif;
   --font-satoshi: "Satoshi", "Inter", system-ui, sans-serif;
   --font-space-grotesk: "Space Grotesk", "Roboto Mono", monospace;
@@ -61,7 +63,7 @@
 
   /* Border Radius */
   --radius-card: 16px;
-  --radius-card-lg: 20px;
+  --radius-card-lg: 24px;
   --radius-button: 10px;
   --radius-badge: 12px;
   --radius-input: 8px;
@@ -70,25 +72,27 @@
 
   /* Shadows */
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
-  --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
-  --shadow-card-dark: 0 8px 32px rgba(26, 26, 46, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
-  --shadow-sidebar: 2px 0 8px rgba(0, 0, 0, 0.04);
+  --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-card-dark: 0 8px 32px rgba(13, 13, 13, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-sidebar: 4px 0 24px rgba(0, 0, 0, 0.15);
   --shadow-modal: 0 24px 48px rgba(0, 0, 0, 0.16);
   --shadow-tooltip: 0 4px 16px rgba(0, 0, 0, 0.2);
   --shadow-toast: 0 4px 16px rgba(0, 0, 0, 0.16);
   --shadow-panel-left: -8px 0 32px rgba(0, 0, 0, 0.08);
-  --shadow-button-primary: 0 1px 2px rgba(255, 107, 0, 0.3);
-  --shadow-button-primary-hover: 0 4px 12px rgba(255, 107, 0, 0.3);
+  --shadow-button-primary: 0 2px 8px rgba(255, 107, 0, 0.35);
+  --shadow-button-primary-hover: 0 6px 20px rgba(255, 107, 0, 0.4);
 
   /* Spacing */
-  --spacing-sidebar: 260px;
+  --spacing-sidebar: 280px;
   --spacing-sidebar-collapsed: 72px;
-  --spacing-header: 64px;
+  --spacing-header: 56px;
+  --spacing-marquee: 36px;
   --spacing-detail-panel: 480px;
   --spacing-chat-panel: 400px;
 
   /* Z-Index */
   --z-header: 30;
+  --z-marquee: 35;
   --z-sidebar: 40;
   --z-panel: 45;
   --z-modal: 50;
@@ -102,7 +106,10 @@
   --animate-slide-in-right: slide-in-right 0.3s ease-out;
   --animate-scale-in: scale-in 0.2s ease-out;
   --animate-pulse-slow: pulse-glow 3s ease-in-out infinite;
+  --animate-marquee: marquee 30s linear infinite;
 }
+
+/* ── Keyframes ─────────────────────────────────────────────── */
 
 @keyframes gradient-shift {
   0% { background-position: 0% 50%; }
@@ -135,7 +142,18 @@
   50% { opacity: 0.8; }
 }
 
-/* ── Component Layers ──────────────────────────────────────────── */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes blob-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(12px, -16px) scale(1.05); }
+  66% { transform: translate(-8px, 8px) scale(0.97); }
+}
+
+/* ── Component Layers ──────────────────────────────────────── */
 
 @layer components {
   .card {
@@ -147,6 +165,13 @@
   .card-dark {
     @apply bg-dark rounded-[var(--radius-card-lg)] shadow-[var(--shadow-card-dark)] border border-white/5 overflow-hidden;
   }
+
+  /* ── Accent card with orange left border ── */
+  .card-accent {
+    @apply bg-surface rounded-[var(--radius-card)] border border-border shadow-[var(--shadow-card)]
+           border-l-4 border-l-primary;
+  }
+
   .btn-primary {
     @apply h-10 px-5 rounded-[var(--radius-button)] bg-primary text-white font-[var(--font-satoshi)] font-medium text-sm
            shadow-[var(--shadow-button-primary)] transition-all duration-200 cursor-pointer
@@ -167,6 +192,47 @@
   .skeleton {
     @apply bg-border-light rounded animate-[shimmer_1.5s_linear_infinite] bg-[length:200%_100%];
     background-image: linear-gradient(90deg, var(--color-border-light) 0%, var(--color-border) 50%, var(--color-border-light) 100%);
+  }
+
+  /* ── Bebas display title (portfolio-style) ── */
+  .title-display {
+    font-family: var(--font-bebas);
+    letter-spacing: 0.03em;
+    line-height: 0.9;
+    text-transform: uppercase;
+  }
+
+  /* ── Marquee ticker strip ── */
+  .marquee-strip {
+    overflow: hidden;
+    white-space: nowrap;
+    background: var(--color-dark);
+    color: var(--color-primary);
+    font-family: var(--font-bebas);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    height: var(--spacing-marquee);
+    display: flex;
+    align-items: center;
+  }
+  .marquee-content {
+    display: inline-flex;
+    animation: marquee 30s linear infinite;
+  }
+  .marquee-content:hover {
+    animation-play-state: paused;
+  }
+
+  /* ── Decorative blob ── */
+  .blob-decorator {
+    position: absolute;
+    border-radius: 50%;
+    background: var(--color-primary);
+    opacity: 0.06;
+    pointer-events: none;
+    animation: blob-float 12s ease-in-out infinite;
+    filter: blur(60px);
   }
 }
 

@@ -27,7 +27,7 @@ const FORMAT_COLORS: Record<string, string> = {
 
 const FORMAT_LABELS: Record<string, string> = {
   challenge: 'Challenge',
-  reaction: 'Reaction',
+  reaction: 'Réaction',
   vlog: 'Vlog',
   tuto: 'Tutoriel',
   short: 'Short',
@@ -105,8 +105,8 @@ export default function Quadrant() {
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.4, ease: 'easeOut' as const }}
     >
-      <h1 className="text-4xl font-bold font-[var(--font-clash)] text-text-primary mb-8">
-        Content Quadrant
+      <h1 className="title-display text-[56px] text-text-primary mb-8">
+        QUADRANT DE CONTENU
       </h1>
 
       <motion.div
@@ -121,24 +121,24 @@ export default function Quadrant() {
             <div className="flex-1 flex flex-col">
               <div className="flex-1 flex items-start justify-start pl-16 pt-12">
                 <span className="text-lg font-[var(--font-satoshi)] text-text-tertiary/40 select-none">
-                  Hidden Gems
+                  Pépites cachées
                 </span>
               </div>
               <div className="flex-1 flex items-end justify-start pl-16 pb-16">
                 <span className="text-lg font-[var(--font-satoshi)] text-text-tertiary/40 select-none">
-                  Underperformers
+                  Sous-performeurs
                 </span>
               </div>
             </div>
             <div className="flex-1 flex flex-col">
               <div className="flex-1 flex items-start justify-end pr-8 pt-12">
                 <span className="text-lg font-[var(--font-satoshi)] text-text-tertiary/40 select-none">
-                  Stars
+                  Étoiles
                 </span>
               </div>
               <div className="flex-1 flex items-end justify-end pr-8 pb-16">
                 <span className="text-lg font-[var(--font-satoshi)] text-text-tertiary/40 select-none">
-                  Reach Builders
+                  Faiseurs de reach
                 </span>
               </div>
             </div>
@@ -171,7 +171,7 @@ export default function Quadrant() {
                 stroke="var(--color-border)"
               >
                 <Label
-                  value="Revenu (EUR)"
+                  value="Revenu (€)"
                   position="insideTopLeft"
                   offset={10}
                   style={{ fontSize: 13, fontFamily: 'var(--font-satoshi)', fill: 'var(--color-text-secondary)' }}

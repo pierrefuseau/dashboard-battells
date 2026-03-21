@@ -48,12 +48,12 @@ const TYPE_OPTIONS = [
 
 const LANGUAGE_OPTIONS = [
   { value: '', label: 'Toutes les langues' },
-  { value: 'fr', label: 'Francais' },
-  { value: 'en', label: 'English' },
+  { value: 'fr', label: 'Français' },
+  { value: 'en', label: 'Anglais' },
 ]
 
 const PERIOD_OPTIONS = [
-  { value: '', label: 'Toute periode' },
+  { value: '', label: 'Toute période' },
   { value: '7d', label: '7 derniers jours' },
   { value: '30d', label: '30 derniers jours' },
   { value: '90d', label: '90 derniers jours' },
@@ -178,7 +178,7 @@ export default function FilterBar({ filters, onChange }: FilterBarProps) {
             onChange={(e) => update('search', e.target.value)}
             onFocus={() => setSearchFocused(true)}
             onBlur={() => setSearchFocused(false)}
-            placeholder="Rechercher une video..."
+            placeholder="Rechercher une vidéo..."
             className="h-full px-2 bg-transparent text-sm font-[var(--font-satoshi)] text-text-primary placeholder:text-text-tertiary outline-none w-48"
           />
           {filters.search && (

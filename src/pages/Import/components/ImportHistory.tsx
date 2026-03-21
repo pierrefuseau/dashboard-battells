@@ -32,7 +32,7 @@ export default function ImportHistory({ imports }: ImportHistoryProps) {
                 Type
               </th>
               <th className="text-right py-3 px-4 font-[var(--font-satoshi)] font-semibold text-text-secondary text-xs uppercase tracking-wider">
-                Lignes importees
+                Lignes importées
               </th>
               <th className="text-left py-3 px-4 font-[var(--font-satoshi)] font-semibold text-text-secondary text-xs uppercase tracking-wider">
                 Par

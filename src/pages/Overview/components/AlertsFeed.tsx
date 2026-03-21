@@ -6,7 +6,7 @@ export default function AlertsFeed() {
     <div className="card overflow-hidden">
       <div className="px-6 pt-5 pb-3">
         <h2 className="font-[var(--font-clash)] text-xl font-semibold text-text-primary">
-          Alertes recentes
+          Alertes récentes
         </h2>
       </div>
 

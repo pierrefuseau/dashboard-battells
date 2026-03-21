@@ -27,8 +27,8 @@ export default function Sponsors() {
     >
       {/* Header */}
       <motion.div variants={fadeUp} className="flex items-center justify-between">
-        <h1 className="font-[var(--font-clash)] text-4xl font-bold text-text-primary">
-          Sponsors & Partenariats
+        <h1 className="title-display text-[56px] text-text-primary">
+          SPONSORS & PARTENARIATS
         </h1>
         <button className="btn-primary inline-flex items-center gap-2">
           <Plus size={18} />

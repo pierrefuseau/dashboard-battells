@@ -12,15 +12,15 @@ type StatusFilter = 'all' | VideoIdea['status']
 const STATUS_TABS: { key: StatusFilter; label: string }[] = [
   { key: 'all', label: 'Tout' },
   { key: 'backlog', label: 'Backlog' },
-  { key: 'approved', label: 'Approuve' },
-  { key: 'rejected', label: 'Rejete' },
+  { key: 'approved', label: 'Approuvé' },
+  { key: 'rejected', label: 'Rejeté' },
 ]
 
 const STATUS_CONFIG: Record<VideoIdea['status'], { color: string; label: string }> = {
   backlog: { color: '#6B7280', label: 'Backlog' },
-  approved: { color: '#43A047', label: 'Approuve' },
-  rejected: { color: '#E53935', label: 'Rejete' },
-  in_calendar: { color: '#2196F3', label: 'Planifie' },
+  approved: { color: '#43A047', label: 'Approuvé' },
+  rejected: { color: '#E53935', label: 'Rejeté' },
+  in_calendar: { color: '#2196F3', label: 'Planifié' },
 }
 
 const SOURCE_BADGES: Record<string, { label: string; variant: 'info' | 'neutral' | 'success' | 'primary' | 'error' }> = {
@@ -48,12 +48,12 @@ export default function Ideas() {
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-4xl font-bold font-[var(--font-clash)] text-text-primary">
-          Idees de Videos
+        <h1 className="title-display text-[56px] text-text-primary">
+          IDÉES DE VIDÉOS
         </h1>
         <button className="btn-primary flex items-center gap-2">
           <Plus size={16} />
-          Nouvelle idee
+          Nouvelle idée
         </button>
       </div>
 

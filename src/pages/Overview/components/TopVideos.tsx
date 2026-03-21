@@ -5,7 +5,7 @@ export default function TopVideos() {
   return (
     <div className="card p-6 h-full">
       <h2 className="font-[var(--font-clash)] text-xl font-semibold text-text-primary mb-4">
-        Top Videos
+        Top Vidéos
       </h2>
 
       <div className="flex flex-col gap-3">

@@ -19,8 +19,8 @@ export default function Planner() {
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
-        <h1 className="font-[var(--font-clash)] text-4xl font-semibold text-text-primary">
-          Calendrier de contenu
+        <h1 className="title-display text-[56px] text-text-primary">
+          CALENDRIER DE CONTENU
         </h1>
 
         <div className="flex items-center gap-3">
@@ -57,7 +57,7 @@ export default function Planner() {
           {/* New video button */}
           <button className="btn-primary inline-flex items-center gap-2">
             <Plus size={16} />
-            Nouvelle video
+            Nouvelle vidéo
           </button>
         </div>
       </div>

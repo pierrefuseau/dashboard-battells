@@ -97,7 +97,7 @@ export default function VideoDetail({ video }: VideoDetailProps) {
 
           {/* Language */}
           <span className="badge bg-border-light text-text-secondary">
-            {video.language === 'fr' ? 'Francais' : 'English'}
+            {video.language === 'fr' ? 'Français' : 'Anglais'}
           </span>
 
           {/* Type */}
@@ -107,7 +107,7 @@ export default function VideoDetail({ video }: VideoDetailProps) {
         </div>
 
         <p className="text-sm text-text-secondary font-[var(--font-satoshi)]">
-          Publiee le {formatDate(video.published_at)}
+          Publiée le {formatDate(video.published_at)}
         </p>
       </motion.div>
 

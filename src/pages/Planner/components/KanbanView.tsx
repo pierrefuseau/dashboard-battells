@@ -10,12 +10,12 @@ const KANBAN_COLUMNS: {
   statuses: ContentCalendarItem['status'][]
   color: string
 }[] = [
-  { key: 'idea', label: 'IDEE', statuses: ['idea'], color: '#9CA3AF' },
-  { key: 'planned', label: 'PLANIFIE', statuses: ['planned', 'scripted'], color: '#6B7280' },
+  { key: 'idea', label: 'IDÉE', statuses: ['idea'], color: '#9CA3AF' },
+  { key: 'planned', label: 'PLANIFIÉ', statuses: ['planned', 'scripted'], color: '#6B7280' },
   { key: 'filmed', label: 'TOURNAGE', statuses: ['filmed'], color: '#FFB800' },
   { key: 'editing', label: 'MONTAGE', statuses: ['editing'], color: '#FF6B00' },
-  { key: 'scheduled', label: 'PROGRAMME', statuses: ['scheduled'], color: '#2196F3' },
-  { key: 'published', label: 'PUBLIE', statuses: ['published'], color: '#43A047' },
+  { key: 'scheduled', label: 'PROGRAMMÉ', statuses: ['scheduled'], color: '#2196F3' },
+  { key: 'published', label: 'PUBLIÉ', statuses: ['published'], color: '#43A047' },
 ]
 
 function platformIcon(platform: string) {
