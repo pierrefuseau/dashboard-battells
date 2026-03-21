@@ -9,6 +9,10 @@ import Planner from '@/pages/Planner'
 import Sponsors from '@/pages/Sponsors'
 import Simulator from '@/pages/Simulator'
 import Advisor from '@/pages/Advisor'
+import Platforms from '@/pages/Platforms'
+import Quadrant from '@/pages/Quadrant'
+import Trends from '@/pages/Trends'
+import Ideas from '@/pages/Ideas'
 
 export default function App() {
   return (
@@ -26,6 +30,10 @@ export default function App() {
               <Route path="/sponsors" element={<Sponsors />} />
               <Route path="/simulateur" element={<Simulator />} />
               <Route path="/advisor" element={<Advisor />} />
+              <Route path="/plateformes" element={<Platforms />} />
+              <Route path="/quadrant" element={<Quadrant />} />
+              <Route path="/tendances" element={<Trends />} />
+              <Route path="/idees" element={<Ideas />} />
             </Routes>
           </AnimatePresence>
         </main>

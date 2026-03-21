@@ -1,0 +1,207 @@
+import { useMemo } from 'react'
+import { motion } from 'framer-motion'
+import {
+  ScatterChart,
+  Scatter,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+  Cell,
+  Label,
+  ReferenceLine,
+} from 'recharts'
+import { quadrantVideos, type QuadrantVideo } from './mockData'
+import { formatCompact, formatEuros } from '@/lib/formatters'
+
+const FORMAT_COLORS: Record<string, string> = {
+  challenge: '#FF6B00',
+  reaction: '#E53935',
+  vlog: '#2196F3',
+  tuto: '#43A047',
+  short: '#EC4899',
+  other: '#6B7280',
+}
+
+const FORMAT_LABELS: Record<string, string> = {
+  challenge: 'Challenge',
+  reaction: 'Reaction',
+  vlog: 'Vlog',
+  tuto: 'Tutoriel',
+  short: 'Short',
+  other: 'Autre',
+}
+
+interface DotPayload {
+  title: string
+  views: number
+  revenue: number
+  format: string
+  engagement: number
+  dotSize: number
+}
+
+function CustomTooltip({ active, payload }: { active?: boolean; payload?: Array<{ payload: DotPayload }> }) {
+  if (!active || !payload?.length) return null
+  const data = payload[0].payload
+  return (
+    <div className="bg-surface border border-border rounded-[var(--radius-tooltip)] px-4 py-3 shadow-[var(--shadow-tooltip)]">
+      <p className="font-[var(--font-satoshi)] font-bold text-sm text-text-primary mb-1">{data.title}</p>
+      <p className="text-xs text-text-secondary">Vues : {formatCompact(data.views)}</p>
+      <p className="text-xs text-text-secondary">Revenu : {formatEuros(data.revenue)}</p>
+      <p className="text-xs text-text-secondary">
+        Format : <span style={{ color: FORMAT_COLORS[data.format] }}>{FORMAT_LABELS[data.format]}</span>
+      </p>
+      <p className="text-xs text-text-secondary">Engagement : {data.engagement}%</p>
+    </div>
+  )
+}
+
+function renderLegend() {
+  return (
+    <div className="flex items-center justify-center gap-5 mt-2">
+      {Object.entries(FORMAT_LABELS).map(([key, label]) => (
+        <div key={key} className="flex items-center gap-1.5">
+          <div className="w-3 h-3 rounded-full" style={{ backgroundColor: FORMAT_COLORS[key] }} />
+          <span className="text-xs font-[var(--font-satoshi)] text-text-secondary">{label}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+export default function Quadrant() {
+  const { chartData, medianViews, medianRevenue } = useMemo(() => {
+    const data = quadrantVideos.map((v) => ({
+      ...v,
+      dotSize: Math.max(40, v.engagement * 12),
+    }))
+    const sortedViews = [...quadrantVideos].sort((a, b) => a.views - b.views)
+    const sortedRevenue = [...quadrantVideos].sort((a, b) => a.revenue - b.revenue)
+    const mid = Math.floor(quadrantVideos.length / 2)
+    return {
+      chartData: data,
+      medianViews: sortedViews[mid].views,
+      medianRevenue: sortedRevenue[mid].revenue,
+    }
+  }, [])
+
+  // Group data by format for legend
+  const groupedByFormat = useMemo(() => {
+    const groups: Record<string, (QuadrantVideo & { dotSize: number })[]> = {}
+    for (const d of chartData) {
+      if (!groups[d.format]) groups[d.format] = []
+      groups[d.format].push(d)
+    }
+    return groups
+  }, [chartData])
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.4, ease: 'easeOut' as const }}
+    >
+      <h1 className="text-4xl font-bold font-[var(--font-clash)] text-text-primary mb-8">
+        Content Quadrant
+      </h1>
+
+      <motion.div
+        className="card p-6"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.15, ease: 'easeOut' as const }}
+      >
+        <div className="relative w-full" style={{ height: 560 }}>
+          {/* Quadrant labels */}
+          <div className="absolute inset-0 pointer-events-none z-10 flex">
+            <div className="flex-1 flex flex-col">
+              <div className="flex-1 flex items-start justify-start pl-16 pt-12">
+                <span className="text-lg font-[var(--font-satoshi)] text-text-tertiary/40 select-none">
+                  Hidden Gems
+                </span>
+              </div>
+              <div className="flex-1 flex items-end justify-start pl-16 pb-16">
+                <span className="text-lg font-[var(--font-satoshi)] text-text-tertiary/40 select-none">
+                  Underperformers
+                </span>
+              </div>
+            </div>
+            <div className="flex-1 flex flex-col">
+              <div className="flex-1 flex items-start justify-end pr-8 pt-12">
+                <span className="text-lg font-[var(--font-satoshi)] text-text-tertiary/40 select-none">
+                  Stars
+                </span>
+              </div>
+              <div className="flex-1 flex items-end justify-end pr-8 pb-16">
+                <span className="text-lg font-[var(--font-satoshi)] text-text-tertiary/40 select-none">
+                  Reach Builders
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <ResponsiveContainer width="100%" height="100%">
+            <ScatterChart margin={{ top: 20, right: 30, bottom: 20, left: 20 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border-light)" />
+              <XAxis
+                type="number"
+                dataKey="views"
+                domain={[0, 10_000_000]}
+                tickFormatter={(v: number) => formatCompact(v)}
+                tick={{ fontSize: 12, fontFamily: 'var(--font-space-grotesk)', fill: 'var(--color-text-secondary)' }}
+                stroke="var(--color-border)"
+              >
+                <Label
+                  value="Vues"
+                  position="insideBottomRight"
+                  offset={-5}
+                  style={{ fontSize: 13, fontFamily: 'var(--font-satoshi)', fill: 'var(--color-text-secondary)' }}
+                />
+              </XAxis>
+              <YAxis
+                type="number"
+                dataKey="revenue"
+                domain={[0, 3200]}
+                tickFormatter={(v: number) => `${v}€`}
+                tick={{ fontSize: 12, fontFamily: 'var(--font-space-grotesk)', fill: 'var(--color-text-secondary)' }}
+                stroke="var(--color-border)"
+              >
+                <Label
+                  value="Revenu (EUR)"
+                  position="insideTopLeft"
+                  offset={10}
+                  style={{ fontSize: 13, fontFamily: 'var(--font-satoshi)', fill: 'var(--color-text-secondary)' }}
+                />
+              </YAxis>
+              <ReferenceLine x={medianViews} stroke="var(--color-border)" strokeDasharray="6 4" />
+              <ReferenceLine y={medianRevenue} stroke="var(--color-border)" strokeDasharray="6 4" />
+              <Tooltip content={<CustomTooltip />} cursor={{ strokeDasharray: '3 3' }} />
+              <Legend content={renderLegend} />
+              {Object.entries(groupedByFormat).map(([format, data]) => (
+                <Scatter
+                  key={format}
+                  name={FORMAT_LABELS[format]}
+                  data={data}
+                  fill={FORMAT_COLORS[format]}
+                >
+                  {data.map((entry, idx) => (
+                    <Cell
+                      key={`cell-${format}-${idx}`}
+                      fill={FORMAT_COLORS[format]}
+                      fillOpacity={0.75}
+                      r={Math.max(5, entry.engagement * 1.2)}
+                    />
+                  ))}
+                </Scatter>
+              ))}
+            </ScatterChart>
+          </ResponsiveContainer>
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}

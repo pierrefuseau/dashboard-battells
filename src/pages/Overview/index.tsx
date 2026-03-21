@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import KpiCard from '@/components/ui/KpiCard'
+import ChannelHeader from './components/ChannelHeader'
 import ViewsTrendChart from './components/ViewsTrendChart'
 import TopVideos from './components/TopVideos'
 import MonthlyGoals from './components/MonthlyGoals'
@@ -27,6 +28,11 @@ export default function Overview() {
       initial="hidden"
       animate="show"
     >
+      {/* Channel Header */}
+      <motion.div variants={fadeUp}>
+        <ChannelHeader />
+      </motion.div>
+
       {/* Page Title */}
       <motion.h1
         variants={fadeUp}
