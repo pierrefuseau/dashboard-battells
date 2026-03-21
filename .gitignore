@@ -30,3 +30,6 @@ dist-ssr
 
 # Claude Code settings (contains API keys)
 .claude/settings.json
+
+# Local Netlify folder
+.netlify
