@@ -49,9 +49,6 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           alt="BATTELLS Logo" 
           className="w-[85%] h-auto mb-2 object-contain" 
         />
-        <span className="text-[9px] font-[var(--font-bebas)] tracking-[0.2em] text-white/35 block mt-1">
-          CENTRE DE COMMANDE
-        </span>
         <div className="h-[3px] w-full bg-gradient-to-r from-primary to-transparent rounded-full mt-3" />
       </div>
 
