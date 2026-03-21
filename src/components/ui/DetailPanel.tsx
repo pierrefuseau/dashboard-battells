@@ -13,13 +13,12 @@ export default function DetailPanel({ isOpen, onClose, children }: DetailPanelPr
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop — no pointer blocking so cards behind remain clickable */}
           <motion.div
-            className="fixed inset-0 bg-black/20 z-[var(--z-panel)]"
+            className="fixed inset-0 bg-black/20 z-[calc(var(--z-panel)-1)] pointer-events-none"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={onClose}
           />
 
           {/* Panel */}
