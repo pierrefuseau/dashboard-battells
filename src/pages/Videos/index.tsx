@@ -66,7 +66,7 @@ export default function Videos() {
       setLoading(true)
       const { data, error } = await supabase
         .from('yt_videos')
-        .select('*, yt_daily_stats(views, estimated_revenue, likes, comments, shares, avg_view_duration_seconds)')
+        .select('*, yt_daily_stats(views, estimated_revenue, likes, comments, shares, avg_view_duration_seconds, impressions_ctr)')
         .order('published_at', { ascending: false })
 
       if (error) {
@@ -84,6 +84,8 @@ export default function Videos() {
         const rpm = totalViews > 0 ? (totalRevenue / totalViews) * 1000 : 0
         const engagement = totalViews > 0 ? ((totalLikes + comments) / totalViews) * 100 : 0
 
+        const ctr = stats?.impressions_ctr ? +(stats.impressions_ctr * 100).toFixed(2) : 0
+
         return {
           id: v.id,
           title: v.title,
@@ -100,7 +102,7 @@ export default function Videos() {
           totalViews,
           totalLikes,
           totalRevenue,
-          ctr: 0,
+          ctr,
           rpm: +rpm.toFixed(2),
           engagement: +engagement.toFixed(2),
           dailyStats: [],
@@ -253,11 +255,27 @@ export default function Videos() {
                 >
                   {/* Thumbnail */}
                   <td className="px-4 py-3">
-                    <div className="w-[60px] h-[34px] rounded bg-dark-secondary flex items-center justify-center relative overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent" />
-                      <Play size={12} className="text-white/50" />
+                    <div className="w-[60px] h-[34px] rounded bg-dark-secondary flex items-center justify-center relative overflow-hidden group">
+                      {video.thumbnail_url ? (
+                        <img 
+                          src={video.thumbnail_url} 
+                          alt={video.title}
+                          className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                        />
+                      ) : (
+                        <>
+                          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent" />
+                          <Play size={12} className="text-white/50" />
+                        </>
+                      )}
+                      
+                      {/* Play overlay on hover */}
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-20">
+                        <Play size={12} className="text-white" fill="currentColor" />
+                      </div>
+
                       {video.is_short && (
-                        <div className="absolute top-0.5 right-0.5 bg-primary text-white text-[6px] font-bold px-1 rounded-sm leading-tight">
+                        <div className="absolute top-0.5 right-0.5 bg-primary text-white text-[6px] font-bold px-1 rounded-sm leading-tight z-30 shadow-sm">
                           S
                         </div>
                       )}
@@ -266,14 +284,26 @@ export default function Videos() {
 
                   {/* Title */}
                   <td className="px-4 py-3">
-                    <span className="text-sm font-medium font-[var(--font-satoshi)] text-text-primary line-clamp-1">
+                    <span 
+                      className="text-sm font-medium font-[var(--font-satoshi)] text-text-primary line-clamp-2"
+                      title={video.title}
+                    >
                       {video.title}
                     </span>
                   </td>
 
                   {/* Platform */}
                   <td className="px-4 py-3">
-                    <Youtube size={16} className="text-error" />
+                    <a 
+                      href={`https://youtube.com/watch?v=${video.id}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="inline-flex hover:scale-110 transition-transform drop-shadow-sm"
+                      title="Voir sur YouTube"
+                    >
+                      <Youtube size={16} className="text-error" />
+                    </a>
                   </td>
 
                   {/* Format */}

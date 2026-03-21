@@ -44,9 +44,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
       {/* Titre */}
       <div className="px-2 mb-6">
-        <span className="title-display !text-[36px] text-primary leading-none block">
-          BATTELLS
-        </span>
+        <img 
+          src="/battells_logo.png" 
+          alt="BATTELLS Logo" 
+          className="w-[85%] h-auto mb-2 object-contain" 
+        />
         <span className="text-[9px] font-[var(--font-bebas)] tracking-[0.2em] text-white/35 block mt-1">
           CENTRE DE COMMANDE
         </span>

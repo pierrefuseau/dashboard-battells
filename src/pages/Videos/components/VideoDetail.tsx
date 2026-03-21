@@ -55,19 +55,42 @@ export default function VideoDetail({ video }: VideoDetailProps) {
       animate="visible"
       className="space-y-6"
     >
-      {/* Thumbnail placeholder */}
+      {/* Thumbnail */}
       <motion.div
         variants={fadeUp}
-        className="w-full aspect-video rounded-[var(--radius-card)] bg-dark flex items-center justify-center relative overflow-hidden"
+        className="w-full aspect-video rounded-[var(--radius-card)] bg-dark flex items-center justify-center relative overflow-hidden group"
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-dark" />
-        <Play size={48} className="text-white/60 relative z-10" />
+        {video.thumbnail_url ? (
+          <img 
+            src={video.thumbnail_url} 
+            alt={video.title}
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+        ) : (
+          <>
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-dark" />
+            <Play size={48} className="text-white/60 relative z-10" />
+          </>
+        )}
+        
+        {/* Play overlay on hover */}
+        <a 
+          href={`https://youtube.com/watch?v=${video.id}`} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-20"
+        >
+          <div className="bg-primary/90 rounded-full p-4 transform hover:scale-110 transition-transform shadow-lg">
+            <Play size={24} className="text-white" fill="currentColor" />
+          </div>
+        </a>
+
         {video.is_short && (
-          <div className="absolute top-3 right-3 z-10 bg-primary text-white text-[10px] font-bold font-[var(--font-satoshi)] px-2 py-0.5 rounded-full">
+          <div className="absolute top-3 right-3 z-30 bg-primary text-white text-[10px] font-bold font-[var(--font-satoshi)] px-2 py-0.5 rounded-full shadow-md">
             SHORT
           </div>
         )}
-        <div className="absolute bottom-3 right-3 z-10 bg-black/70 text-white text-xs font-[var(--font-space-grotesk)] px-2 py-0.5 rounded">
+        <div className="absolute bottom-3 right-3 z-30 bg-black/70 text-white text-xs font-[var(--font-space-grotesk)] px-2 py-0.5 rounded backdrop-blur-sm">
           {formatDuration(video.duration_seconds)}
         </div>
       </motion.div>
@@ -79,11 +102,17 @@ export default function VideoDetail({ video }: VideoDetailProps) {
         </h2>
 
         <div className="flex flex-wrap items-center gap-2">
-          {/* Platform badge */}
-          <span className="badge bg-error-50 text-error-dark">
-            <Youtube size={12} className="mr-1" />
-            YouTube
-          </span>
+          {/* Platform badge / Link */}
+          <a
+            href={`https://youtube.com/watch?v=${video.id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="badge bg-error/10 text-error hover:bg-error hover:text-white transition-colors cursor-pointer group flex items-center gap-1.5"
+            title="Ouvrir sur YouTube"
+          >
+            <Youtube size={14} className="group-hover:scale-110 transition-transform" />
+            <span>Voir sur YouTube</span>
+          </a>
 
           {/* Format badge */}
           {formatTag && (
