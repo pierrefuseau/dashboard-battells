@@ -8,6 +8,7 @@ export interface KanbanColumnDef {
   id: string
   label: string
   color: string
+  emptyHint?: string
 }
 
 interface KanbanColumnProps {
@@ -48,12 +49,7 @@ export default function KanbanColumn({ column, ideas, onCardClick }: KanbanColum
         <div className="flex flex-col gap-2 px-1 pb-2 min-h-[120px]">
           {ideas.length === 0 ? (
             <p className="text-[11px] text-text-tertiary text-center py-6 font-[var(--font-satoshi)] italic">
-              {column.id === 'backlog' && 'Les nouvelles idees arrivent ici'}
-              {column.id === 'approved' && "Glisse une idee ici pour l'approuver"}
-              {column.id === 'writing' && "Idees en cours d'ecriture"}
-              {column.id === 'filmed' && 'Videos tournees'}
-              {column.id === 'editing' && 'En post-production'}
-              {column.id === 'published' && 'Publiees — bravo !'}
+              {column.emptyHint}
             </p>
           ) : (
             ideas.map((idea) => (

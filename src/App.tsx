@@ -8,6 +8,7 @@ import Videos from '@/pages/Videos'
 import Import from '@/pages/Import'
 import Simulator from '@/pages/Simulator'
 import Quadrant from '@/pages/Quadrant'
+import Growth from '@/pages/Growth'
 import Audience from '@/pages/Audience'
 import Traffic from '@/pages/Traffic'
 import Calendar from '@/pages/Calendar'
@@ -51,6 +52,7 @@ export default function App() {
               <Route path="/" element={<Overview />} />
               <Route path="/videos" element={<Videos />} />
               <Route path="/quadrant" element={<Quadrant />} />
+              <Route path="/croissance" element={<Growth />} />
               <Route path="/audience" element={<Audience />} />
               <Route path="/trafic" element={<Traffic />} />
               <Route path="/calendrier" element={<Calendar />} />

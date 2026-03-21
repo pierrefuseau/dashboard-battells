@@ -1,6 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { FORMAT_TAGS } from '@/lib/constants'
+import { formatCompact } from '@/lib/formatters'
 import type { VideoIdea } from '@/types/database'
 
 interface KanbanCardProps {
@@ -53,7 +54,7 @@ export default function KanbanCard({ idea, onClick }: KanbanCardProps) {
 
       {idea.ai_analysis?.estimated_views && (
         <p className="text-[11px] text-text-tertiary font-[var(--font-space-grotesk)]">
-          ~{(idea.ai_analysis.estimated_views / 1000).toFixed(0)}K vues estimees
+          ~{formatCompact(idea.ai_analysis.estimated_views)} vues estimees
         </p>
       )}
 

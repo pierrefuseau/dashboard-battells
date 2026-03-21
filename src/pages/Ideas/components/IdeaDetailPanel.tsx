@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ExternalLink, Sparkles, Check, ThumbsDown } from 'lucide-react'
 import { DetailPanel } from '@/components/ui'
 import { FORMAT_TAGS } from '@/lib/constants'
+import { formatCompact } from '@/lib/formatters'
 import type { VideoIdea, DetectedVideo } from '@/types/database'
 
 interface IdeaDetailPanelProps {
@@ -19,6 +20,8 @@ export default function IdeaDetailPanel({
 }: IdeaDetailPanelProps) {
   const [notes, setNotes] = useState(idea?.user_notes ?? '')
   const [saving, setSaving] = useState(false)
+
+  useEffect(() => { setNotes(idea?.user_notes ?? '') }, [idea?.id, idea?.user_notes])
 
   if (!idea) return null
 
@@ -57,8 +60,8 @@ export default function IdeaDetailPanel({
               <p className="text-sm font-semibold font-[var(--font-satoshi)] text-text-primary">{detectedVideo.title}</p>
               <p className="text-xs text-text-secondary mt-1">{detectedVideo.channel_name} — {detectedVideo.platform}</p>
               <div className="flex gap-3 mt-2 text-xs font-[var(--font-space-grotesk)] text-text-secondary">
-                <span>{(detectedVideo.views / 1000).toFixed(0)}K vues</span>
-                <span>{(detectedVideo.likes / 1000).toFixed(0)}K likes</span>
+                <span>{formatCompact(detectedVideo.views)} vues</span>
+                <span>{formatCompact(detectedVideo.likes)} likes</span>
                 <span>+{Math.round((detectedVideo.overperformance_ratio - 1) * 100)}% vs moyenne</span>
               </div>
             </div>
@@ -108,7 +111,7 @@ export default function IdeaDetailPanel({
             )}
             {analysis.estimated_views && (
               <p className="text-xs text-text-tertiary font-[var(--font-space-grotesk)]">
-                ~{(analysis.estimated_views / 1000).toFixed(0)}K vues estimees
+                ~{formatCompact(analysis.estimated_views)} vues estimees
               </p>
             )}
           </div>

@@ -8,12 +8,12 @@ import KanbanColumn, { type KanbanColumnDef } from './KanbanColumn'
 import KanbanCard from './KanbanCard'
 
 const COLUMNS: KanbanColumnDef[] = [
-  { id: 'backlog', label: 'Backlog', color: 'var(--color-text-tertiary)' },
-  { id: 'approved', label: 'Approuve', color: 'var(--color-primary)' },
-  { id: 'writing', label: 'En ecriture', color: 'var(--color-info)' },
-  { id: 'filmed', label: 'Filme', color: 'var(--color-secondary)' },
-  { id: 'editing', label: 'Monte', color: '#8B5CF6' },
-  { id: 'published', label: 'Publie', color: 'var(--color-success)' },
+  { id: 'backlog', label: 'Backlog', color: 'var(--color-text-tertiary)', emptyHint: 'Les nouvelles idees arrivent ici' },
+  { id: 'approved', label: 'Approuve', color: 'var(--color-primary)', emptyHint: "Glisse une idee ici pour l'approuver" },
+  { id: 'writing', label: 'En ecriture', color: 'var(--color-info)', emptyHint: "Idees en cours d'ecriture" },
+  { id: 'filmed', label: 'Filme', color: 'var(--color-secondary)', emptyHint: 'Videos tournees' },
+  { id: 'editing', label: 'Monte', color: '#8B5CF6', emptyHint: 'En post-production' },
+  { id: 'published', label: 'Publie', color: 'var(--color-success)', emptyHint: 'Publiees — bravo !' },
 ]
 
 interface KanbanBoardProps {

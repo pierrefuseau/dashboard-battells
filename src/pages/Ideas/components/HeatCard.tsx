@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { useSpring, animated } from '@react-spring/web'
 import { X } from 'lucide-react'
+import { formatCompact } from '@/lib/formatters'
 import type { DetectedVideo } from '@/types/database'
 
 interface HeatCardProps {
@@ -17,8 +18,8 @@ function heatColor(score: number): string {
 }
 
 function AnimatedStat({ value, suffix = '' }: { value: number; suffix?: string }) {
-  const { number } = useSpring({ number: value, from: { number: 0 }, config: { duration: 800 } })
-  return <animated.span>{number.to((n) => `${n >= 1000 ? `${(n / 1000).toFixed(1)}K` : Math.round(n)}${suffix}`)}</animated.span>
+  const { number } = useSpring({ number: value, config: { duration: 800 } })
+  return <animated.span>{number.to((n) => `${formatCompact(Math.round(n))}${suffix}`)}</animated.span>
 }
 
 export default function HeatCard({ video, index, onSelect, onDismiss }: HeatCardProps) {
@@ -41,13 +42,11 @@ export default function HeatCard({ video, index, onSelect, onDismiss }: HeatCard
       role="button"
       aria-label={`Voir details: ${video.title}`}
     >
-      {/* Heat indicator bar */}
       <div
         className="absolute left-0 top-0 bottom-0 w-1 rounded-l-[var(--radius-card-lg)]"
         style={{ backgroundColor: heatColor(video.heat_score) }}
       />
 
-      {/* Dismiss button */}
       <button
         className="absolute top-2 right-2 w-7 h-7 flex items-center justify-center rounded-full bg-white/10 text-white/40 hover:text-white hover:bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity z-10 cursor-pointer"
         onClick={(e) => { e.stopPropagation(); onDismiss(video.id) }}
@@ -56,7 +55,6 @@ export default function HeatCard({ video, index, onSelect, onDismiss }: HeatCard
         <X size={14} />
       </button>
 
-      {/* Thumbnail */}
       {video.thumbnail_url && (
         <div className="relative h-36 overflow-hidden">
           <img

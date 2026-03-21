@@ -31,6 +31,7 @@ export const NAV_SECTIONS = [
       { id: 'overview', label: 'Vue d\'ensemble', icon: 'home', path: '/' },
       { id: 'videos', label: 'Vidéos', icon: 'video', path: '/videos' },
       { id: 'quadrant', label: 'Quadrant', icon: 'scatter-chart', path: '/quadrant' },
+      { id: 'growth', label: 'Croissance', icon: 'trending-up', path: '/croissance' },
     ],
   },
   {

@@ -24,7 +24,7 @@ export function useDetectedVideos({
   const [error, setError] = useState<string | null>(null)
   const fetchId = useRef(0)
 
-  const fetch = useCallback(async () => {
+  const load = useCallback(async () => {
     const id = ++fetchId.current
     setLoading(true)
     setError(null)
@@ -46,12 +46,12 @@ export function useDetectedVideos({
     setLoading(false)
   }, [hoursBack, minHeatScore])
 
-  useEffect(() => { fetch() }, [fetch])
+  useEffect(() => { load() }, [load])
 
   const dismiss = useCallback(async (videoId: number) => {
     await supabase.from('detected_videos').update({ is_dismissed: true }).eq('id', videoId)
     setVideos((prev) => prev.filter((v) => v.id !== videoId))
   }, [])
 
-  return { videos, loading, error, refetch: fetch, dismiss }
+  return { videos, loading, error, refetch: load, dismiss }
 }

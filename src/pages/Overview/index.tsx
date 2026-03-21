@@ -4,6 +4,7 @@ import ChannelHeader from './components/ChannelHeader'
 import ViewsTrendChart from './components/ViewsTrendChart'
 import TopVideos from './components/TopVideos'
 import DarkCard from '@/components/ui/DarkCard'
+import GrowthSparkline from './components/GrowthSparkline'
 import { useChannelStats } from '@/hooks'
 import { YOUTUBE_CONFIG } from '@/lib/youtube'
 import { formatCompact, formatEuros } from '@/lib/formatters'
@@ -124,6 +125,11 @@ export default function Overview() {
         <div className="lg:col-span-4">
           <TopVideos />
         </div>
+      </motion.div>
+
+      {/* Growth Sparkline widget */}
+      <motion.div variants={fadeUp} className="mb-6 sm:mb-8">
+        <GrowthSparkline />
       </motion.div>
 
       {/* Dark Card — real data summary */}

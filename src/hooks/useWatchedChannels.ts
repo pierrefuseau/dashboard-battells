@@ -6,7 +6,7 @@ export function useWatchedChannels() {
   const [channels, setChannels] = useState<WatchedChannel[]>([])
   const [loading, setLoading] = useState(true)
 
-  const fetch = useCallback(async () => {
+  const load = useCallback(async () => {
     setLoading(true)
     const { data } = await supabase
       .from('watched_channels')
@@ -18,7 +18,7 @@ export function useWatchedChannels() {
     setLoading(false)
   }, [])
 
-  useEffect(() => { fetch() }, [fetch])
+  useEffect(() => { load() }, [load])
 
   const addChannel = useCallback(async (channel: Omit<WatchedChannel, 'id' | 'created_at'>) => {
     const { data, error } = await supabase.from('watched_channels').insert(channel).select().single()
@@ -27,5 +27,5 @@ export function useWatchedChannels() {
     return data as WatchedChannel
   }, [])
 
-  return { channels, loading, refetch: fetch, addChannel }
+  return { channels, loading, refetch: load, addChannel }
 }

@@ -41,6 +41,16 @@ export function formatDuration(seconds: number): string {
 }
 
 /**
+ * Format watch time in minutes to human readable (Kh, Mh)
+ */
+export function formatWatchTime(minutes: number): string {
+  const hours = minutes / 60
+  if (hours >= 1_000_000) return `${(hours / 1_000_000).toFixed(1)}Mh`
+  if (hours >= 1_000) return `${(hours / 1_000).toFixed(1)}Kh`
+  return `${hours.toFixed(0)}h`
+}
+
+/**
  * Format a date to french locale
  */
 export function formatDate(date: string | Date): string {
