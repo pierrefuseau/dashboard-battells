@@ -134,6 +134,18 @@ export interface VideoIdea {
   created_at: string
 }
 
+/** Video with computed stats from yt_daily_stats join */
+export interface VideoWithStats extends YtVideo {
+  platform: 'youtube'
+  totalViews: number
+  totalLikes: number
+  totalRevenue: number
+  ctr: number
+  rpm: number
+  engagement: number
+  dailyStats: YtDailyStat[]
+}
+
 export interface FormatTag {
   tag: string
   label: string

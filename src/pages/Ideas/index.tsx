@@ -1,150 +1,34 @@
-import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Plus } from 'lucide-react'
-import Badge from '@/components/ui/Badge'
-import { FORMAT_TAGS } from '@/lib/constants'
-import { formatCompact } from '@/lib/formatters'
-import { mockIdeas } from './mockData'
-import type { VideoIdea } from '@/types/database'
+import { Lightbulb } from 'lucide-react'
 
-type StatusFilter = 'all' | VideoIdea['status']
-
-const STATUS_TABS: { key: StatusFilter; label: string }[] = [
-  { key: 'all', label: 'Tout' },
-  { key: 'backlog', label: 'Backlog' },
-  { key: 'approved', label: 'Approuvé' },
-  { key: 'rejected', label: 'Rejeté' },
-]
-
-const STATUS_CONFIG: Record<VideoIdea['status'], { color: string; label: string }> = {
-  backlog: { color: '#6B7280', label: 'Backlog' },
-  approved: { color: '#43A047', label: 'Approuvé' },
-  rejected: { color: '#E53935', label: 'Rejeté' },
-  in_calendar: { color: '#2196F3', label: 'Planifié' },
-}
-
-const SOURCE_BADGES: Record<string, { label: string; variant: 'info' | 'neutral' | 'success' | 'primary' | 'error' }> = {
-  ai: { label: 'IA', variant: 'info' },
-  manual: { label: 'Manuel', variant: 'neutral' },
-  trend: { label: 'Tendance', variant: 'success' },
-  comment: { label: 'Commentaire', variant: 'primary' },
-  competitor: { label: 'Concurrent', variant: 'error' },
-  sponsor: { label: 'Sponsor', variant: 'warning' as 'info' },
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' as const } },
 }
 
 export default function Ideas() {
-  const [activeTab, setActiveTab] = useState<StatusFilter>('all')
-
-  const filtered = activeTab === 'all'
-    ? mockIdeas
-    : mockIdeas.filter((idea) => idea.status === activeTab)
-
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.4, ease: 'easeOut' as const }}
+      initial="hidden"
+      animate="show"
     >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
+      <motion.div variants={fadeUp} className="mb-6 sm:mb-8">
         <h1 className="title-display text-text-primary">
           IDÉES DE VIDÉOS
         </h1>
-        <button className="btn-primary flex items-center gap-2 self-start sm:self-auto">
-          <Plus size={16} />
-          Nouvelle idée
-        </button>
-      </div>
+      </motion.div>
 
-      {/* Filter tabs — scrollable on mobile */}
-      <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-1">
-        {STATUS_TABS.map((tab) => (
-          <button
-            key={tab.key}
-            onClick={() => setActiveTab(tab.key)}
-            className={`h-8 px-4 rounded-full text-sm font-[var(--font-satoshi)] font-medium transition-all cursor-pointer ${
-              activeTab === tab.key
-                ? 'bg-primary text-white shadow-[var(--shadow-button-primary)]'
-                : 'bg-surface border border-border text-text-secondary hover:bg-page'
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Ideas grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-        {filtered.map((idea, i) => {
-          const formatInfo = idea.format_tag
-            ? FORMAT_TAGS[idea.format_tag as keyof typeof FORMAT_TAGS]
-            : null
-          const statusInfo = STATUS_CONFIG[idea.status]
-          const sourceInfo = idea.source ? SOURCE_BADGES[idea.source] : null
-
-          return (
-            <motion.div
-              key={idea.id}
-              className="card p-5 flex flex-col gap-3 cursor-pointer"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: i * 0.05, ease: 'easeOut' as const }}
-              whileHover={{ scale: 1.02 }}
-            >
-              {/* Title */}
-              <h3 className="font-[var(--font-satoshi)] font-bold text-base text-text-primary leading-snug line-clamp-2">
-                {idea.title}
-              </h3>
-
-              {/* Badges row */}
-              <div className="flex flex-wrap items-center gap-2">
-                {formatInfo && (
-                  <span
-                    className="badge text-white"
-                    style={{ backgroundColor: formatInfo.color }}
-                  >
-                    {formatInfo.label}
-                  </span>
-                )}
-                {sourceInfo && (
-                  <Badge variant={sourceInfo.variant} size="sm">
-                    {sourceInfo.label}
-                  </Badge>
-                )}
-                <Badge variant={idea.is_long_form ? 'info' : 'primary'} size="sm">
-                  {idea.is_long_form ? 'LF' : 'Short'}
-                </Badge>
-              </div>
-
-              {/* Estimated views */}
-              {idea.estimated_views && (
-                <p className="font-[var(--font-space-grotesk)] text-sm text-text-primary">
-                  ~{formatCompact(idea.estimated_views)} vues
-                </p>
-              )}
-
-              {/* Rationale */}
-              {idea.rationale && (
-                <p className="text-xs text-text-secondary leading-relaxed line-clamp-2">
-                  {idea.rationale}
-                </p>
-              )}
-
-              {/* Status */}
-              <div className="flex items-center gap-2 mt-auto pt-1">
-                <div
-                  className="w-2 h-2 rounded-full shrink-0"
-                  style={{ backgroundColor: statusInfo.color }}
-                />
-                <span className="text-xs font-[var(--font-satoshi)] font-medium text-text-secondary">
-                  {statusInfo.label}
-                </span>
-              </div>
-            </motion.div>
-          )
-        })}
-      </div>
+      {/* Empty state */}
+      <motion.div variants={fadeUp} className="card p-12 flex flex-col items-center justify-center text-center">
+        <Lightbulb size={48} className="text-text-tertiary/40 mb-4" />
+        <h2 className="font-[var(--font-clash)] text-lg font-semibold text-text-primary mb-2">
+          Aucune idée enregistrée
+        </h2>
+        <p className="text-sm font-[var(--font-satoshi)] text-text-secondary max-w-md">
+          Les idées de vidéos seront affichées ici une fois ajoutées à la base de données. L'IA pourra ensuite proposer des suggestions basées sur les tendances.
+        </p>
+      </motion.div>
     </motion.div>
   )
 }

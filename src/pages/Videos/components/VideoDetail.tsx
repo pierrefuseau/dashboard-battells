@@ -3,10 +3,10 @@ import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'rec
 import { Play, Youtube } from 'lucide-react'
 import { FORMAT_TAGS } from '@/lib/constants.ts'
 import { formatCompact, formatEuros, formatDate, formatDuration } from '@/lib/formatters.ts'
-import type { MockVideo } from '../mockData.ts'
+import type { VideoWithStats } from '@/types/database'
 
 interface VideoDetailProps {
-  video: MockVideo
+  video: VideoWithStats
 }
 
 // ── Metric mini-card ──────────────────────────────────────────

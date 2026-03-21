@@ -3,12 +3,10 @@ import KpiCard from '@/components/ui/KpiCard'
 import ChannelHeader from './components/ChannelHeader'
 import ViewsTrendChart from './components/ViewsTrendChart'
 import TopVideos from './components/TopVideos'
-import MonthlyGoals from './components/MonthlyGoals'
-import AlertsFeed from './components/AlertsFeed'
-import { kpiData as mockKpiData, darkCardData } from './mockData'
 import DarkCard from '@/components/ui/DarkCard'
 import { useChannelStats } from '@/hooks'
 import { YOUTUBE_CONFIG } from '@/lib/youtube'
+import { formatCompact, formatEuros } from '@/lib/formatters'
 
 const stagger = {
   hidden: { opacity: 0 },
@@ -26,24 +24,29 @@ const fadeUp = {
 export default function Overview() {
   const { kpis, loading } = useChannelStats({ days: 30 })
 
-  // Use real data when available, fall back to mock for fields with no real data
-  const viewsValue = kpis.totalViews > 0 ? kpis.totalViews : mockKpiData.views.value
-  const viewsPrev = kpis.prevTotalViews > 0 ? kpis.prevTotalViews : mockKpiData.views.previousValue
-  const viewsSparkline = kpis.viewsSparkline.length > 0 ? kpis.viewsSparkline : mockKpiData.views.sparkline
+  // Real data — subscribers from config (API doesn't return daily subs)
+  const viewsValue = kpis.totalViews
+  const viewsPrev = kpis.prevTotalViews
+  const viewsSparkline = kpis.viewsSparkline
 
-  const revenueValue = kpis.totalRevenue > 0 ? kpis.totalRevenue : mockKpiData.revenue.value
-  const revenuePrev = kpis.prevTotalRevenue > 0 ? kpis.prevTotalRevenue : mockKpiData.revenue.previousValue
-  const revenueSparkline = kpis.revenueSparkline.length > 0 ? kpis.revenueSparkline : mockKpiData.revenue.sparkline
+  const revenueValue = kpis.totalRevenue
+  const revenuePrev = kpis.prevTotalRevenue
+  const revenueSparkline = kpis.revenueSparkline
 
-  // Subscribers: yt_channel_daily has 0, use constant from config
   const subscribersValue = kpis.latestSubscribers > 0 ? kpis.latestSubscribers : YOUTUBE_CONFIG.subscriberCount
-  const subscribersPrev = kpis.prevLatestSubscribers > 0 ? kpis.prevLatestSubscribers : mockKpiData.subscribers.previousValue
-  const subscribersSparkline = kpis.subscribersSparkline.some(v => v > 0) ? kpis.subscribersSparkline : mockKpiData.subscribers.sparkline
+  const subscribersPrev = 0
+  const subscribersSparkline: number[] = []
 
-  // CTR: may be 0 if no impressions data, fall back to mock
-  const ctrValue = kpis.avgCTR > 0 ? kpis.avgCTR : mockKpiData.ctr.value
-  const ctrPrev = kpis.prevAvgCTR > 0 ? kpis.prevAvgCTR : mockKpiData.ctr.previousValue
-  const ctrSparkline = kpis.ctrSparkline.some(v => v > 0) ? kpis.ctrSparkline : mockKpiData.ctr.sparkline
+  // CTR: not available from YouTube Analytics API at channel level
+  const ctrValue = kpis.avgCTR
+  const ctrPrev = kpis.prevAvgCTR
+  const ctrSparkline = kpis.ctrSparkline
+
+  // Compute real DarkCard content from KPIs
+  const rpm = kpis.totalViews > 0 ? (kpis.totalRevenue / kpis.totalViews) * 1000 : 0
+  const darkCardTitle = `${formatCompact(kpis.totalViews)} vues ce mois`
+  const darkCardSubtitle = `${formatEuros(kpis.totalRevenue)} de revenu AdSense sur 30 jours`
+  const darkCardDetail = `RPM moyen : ${formatEuros(rpm)} — ${YOUTUBE_CONFIG.videoCount} vidéos publiées`
 
   return (
     <motion.div
@@ -124,20 +127,14 @@ export default function Overview() {
         </div>
       </motion.div>
 
-      {/* Dark Card + Monthly Goals — stacked on mobile */}
-      <motion.div variants={fadeUp} className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 mb-6 sm:mb-8">
+      {/* Dark Card — real data summary */}
+      <motion.div variants={fadeUp} className="mb-6 sm:mb-8">
         <DarkCard
-          emoji={darkCardData.emoji}
-          title={darkCardData.title}
-          subtitle={darkCardData.subtitle}
-          detail={darkCardData.detail}
+          emoji="\uD83D\uDCCA"
+          title={darkCardTitle}
+          subtitle={darkCardSubtitle}
+          detail={darkCardDetail}
         />
-        <MonthlyGoals />
-      </motion.div>
-
-      {/* Alerts Feed */}
-      <motion.div variants={fadeUp}>
-        <AlertsFeed />
       </motion.div>
     </motion.div>
   )

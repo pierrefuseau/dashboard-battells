@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
-import { topVideos as mockTopVideos } from '../mockData'
 import { formatCompact, formatEuros } from '@/lib/formatters'
 
 interface TopVideoRow {
@@ -80,10 +79,7 @@ export default function TopVideos() {
     fetchTopVideos()
   }, [])
 
-  // Fall back to mock data if no real data
-  const displayVideos = videos.length > 0
-    ? videos.map(v => ({ id: v.video_id, title: v.title, views: v.total_views, revenue: v.total_revenue, thumbnail: v.thumbnail_url }))
-    : mockTopVideos
+  const displayVideos = videos.map(v => ({ id: v.video_id, title: v.title, views: v.total_views, revenue: v.total_revenue, thumbnail: v.thumbnail_url }))
 
   return (
     <div className="card p-6 h-full">

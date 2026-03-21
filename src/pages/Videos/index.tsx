@@ -5,7 +5,7 @@ import DetailPanel from '@/components/ui/DetailPanel.tsx'
 import { FORMAT_TAGS } from '@/lib/constants.ts'
 import { formatCompact, formatEuros, formatDuration, formatDate } from '@/lib/formatters.ts'
 import { supabase } from '@/lib/supabase.ts'
-import type { MockVideo } from './mockData.ts'
+import type { VideoWithStats } from '@/types/database'
 import FilterBar, { DEFAULT_FILTERS, type Filters } from './components/FilterBar.tsx'
 import VideoDetail from './components/VideoDetail.tsx'
 
@@ -14,7 +14,7 @@ type SortKey = 'totalViews' | 'ctr' | 'rpm' | 'totalRevenue' | 'published_at'
 type SortDir = 'asc' | 'desc'
 
 // ── Helper: period filter ─────────────────────────────────────
-function filterByPeriod(video: MockVideo, period: string): boolean {
+function filterByPeriod(video: VideoWithStats, period: string): boolean {
   if (!period) return true
   const now = new Date()
   const pub = new Date(video.published_at)
@@ -56,8 +56,8 @@ export default function Videos() {
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
   const [sortKey, setSortKey] = useState<SortKey>('published_at')
   const [sortDir, setSortDir] = useState<SortDir>('desc')
-  const [selectedVideo, setSelectedVideo] = useState<MockVideo | null>(null)
-  const [videos, setVideos] = useState<MockVideo[]>([])
+  const [selectedVideo, setSelectedVideo] = useState<VideoWithStats | null>(null)
+  const [videos, setVideos] = useState<VideoWithStats[]>([])
   const [loading, setLoading] = useState(true)
 
   // ── Fetch real data from Supabase ─────────────────────────
@@ -75,7 +75,7 @@ export default function Videos() {
         return
       }
 
-      const mapped: MockVideo[] = (data ?? []).map((v: any) => {
+      const mapped: VideoWithStats[] = (data ?? []).map((v: any) => {
         const stats = v.yt_daily_stats?.[0]
         const totalViews = stats?.views ?? 0
         const totalRevenue = stats?.estimated_revenue ?? 0

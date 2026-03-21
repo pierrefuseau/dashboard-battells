@@ -9,9 +9,9 @@ export const YOUTUBE_CONFIG = {
   channelHandle: '@battells',
   channelName: 'BATTELLS',
   subscriberCount: 543_000,
-  totalViews: 321_000_000,
-  videoCount: 280,
-  createdAt: '2019-05-15',
+  totalViews: 320_721_033,
+  videoCount: 426,
+  createdAt: '2019-07-10',
   gcpProject: 'analytics-youtube-490619',
   supabaseProject: 'iikppeldebhhqliepudo',
 } as const

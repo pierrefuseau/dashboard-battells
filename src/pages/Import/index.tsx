@@ -1,8 +1,6 @@
 import { useState, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import DropZone from './components/DropZone'
-import ImportHistory from './components/ImportHistory'
-import { mockImportHistory } from './mockData'
 
 export default function Import() {
   const [files, setFiles] = useState<File[]>([])
@@ -59,9 +57,6 @@ export default function Import() {
         importSuccess={importSuccess}
         onImport={handleImport}
       />
-
-      {/* Import history */}
-      <ImportHistory imports={mockImportHistory} />
     </motion.div>
   )
 }

@@ -13,7 +13,14 @@ import {
   Label,
   ReferenceLine,
 } from 'recharts'
-import { type QuadrantVideo } from './mockData'
+interface QuadrantVideo {
+  id: string
+  title: string
+  views: number
+  revenue: number
+  format: string
+  engagement: number
+}
 import { formatCompact, formatEuros } from '@/lib/formatters'
 import { supabase } from '@/lib/supabase'
 

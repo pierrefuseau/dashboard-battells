@@ -1,39 +1,33 @@
 import { motion } from 'framer-motion'
-import TrendList from './components/TrendList'
-import CharacterGrid from './components/CharacterGrid'
-import { trends, characters } from './mockData'
+import { TrendingUp } from 'lucide-react'
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' as const } },
+}
 
 export default function Trends() {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.4, ease: 'easeOut' as const }}
+      initial="hidden"
+      animate="show"
     >
-      <h1 className="title-display text-text-primary mb-6 sm:mb-8">
-        TENDANCES
-      </h1>
+      <motion.div variants={fadeUp}>
+        <h1 className="title-display text-text-primary mb-6 sm:mb-8">
+          TENDANCES
+        </h1>
+      </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
-        <motion.div
-          className="lg:col-span-8"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.4, delay: 0.1, ease: 'easeOut' as const }}
-        >
-          <TrendList trends={trends} />
-        </motion.div>
-
-        <motion.div
-          className="lg:col-span-4"
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.4, delay: 0.2, ease: 'easeOut' as const }}
-        >
-          <CharacterGrid characters={characters} />
-        </motion.div>
-      </div>
+      {/* Empty state */}
+      <motion.div variants={fadeUp} className="card p-12 flex flex-col items-center justify-center text-center">
+        <TrendingUp size={48} className="text-text-tertiary/40 mb-4" />
+        <h2 className="font-[var(--font-clash)] text-lg font-semibold text-text-primary mb-2">
+          Tendances non disponibles
+        </h2>
+        <p className="text-sm font-[var(--font-satoshi)] text-text-secondary max-w-md">
+          L'analyse de tendances sera activée une fois le module IA configuré. Il détectera automatiquement les sujets porteurs dans la niche food.
+        </p>
+      </motion.div>
     </motion.div>
   )
 }
