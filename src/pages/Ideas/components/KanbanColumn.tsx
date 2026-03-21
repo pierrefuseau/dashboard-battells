@@ -22,7 +22,7 @@ export default function KanbanColumn({ column, ideas, onCardClick }: KanbanColum
   return (
     <div
       ref={setNodeRef}
-      className={`flex flex-col min-w-[240px] max-w-[280px] flex-1 rounded-[var(--radius-card)] transition-colors duration-200 ${
+      className={`flex flex-col min-w-[200px] sm:min-w-[240px] max-w-[260px] sm:max-w-[280px] snap-center flex-1 rounded-[var(--radius-card)] transition-colors duration-200 ${
         isOver ? 'bg-primary-50' : 'bg-transparent'
       }`}
     >

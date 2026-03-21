@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react'
+import { celebratePublished } from '@/lib/confetti'
 import { DndContext, DragOverlay, closestCorners, type DragEndEvent, type DragStartEvent } from '@dnd-kit/core'
 import { motion } from 'framer-motion'
 import { useVideoIdeas } from '@/hooks'
@@ -46,6 +47,9 @@ export default function KanbanBoard({ onCardClick }: KanbanBoardProps) {
     if (!isColumn) return
 
     await updateIdea(idea.id, { status: newStatus })
+    if (newStatus === 'published') {
+      celebratePublished()
+    }
   }
 
   return (
@@ -76,7 +80,7 @@ export default function KanbanBoard({ onCardClick }: KanbanBoardProps) {
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
-          <div className="flex gap-4 overflow-x-auto pb-4" style={{ scrollbarWidth: 'none' }}>
+          <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-4 snap-x snap-mandatory sm:snap-none" style={{ scrollbarWidth: 'none' }}>
             {COLUMNS.map((col) => (
               <KanbanColumn
                 key={col.id}
