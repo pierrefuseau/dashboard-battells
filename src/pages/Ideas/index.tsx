@@ -9,7 +9,7 @@ import IdeaDetailPanel from './components/IdeaDetailPanel'
 import AddLinkModal from './components/AddLinkModal'
 
 export default function Ideas() {
-  const { updateIdea } = useVideoIdeas()
+  const { ideas, loading, updateIdea, refetch } = useVideoIdeas()
   const [selectedIdea, setSelectedIdea] = useState<VideoIdea | null>(null)
   const [selectedDetectedVideo, setSelectedDetectedVideo] = useState<DetectedVideo | null>(null)
   const [panelOpen, setPanelOpen] = useState(false)
@@ -27,10 +27,12 @@ export default function Ideas() {
         },
         body: JSON.stringify({ detected_video_id: detectedVideoId }),
       })
+      // Refetch ideas to pick up the AI analysis
+      refetch()
     } catch (err) {
       console.error('Analysis trigger failed:', err)
     }
-  }, [])
+  }, [refetch])
 
   const handleSelectDetectedVideo = useCallback(async (video: DetectedVideo) => {
     setSelectedDetectedVideo(video)
@@ -57,10 +59,12 @@ export default function Ideas() {
         .single()
 
       setSelectedIdea(newIdea as VideoIdea)
+      // Refetch so Kanban sees the new idea immediately
+      refetch()
       triggerAnalysis(video.id)
     }
     setPanelOpen(true)
-  }, [triggerAnalysis])
+  }, [triggerAnalysis, refetch])
 
   const handleSelectIdea = useCallback(async (idea: VideoIdea) => {
     setSelectedIdea(idea)
@@ -80,6 +84,7 @@ export default function Ideas() {
 
   const handleApprove = useCallback(async (id: number) => {
     await updateIdea(id, { status: 'approved' })
+    setSelectedIdea((prev) => prev && prev.id === id ? { ...prev, status: 'approved' } : prev)
     setPanelOpen(false)
   }, [updateIdea])
 
@@ -126,7 +131,12 @@ export default function Ideas() {
         onAddLink={() => setLinkModalOpen(true)}
       />
 
-      <KanbanBoard onCardClick={handleSelectIdea} />
+      <KanbanBoard
+        ideas={ideas}
+        loading={loading}
+        onCardClick={handleSelectIdea}
+        onUpdateIdea={updateIdea}
+      />
 
       <IdeaDetailPanel
         idea={selectedIdea}

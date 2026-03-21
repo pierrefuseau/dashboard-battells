@@ -2,7 +2,6 @@ import { useState, useCallback } from 'react'
 import { celebratePublished } from '@/lib/confetti'
 import { DndContext, DragOverlay, closestCorners, type DragEndEvent, type DragStartEvent } from '@dnd-kit/core'
 import { motion } from 'framer-motion'
-import { useVideoIdeas } from '@/hooks'
 import type { VideoIdea } from '@/types/database'
 import KanbanColumn, { type KanbanColumnDef } from './KanbanColumn'
 import KanbanCard from './KanbanCard'
@@ -12,16 +11,18 @@ const COLUMNS: KanbanColumnDef[] = [
   { id: 'approved', label: 'Approuve', color: 'var(--color-primary)', emptyHint: "Glisse une idee ici pour l'approuver" },
   { id: 'writing', label: 'En ecriture', color: 'var(--color-info)', emptyHint: "Idees en cours d'ecriture" },
   { id: 'filmed', label: 'Filme', color: 'var(--color-secondary)', emptyHint: 'Videos tournees' },
-  { id: 'editing', label: 'Monte', color: '#8B5CF6', emptyHint: 'En post-production' },
+  { id: 'editing', label: 'Monte', color: 'var(--color-warning)', emptyHint: 'En post-production' },
   { id: 'published', label: 'Publie', color: 'var(--color-success)', emptyHint: 'Publiees — bravo !' },
 ]
 
 interface KanbanBoardProps {
+  ideas: VideoIdea[]
+  loading: boolean
   onCardClick: (idea: VideoIdea) => void
+  onUpdateIdea: (id: number, updates: Partial<VideoIdea>) => Promise<void>
 }
 
-export default function KanbanBoard({ onCardClick }: KanbanBoardProps) {
-  const { ideas, loading, updateIdea } = useVideoIdeas()
+export default function KanbanBoard({ ideas, loading, onCardClick, onUpdateIdea }: KanbanBoardProps) {
   const [activeIdea, setActiveIdea] = useState<VideoIdea | null>(null)
 
   const ideasByStatus = useCallback(
@@ -46,7 +47,7 @@ export default function KanbanBoard({ onCardClick }: KanbanBoardProps) {
     const isColumn = COLUMNS.some((c) => c.id === newStatus)
     if (!isColumn) return
 
-    await updateIdea(idea.id, { status: newStatus })
+    await onUpdateIdea(idea.id, { status: newStatus })
     if (newStatus === 'published') {
       celebratePublished()
     }
@@ -80,7 +81,7 @@ export default function KanbanBoard({ onCardClick }: KanbanBoardProps) {
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
-          <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-4 snap-x snap-mandatory sm:snap-none" style={{ scrollbarWidth: 'none' }}>
+          <div className="flex gap-4 sm:gap-5 overflow-x-auto pb-6 pt-2 snap-x snap-mandatory sm:snap-none hide-scrollbar w-full" style={{ scrollSnapType: 'x mandatory' }}>
             {COLUMNS.map((col) => (
               <KanbanColumn
                 key={col.id}
