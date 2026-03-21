@@ -129,7 +129,7 @@ export default function Overview() {
       {/* Dark Card — real data summary */}
       <motion.div variants={fadeUp} className="mb-6 sm:mb-8">
         <DarkCard
-          emoji="\uD83D\uDCCA"
+          emoji="📊"
           title={darkCardTitle}
           subtitle={darkCardSubtitle}
           detail={darkCardDetail}
