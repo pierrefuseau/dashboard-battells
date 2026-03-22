@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Play, Youtube, ArrowUpDown, Loader2 } from 'lucide-react'
 import DetailPanel from '@/components/ui/DetailPanel.tsx'
@@ -53,6 +54,7 @@ const COLUMNS: Column[] = [
 
 // ── Component ─────────────────────────────────────────────────
 export default function Videos() {
+  const [searchParams, setSearchParams] = useSearchParams()
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
   const [sortKey, setSortKey] = useState<SortKey>('published_at')
   const [sortDir, setSortDir] = useState<SortDir>('desc')
@@ -109,10 +111,19 @@ export default function Videos() {
 
       setVideos(mapped)
       setLoading(false)
+
+      // Auto-select video from ?video= query param
+      const videoParam = searchParams.get('video')
+      if (videoParam) {
+        const target = mapped.find((v) => v.id === videoParam)
+        if (target) setSelectedVideo(target)
+        // Clean up query param
+        setSearchParams({}, { replace: true })
+      }
     }
 
     fetchVideos()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Filter + sort ───────────────────────────────────────────
   const filteredVideos = useMemo(() => {
