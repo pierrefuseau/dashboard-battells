@@ -44,7 +44,7 @@ Calendrier avec suggestions de publication (jour/heure optimaux), alternance Sho
 L'IA analyse les 625 videos (titres, formats, performances) et genere des idees basees sur : ce qui marche chez Baptiste, tendances food du moment, et trous dans le catalogue.
 
 ### Optimiseur de titres & descriptions
-**Priorite : Haute** | Statut : A faire
+**Priorite : Haute** | Statut : FAIT
 Entrer un titre provisoire > comparaison aux patterns des titres les plus performants (longueur, mots-cles, structure) > 5 variantes optimisees. SEO descriptions YouTube.
 
 ### Recycleur de contenu
