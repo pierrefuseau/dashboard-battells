@@ -67,10 +67,11 @@ async function fetchTopTitles(supabase: ReturnType<typeof createClient>) {
 }
 
 async function fetchCompetitorTitles(supabase: ReturnType<typeof createClient>, keyword: string) {
+  const safeKeyword = keyword.replace(/[%_\\]/g, '\\$&').slice(0, 100)
   const { data } = await supabase
     .from('detected_videos')
     .select('title, views, channel_name')
-    .ilike('title', `%${keyword}%`)
+    .ilike('title', `%${safeKeyword}%`)
     .order('views', { ascending: false })
     .limit(10)
 
@@ -233,6 +234,6 @@ Reponds avec ce JSON EXACT :
     })
   } catch (err) {
     console.error('Edge function error:', err)
-    return new Response(JSON.stringify({ error: String(err) }), { status: 500, headers: CORS_HEADERS })
+    return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500, headers: CORS_HEADERS })
   }
 })

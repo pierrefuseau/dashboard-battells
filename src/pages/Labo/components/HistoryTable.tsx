@@ -81,7 +81,7 @@ export default function HistoryTable({ history, loading, onSelect }: HistoryTabl
                 </td>
                 <td className="py-3 px-3 text-center">
                   <div className="flex items-center justify-center gap-1">
-                    {opt.platform.map((p) => (
+                    {(opt.platform ?? []).map((p) => (
                       <span key={p} className="text-[9px] px-1.5 py-0.5 rounded bg-border/30 text-text-tertiary uppercase">
                         {p.slice(0, 2)}
                       </span>

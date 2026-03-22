@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Sparkles, RefreshCw, FlaskConical, Check } from 'lucide-react'
 import { FORMAT_TAGS } from '@/lib/constants'
@@ -32,9 +32,11 @@ export default function InputPanel({
 }: InputPanelProps) {
   const [abSelected, setAbSelected] = useState<Set<number>>(new Set())
 
+  useEffect(() => { setAbSelected(new Set()) }, [result])
+
   const titleLength = formData.title.length
   const titleColor = titleLength === 0 ? 'text-text-tertiary'
-    : titleLength <= 50 ? 'text-success'
+    : titleLength <= 50 ? 'text-info'
     : titleLength <= 65 ? 'text-success'
     : titleLength <= 80 ? 'text-warning'
     : 'text-error'
@@ -135,6 +137,16 @@ export default function InputPanel({
       <div>
         <label className="text-xs font-bold text-text-secondary font-[var(--font-clash)] mb-2 block">Plateformes</label>
         <div className="flex gap-2">
+          <button
+            onClick={() => onChange({ ...formData, platforms: [...PLATFORMS] })}
+            className={`px-3 py-1.5 text-xs font-bold font-[var(--font-clash)] rounded-[var(--radius-button)] border transition-all ${
+              formData.platforms.length === PLATFORMS.length
+                ? 'bg-primary text-white border-primary'
+                : 'bg-page text-text-secondary border-border/60 hover:border-primary/40'
+            }`}
+          >
+            Toutes
+          </button>
           {PLATFORMS.map((p) => (
             <button
               key={p}

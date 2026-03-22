@@ -195,16 +195,16 @@ export default function OutputPanel({ result, formData, loading }: OutputPanelPr
 
           {showSection === 'tags' && result && (
             <motion.div key="tags" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-4">
-              {result.tags_generated.length > 0 && (
+              {(result.tags_generated ?? []).length > 0 && (
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-xs font-bold text-text-secondary font-[var(--font-clash)]">
-                      Tags YouTube ({result.tags_generated.length})
+                      Tags YouTube ({(result.tags_generated ?? []).length})
                     </span>
-                    <CopyButton text={result.tags_generated.join(', ')} />
+                    <CopyButton text={(result.tags_generated ?? []).join(', ')} />
                   </div>
                   <div className="flex flex-wrap gap-1.5">
-                    {result.tags_generated.map((tag, i) => (
+                    {(result.tags_generated ?? []).map((tag, i) => (
                       <span key={i} className="text-[11px] px-2 py-1 rounded-lg bg-red-500/10 text-red-600 border border-red-500/20">
                         {tag}
                       </span>
@@ -233,12 +233,12 @@ export default function OutputPanel({ result, formData, loading }: OutputPanelPr
             </motion.div>
           )}
 
-          {showSection === 'hooks' && result?.hook_suggestions && (
+          {showSection === 'hooks' && result && (result.hook_suggestions ?? []).length > 0 && (
             <motion.div key="hooks" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-3">
               <span className="text-xs font-bold text-text-secondary font-[var(--font-clash)]">
                 Hook — les 3 premieres secondes
               </span>
-              {result.hook_suggestions.map((hook, i) => {
+              {(result.hook_suggestions ?? []).map((hook, i) => {
                 const coherence = computeHookCoherence(displayTitle, hook)
                 const coherenceColor = coherence >= 70 ? 'text-success' : coherence >= 40 ? 'text-warning' : 'text-error'
                 return (

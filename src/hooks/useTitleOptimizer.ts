@@ -110,14 +110,24 @@ export function useTitleOptimizer(): UseTitleOptimizerReturn {
 
   const fetchHistory = useCallback(async () => {
     setHistoryLoading(true)
-    const { data } = await supabase
-      .from('title_optimizations')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(50)
+    try {
+      const { data, error: fetchError } = await supabase
+        .from('title_optimizations')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(50)
 
-    setHistory((data as TitleOptimization[]) ?? [])
-    setHistoryLoading(false)
+      if (fetchError) {
+        console.error('Failed to fetch history:', fetchError)
+        setError(fetchError.message)
+      } else {
+        setHistory((data as TitleOptimization[]) ?? [])
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch history')
+    } finally {
+      setHistoryLoading(false)
+    }
   }, [])
 
   return { result, history, loading, historyLoading, error, optimize, runAbTest, abTestResult, fetchHistory }

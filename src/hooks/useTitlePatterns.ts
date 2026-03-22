@@ -13,17 +13,20 @@ export function useTitlePatterns() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    async function fetch() {
+    let cancelled = false
+    async function fetchData() {
       const { data: videosWithId } = await supabase
         .from('yt_videos')
         .select('id, title, format_tag')
 
+      if (cancelled) return
       if (!videosWithId) { setLoading(false); return }
 
       const { data: stats } = await supabase
         .from('yt_daily_stats')
         .select('video_id, views')
 
+      if (cancelled) return
       if (!stats) { setLoading(false); return }
 
       const viewsMap: Record<string, number> = {}
@@ -40,7 +43,8 @@ export function useTitlePatterns() {
       setVideos(merged)
       setLoading(false)
     }
-    fetch()
+    fetchData()
+    return () => { cancelled = true }
   }, [])
 
   const patterns = useMemo<TitlePattern>(() => {
