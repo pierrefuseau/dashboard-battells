@@ -30,19 +30,16 @@ export default function RadarFeed({ onSelectVideo, onAddLink }: RadarFeedProps) 
 
   return (
     <motion.section
-      className="relative rounded-[var(--radius-card-lg)] overflow-hidden"
-      style={{
-        background: 'linear-gradient(135deg, var(--color-dark) 0%, var(--color-dark-secondary) 100%)',
-      }}
+      className="relative rounded-[var(--radius-card-lg)] overflow-hidden bg-surface border border-white/5 shadow-2xl"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
     >
       {/* Ambient glow */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-30"
+        className="absolute inset-0 pointer-events-none opacity-20"
         style={{
-          background: 'radial-gradient(ellipse at 20% 50%, rgba(255,107,0,0.15) 0%, transparent 60%)',
+          background: 'radial-gradient(circle at 0% 0%, rgba(255,107,0,0.15) 0%, transparent 50%)',
         }}
       />
 
@@ -79,17 +76,17 @@ export default function RadarFeed({ onSelectVideo, onAddLink }: RadarFeedProps) 
         <>
           <button
             onClick={() => scroll('left')}
-            className="absolute left-2 top-1/2 translate-y-2 z-20 w-8 h-8 rounded-full bg-black/40 text-white/60 hover:text-white flex items-center justify-center cursor-pointer"
+            className="absolute left-4 top-[55%] -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/60 backdrop-blur-md text-white/80 hover:text-white hover:scale-110 hover:bg-black/80 flex items-center justify-center cursor-pointer transition-all border border-white/10 shadow-xl"
             aria-label="Defiler a gauche"
           >
-            <ChevronLeft size={18} />
+            <ChevronLeft size={20} strokeWidth={2.5} />
           </button>
           <button
             onClick={() => scroll('right')}
-            className="absolute right-2 top-1/2 translate-y-2 z-20 w-8 h-8 rounded-full bg-black/40 text-white/60 hover:text-white flex items-center justify-center cursor-pointer"
+            className="absolute right-4 top-[55%] -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/60 backdrop-blur-md text-white/80 hover:text-white hover:scale-110 hover:bg-black/80 flex items-center justify-center cursor-pointer transition-all border border-white/10 shadow-xl"
             aria-label="Defiler a droite"
           >
-            <ChevronRight size={18} />
+            <ChevronRight size={20} strokeWidth={2.5} />
           </button>
         </>
       )}
@@ -97,8 +94,7 @@ export default function RadarFeed({ onSelectVideo, onAddLink }: RadarFeedProps) 
       {/* Cards feed */}
       <div
         ref={scrollRef}
-        className="relative z-10 flex gap-4 overflow-x-auto px-6 pb-5 pt-2 scrollbar-none"
-        style={{ scrollbarWidth: 'none' }}
+        className="relative z-10 flex gap-5 overflow-x-auto px-6 pb-6 pt-2 snap-x snap-mandatory hide-scrollbar"
       >
         {loading ? (
           Array.from({ length: 4 }).map((_, i) => (

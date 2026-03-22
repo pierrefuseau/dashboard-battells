@@ -27,12 +27,7 @@ export default function HeatCard({ video, index, onSelect, onDismiss }: HeatCard
 
   return (
     <motion.div
-      className="relative flex-shrink-0 w-72 rounded-[var(--radius-card-lg)] overflow-hidden cursor-pointer group"
-      style={{
-        background: 'rgba(26, 26, 26, 0.8)',
-        backdropFilter: 'blur(12px)',
-        border: '1px solid rgba(255, 255, 255, 0.08)',
-      }}
+      className="relative flex-shrink-0 w-[300px] snap-center rounded-[var(--radius-card-lg)] overflow-hidden cursor-pointer group bg-dark/80 backdrop-blur-xl border border-white/10 transition-all hover:border-white/20 hover:shadow-2xl hover:shadow-primary/10"
       initial={{ opacity: 0, x: 40 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.4, ease: 'easeOut', delay: index * 0.08 }}
@@ -71,14 +66,14 @@ export default function HeatCard({ video, index, onSelect, onDismiss }: HeatCard
       )}
 
       <div className="p-4 pl-5 space-y-2">
-        <h4 className="text-sm font-bold font-[var(--font-clash)] text-white leading-snug line-clamp-2">
+        <h4 className="text-[15px] font-bold font-[var(--font-clash)] text-white leading-snug line-clamp-2 group-hover:text-primary transition-colors">
           {video.title}
         </h4>
-        <p className="text-[11px] text-white/50 font-[var(--font-satoshi)]">
+        <p className="text-xs text-white/60 font-[var(--font-satoshi)] font-medium">
           {video.channel_name}
         </p>
-        <div className="flex items-center gap-3 text-xs font-[var(--font-space-grotesk)]">
-          <span className="text-white/70">
+        <div className="flex items-center gap-3 text-xs font-[var(--font-space-grotesk)] pt-1">
+          <span className="text-white/80 bg-white/5 px-2 py-1 rounded-md">
             <AnimatedStat value={video.views} /> vues
           </span>
           {overPerf > 0 && (

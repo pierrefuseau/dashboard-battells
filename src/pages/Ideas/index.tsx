@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase'
 import { useVideoIdeas } from '@/hooks'
 import type { VideoIdea, DetectedVideo } from '@/types/database'
 import RadarFeed from './components/RadarFeed'
-import KanbanBoard from './components/KanbanBoard'
+import SavedIdeasVault from './components/SavedIdeasVault'
 import IdeaDetailPanel from './components/IdeaDetailPanel'
 import AddLinkModal from './components/AddLinkModal'
 
@@ -103,10 +103,14 @@ export default function Ideas() {
     setPanelOpen(false)
   }, [updateIdea])
 
-  const handleReject = useCallback(async (id: number) => {
+
+  const handleArchiveIdea = useCallback(async (id: number) => {
+    // We set the status to 'rejected' to remove it from the vault
     await updateIdea(id, { status: 'rejected' })
-    setPanelOpen(false)
-  }, [updateIdea])
+    if (selectedIdea?.id === id) {
+      setPanelOpen(false)
+    }
+  }, [updateIdea, selectedIdea])
 
   const handleUpdateNotes = useCallback(async (id: number, notes: string) => {
     await updateIdea(id, { user_notes: notes } as Partial<VideoIdea>)
@@ -152,11 +156,11 @@ export default function Ideas() {
         onAddLink={() => setLinkModalOpen(true)}
       />
 
-      <KanbanBoard
+      <SavedIdeasVault
         ideas={ideas}
         loading={loading}
         onCardClick={handleSelectIdea}
-        onUpdateIdea={updateIdea}
+        onArchiveIdea={handleArchiveIdea}
       />
 
       <IdeaDetailPanel
@@ -165,7 +169,7 @@ export default function Ideas() {
         isOpen={panelOpen}
         onClose={() => setPanelOpen(false)}
         onApprove={handleApprove}
-        onReject={handleReject}
+        onReject={handleArchiveIdea} // Pass handleArchiveIdea instead of generic Reject
         onUpdateNotes={handleUpdateNotes}
       />
 
