@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import KpiCard from '@/components/ui/KpiCard'
 import ChannelHeader from './components/ChannelHeader'
+import HeroScroll from './components/HeroScroll'
 import ViewsTrendChart from './components/ViewsTrendChart'
 import TopVideos from './components/TopVideos'
 import DarkCard from '@/components/ui/DarkCard'
@@ -59,22 +60,12 @@ export default function Overview() {
       <div className="blob-decorator w-[400px] h-[400px] -top-32 -right-32" />
       <div className="blob-decorator w-[250px] h-[250px] top-[600px] -left-24" style={{ animationDelay: '4s' }} />
 
+      {/* Hero Scroll — Tablet 3D avec chaîne YouTube */}
+      <HeroScroll />
+
       {/* Channel Header */}
       <motion.div variants={fadeUp}>
         <ChannelHeader />
-      </motion.div>
-
-      {/* Page Title — fluid via .title-display clamp() */}
-      <motion.div variants={fadeUp} className="mb-6 sm:mb-8">
-        <h1 className="title-display text-text-primary">
-          VUE D'ENSEMBLE
-        </h1>
-        <div className="flex items-center gap-3 mt-1">
-          <div className="h-1 w-12 sm:w-16 bg-primary rounded-full" />
-          <span className="text-xs sm:text-sm font-[var(--font-satoshi)] text-text-secondary">
-            Tableau de bord analytique
-          </span>
-        </div>
       </motion.div>
 
       {/* KPI Row — 2 cols mobile, 4 cols desktop */}
