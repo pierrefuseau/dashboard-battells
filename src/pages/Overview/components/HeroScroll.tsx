@@ -10,7 +10,7 @@ export default function HeroScroll() {
     <div className="flex flex-col overflow-hidden -mx-4 sm:-mx-6 lg:-mx-8">
       <ContainerScroll
         titleComponent={
-          <div className="relative flex flex-col items-center -mt-8 md:-mt-16">
+          <div className="relative flex flex-col items-center mt-2 md:mt-0">
             {/* Sparkles background */}
             <div className="absolute inset-0 w-full h-full">
               <SparklesCore
