@@ -58,8 +58,6 @@ export default function MomentsTimeline({ annotations, onMomentClick }: MomentsT
       .slice(0, 20)
   }, [annotations, activeFilter])
 
-  if (annotations.length === 0) return null
-
   // Group by month for visual separation
   const grouped = useMemo(() => {
     const groups: { month: string; items: GrowthAnnotation[] }[] = []
@@ -75,6 +73,8 @@ export default function MomentsTimeline({ annotations, onMomentClick }: MomentsT
     }
     return groups
   }, [filtered])
+
+  if (annotations.length === 0) return null
 
   const handleItemClick = (annotation: GrowthAnnotation) => {
     if (annotation.type === 'long_form_publish' && annotation.videoId) {
