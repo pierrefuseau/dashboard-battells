@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { supabase } from '@/lib/supabase'
+import { tokenizeFrenchText } from '@/lib/formatters'
 
 interface TitlePattern {
   topKeywords: { word: string; avgViews: number; count: number }[]
@@ -15,19 +16,13 @@ export function useTitlePatterns() {
   useEffect(() => {
     let cancelled = false
     async function fetchData() {
-      const { data: videosWithId } = await supabase
-        .from('yt_videos')
-        .select('id, title, format_tag')
+      const [{ data: videosWithId }, { data: stats }] = await Promise.all([
+        supabase.from('yt_videos').select('id, title, format_tag'),
+        supabase.from('yt_daily_stats').select('video_id, views'),
+      ])
 
       if (cancelled) return
-      if (!videosWithId) { setLoading(false); return }
-
-      const { data: stats } = await supabase
-        .from('yt_daily_stats')
-        .select('video_id, views')
-
-      if (cancelled) return
-      if (!stats) { setLoading(false); return }
+      if (!videosWithId || !stats) { setLoading(false); return }
 
       const viewsMap: Record<string, number> = {}
       for (const s of stats) {
@@ -65,11 +60,7 @@ export function useTitlePatterns() {
     const stopWords = new Set(['de', 'la', 'le', 'les', 'du', 'des', 'un', 'une', 'et', 'en', 'au', 'aux', 'a', 'à', 'je', 'mon', 'ma', 'mes', 'ce', 'cette', 'avec', 'pour', 'dans', 'sur', 'par', 'plus', 'pas', 'que', 'qui', 'ne', 'se', 'son', 'sa', 'ses', 'the', 'of', 'and', 'to', 'in', 'is', 'it', 'for', 'on', 'with'])
 
     for (const v of videos) {
-      const words = v.title.toLowerCase()
-        .replace(/[^a-zàâäéèêëïîôùûüÿç0-9\s]/g, '')
-        .split(/\s+/)
-        .filter((w) => w.length > 2 && !stopWords.has(w))
-
+      const words = tokenizeFrenchText(v.title).filter((w) => !stopWords.has(w))
       const uniqueWords = [...new Set(words)]
       for (const w of uniqueWords) {
         if (!wordStats[w]) wordStats[w] = { totalViews: 0, count: 0 }

@@ -6,6 +6,7 @@ import type { OptimizeTitleRequest, OptimizeTitleResponse, TitleOptimization, Ti
 
 const CONTENT_TYPES = ['Recette', 'Defi', 'Reaction', 'Vlog', 'Storytelling', 'Review', 'Mukbang', 'Street Food', 'Challenge 24h']
 const PLATFORMS = ['youtube', 'tiktok', 'instagram'] as const
+const PLATFORM_LABELS: Record<string, string> = { youtube: 'YouTube', tiktok: 'TikTok', instagram: 'Instagram' }
 
 const STYLE_LABELS: Record<string, { label: string; color: string }> = {
   emotional: { label: 'Emotionnel', color: 'bg-red-500/20 text-red-400' },
@@ -32,7 +33,7 @@ export default function InputPanel({
 }: InputPanelProps) {
   const [abSelected, setAbSelected] = useState<Set<number>>(new Set())
 
-  useEffect(() => { setAbSelected(new Set()) }, [result])
+  useEffect(() => { if (result !== null) setAbSelected(new Set()) }, [result])
 
   const titleLength = formData.title.length
   const titleColor = titleLength === 0 ? 'text-text-tertiary'
@@ -67,7 +68,6 @@ export default function InputPanel({
         Input
       </h2>
 
-      {/* Title */}
       <div>
         <label className="text-xs font-bold text-text-secondary font-[var(--font-clash)] mb-1 block">
           Titre de la video
@@ -89,7 +89,6 @@ export default function InputPanel({
         </div>
       </div>
 
-      {/* Description */}
       <div>
         <label className="text-xs font-bold text-text-secondary font-[var(--font-clash)] mb-1 block">
           Description (optionnel)
@@ -103,7 +102,6 @@ export default function InputPanel({
         />
       </div>
 
-      {/* Format + Content Type */}
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className="text-xs font-bold text-text-secondary font-[var(--font-clash)] mb-1 block">Format</label>
@@ -133,7 +131,6 @@ export default function InputPanel({
         </div>
       </div>
 
-      {/* Platforms */}
       <div>
         <label className="text-xs font-bold text-text-secondary font-[var(--font-clash)] mb-2 block">Plateformes</label>
         <div className="flex gap-2">
@@ -157,13 +154,12 @@ export default function InputPanel({
                   : 'bg-page text-text-secondary border-border/60 hover:border-primary/40'
               }`}
             >
-              {p === 'youtube' ? 'YouTube' : p === 'tiktok' ? 'TikTok' : 'Instagram'}
+              {PLATFORM_LABELS[p]}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Keyword */}
       <div>
         <label className="text-xs font-bold text-text-secondary font-[var(--font-clash)] mb-1 block">
           Mot-cle SEO (optionnel)
@@ -177,7 +173,6 @@ export default function InputPanel({
         />
       </div>
 
-      {/* Gustavo toggle */}
       <label className="flex items-center gap-3 cursor-pointer">
         <div
           onClick={() => onChange({ ...formData, has_gustavo: !formData.has_gustavo })}
@@ -192,7 +187,6 @@ export default function InputPanel({
         <span className="text-sm text-text-secondary font-[var(--font-satoshi)]">Gustavo present</span>
       </label>
 
-      {/* Optimize button */}
       <button
         onClick={onOptimize}
         disabled={loading || !formData.title.trim()}
@@ -206,7 +200,6 @@ export default function InputPanel({
         {loading ? 'Analyse en cours...' : 'Optimiser'}
       </button>
 
-      {/* Variants */}
       <AnimatePresence>
         {result && result.variants.length > 0 && (
           <motion.div

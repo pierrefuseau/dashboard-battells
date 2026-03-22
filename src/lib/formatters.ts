@@ -60,3 +60,17 @@ export function formatDate(date: string | Date): string {
     year: 'numeric',
   })
 }
+
+const FRENCH_TEXT_REGEX = /[^a-zàâäéèêëïîôùûüÿç0-9\s]/g
+
+export function tokenizeFrenchText(text: string): string[] {
+  return text
+    .toLowerCase()
+    .replace(FRENCH_TEXT_REGEX, '')
+    .split(/\s+/)
+    .filter((w) => w.length > 2)
+}
+
+export function coherenceTier(score: number): 'success' | 'warning' | 'error' {
+  return score >= 70 ? 'success' : score >= 40 ? 'warning' : 'error'
+}

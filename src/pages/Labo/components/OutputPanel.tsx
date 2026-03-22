@@ -1,6 +1,8 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Eye, Copy, Check, Hash, Zap, FileText, Youtube, Instagram } from 'lucide-react'
+import { Eye, Hash, Zap, FileText, Youtube, Instagram } from 'lucide-react'
+import { CopyButton } from '@/components/ui'
+import { tokenizeFrenchText, coherenceTier } from '@/lib/formatters'
 import type { OptimizeTitleRequest, OptimizeTitleResponse } from '@/types/database'
 
 type PreviewTab = 'yt-search' | 'yt-home' | 'tiktok' | 'instagram'
@@ -13,26 +15,12 @@ interface OutputPanelProps {
 
 function computeHookCoherence(title: string, hook: string): number {
   if (!title || !hook) return 0
-  const titleWords = new Set(title.toLowerCase().replace(/[^a-zàâäéèêëïîôùûüÿç0-9\s]/g, '').split(/\s+/).filter((w) => w.length > 2))
-  const hookWords = hook.toLowerCase().replace(/[^a-zàâäéèêëïîôùûüÿç0-9\s]/g, '').split(/\s+/).filter((w) => w.length > 2)
+  const titleWords = new Set(tokenizeFrenchText(title))
+  const hookWords = tokenizeFrenchText(hook)
   if (titleWords.size === 0 || hookWords.length === 0) return 50
   const overlap = hookWords.filter((w) => titleWords.has(w)).length
   const ratio = overlap / Math.max(titleWords.size, hookWords.length)
   return Math.min(100, Math.round(30 + ratio * 70))
-}
-
-function CopyButton({ text }: { text: string }) {
-  const [copied, setCopied] = useState(false)
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(text)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
-  return (
-    <button onClick={handleCopy} className="text-text-tertiary hover:text-primary transition-colors">
-      {copied ? <Check className="w-3.5 h-3.5 text-success" /> : <Copy className="w-3.5 h-3.5" />}
-    </button>
-  )
 }
 
 function YouTubeSearchPreview({ title }: { title: string }) {
@@ -105,6 +93,20 @@ function InstagramPreview({ title, hashtags }: { title: string; hashtags: string
   )
 }
 
+const previewTabs: { id: PreviewTab; label: string }[] = [
+  { id: 'yt-search', label: 'YT Search' },
+  { id: 'yt-home', label: 'YT Home' },
+  { id: 'tiktok', label: 'TikTok' },
+  { id: 'instagram', label: 'Insta' },
+]
+
+const sections = [
+  { id: 'preview' as const, label: 'Preview', icon: Eye },
+  { id: 'description' as const, label: 'Description', icon: FileText },
+  { id: 'tags' as const, label: 'Tags', icon: Hash },
+  { id: 'hooks' as const, label: 'Hooks', icon: Zap },
+]
+
 export default function OutputPanel({ result, formData, loading }: OutputPanelProps) {
   const [activePreview, setActivePreview] = useState<PreviewTab>('yt-search')
   const [showSection, setShowSection] = useState<'preview' | 'description' | 'tags' | 'hooks'>('preview')
@@ -112,20 +114,13 @@ export default function OutputPanel({ result, formData, loading }: OutputPanelPr
   const displayTitle = result?.optimized_title || formData.title || 'Votre titre apparaitra ici...'
   const tiktokHashtags = result?.hashtags?.tiktok || []
   const instaHashtags = result?.hashtags?.instagram || []
+  const tags = result?.tags_generated ?? []
+  const hooks = result?.hook_suggestions ?? []
 
-  const previewTabs: { id: PreviewTab; label: string }[] = [
-    { id: 'yt-search', label: 'YT Search' },
-    { id: 'yt-home', label: 'YT Home' },
-    { id: 'tiktok', label: 'TikTok' },
-    { id: 'instagram', label: 'Insta' },
-  ]
-
-  const sections = [
-    { id: 'preview' as const, label: 'Preview', icon: Eye },
-    { id: 'description' as const, label: 'Description', icon: FileText },
-    { id: 'tags' as const, label: 'Tags', icon: Hash },
-    { id: 'hooks' as const, label: 'Hooks', icon: Zap },
-  ]
+  const hookCoherences = useMemo(
+    () => hooks.map((hook) => computeHookCoherence(displayTitle, hook)),
+    [displayTitle, hooks],
+  )
 
   return (
     <div className="bg-surface rounded-[var(--radius-card-lg)] border border-border/40 shadow-[var(--shadow-card)] p-5 space-y-4 overflow-y-auto max-h-[75vh]">
@@ -195,16 +190,16 @@ export default function OutputPanel({ result, formData, loading }: OutputPanelPr
 
           {showSection === 'tags' && result && (
             <motion.div key="tags" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-4">
-              {(result.tags_generated ?? []).length > 0 && (
+              {tags.length > 0 && (
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-xs font-bold text-text-secondary font-[var(--font-clash)]">
-                      Tags YouTube ({(result.tags_generated ?? []).length})
+                      Tags YouTube ({tags.length})
                     </span>
-                    <CopyButton text={(result.tags_generated ?? []).join(', ')} />
+                    <CopyButton text={tags.join(', ')} />
                   </div>
                   <div className="flex flex-wrap gap-1.5">
-                    {(result.tags_generated ?? []).map((tag, i) => (
+                    {tags.map((tag, i) => (
                       <span key={i} className="text-[11px] px-2 py-1 rounded-lg bg-red-500/10 text-red-600 border border-red-500/20">
                         {tag}
                       </span>
@@ -213,16 +208,16 @@ export default function OutputPanel({ result, formData, loading }: OutputPanelPr
                 </div>
               )}
 
-              {Object.entries(result.hashtags || {}).map(([platform, tags]) => (
+              {Object.entries(result.hashtags || {}).map(([platform, platformTags]) => (
                 <div key={platform}>
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-xs font-bold text-text-secondary font-[var(--font-clash)] capitalize">
-                      Hashtags {platform} ({(tags as string[]).length})
+                      Hashtags {platform} ({(platformTags as string[]).length})
                     </span>
-                    <CopyButton text={(tags as string[]).join(' ')} />
+                    <CopyButton text={(platformTags as string[]).join(' ')} />
                   </div>
                   <div className="flex flex-wrap gap-1.5">
-                    {(tags as string[]).map((tag, i) => (
+                    {(platformTags as string[]).map((tag, i) => (
                       <span key={i} className="text-[11px] px-2 py-1 rounded-lg bg-info/10 text-info border border-info/20">
                         {tag}
                       </span>
@@ -233,14 +228,14 @@ export default function OutputPanel({ result, formData, loading }: OutputPanelPr
             </motion.div>
           )}
 
-          {showSection === 'hooks' && result && (result.hook_suggestions ?? []).length > 0 && (
+          {showSection === 'hooks' && hooks.length > 0 && (
             <motion.div key="hooks" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-3">
               <span className="text-xs font-bold text-text-secondary font-[var(--font-clash)]">
                 Hook — les 3 premieres secondes
               </span>
-              {(result.hook_suggestions ?? []).map((hook, i) => {
-                const coherence = computeHookCoherence(displayTitle, hook)
-                const coherenceColor = coherence >= 70 ? 'text-success' : coherence >= 40 ? 'text-warning' : 'text-error'
+              {hooks.map((hook, i) => {
+                const coherence = hookCoherences[i]
+                const tier = coherenceTier(coherence)
                 return (
                   <div key={i} className="p-3 rounded-xl bg-dark text-white">
                     <div className="flex items-center justify-between mb-1">
@@ -248,7 +243,7 @@ export default function OutputPanel({ result, formData, loading }: OutputPanelPr
                         HOOK {i + 1}
                       </span>
                       <div className="flex items-center gap-2">
-                        <span className={`text-[10px] font-bold font-[var(--font-space-grotesk)] ${coherenceColor}`} title="Coherence hook/titre">
+                        <span className={`text-[10px] font-bold font-[var(--font-space-grotesk)] text-${tier}`} title="Coherence hook/titre">
                           {coherence}%
                         </span>
                         <CopyButton text={hook} />
@@ -259,7 +254,7 @@ export default function OutputPanel({ result, formData, loading }: OutputPanelPr
                     </p>
                     <div className="mt-1.5 h-1 bg-white/10 rounded-full overflow-hidden">
                       <motion.div
-                        className={`h-full rounded-full ${coherence >= 70 ? 'bg-success' : coherence >= 40 ? 'bg-warning' : 'bg-error'}`}
+                        className={`h-full rounded-full bg-${tier}`}
                         initial={{ width: 0 }}
                         animate={{ width: `${coherence}%` }}
                         transition={{ duration: 0.5, delay: 0.1 }}

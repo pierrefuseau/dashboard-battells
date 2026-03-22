@@ -18,6 +18,22 @@ interface UseTitleOptimizerReturn {
   fetchHistory: () => Promise<void>
 }
 
+async function callEdgeFunction(body: object): Promise<Response> {
+  const { data: { session } } = await supabase.auth.getSession()
+  return fetch(
+    `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/optimize-title`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${session?.access_token ?? import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+      },
+      body: JSON.stringify(body),
+    },
+  )
+}
+
 export function useTitleOptimizer(): UseTitleOptimizerReturn {
   const [result, setResult] = useState<OptimizeTitleResponse | null>(null)
   const [history, setHistory] = useState<TitleOptimization[]>([])
@@ -32,19 +48,7 @@ export function useTitleOptimizer(): UseTitleOptimizerReturn {
     setResult(null)
 
     try {
-      const { data: { session } } = await supabase.auth.getSession()
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/optimize-title`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${session?.access_token ?? import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-            apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
-          },
-          body: JSON.stringify(req),
-        },
-      )
+      const response = await callEdgeFunction(req)
 
       if (!response.ok) {
         throw new Error(`Optimization failed: ${response.status}`)
@@ -84,19 +88,7 @@ export function useTitleOptimizer(): UseTitleOptimizerReturn {
     setAbTestResult(null)
 
     try {
-      const { data: { session } } = await supabase.auth.getSession()
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/optimize-title`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${session?.access_token ?? import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-            apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
-          },
-          body: JSON.stringify({ mode: 'ab_test', titles }),
-        },
-      )
+      const response = await callEdgeFunction({ mode: 'ab_test', titles })
 
       if (!response.ok) throw new Error(`A/B test failed: ${response.status}`)
       const data = await response.json()

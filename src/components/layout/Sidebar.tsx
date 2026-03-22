@@ -114,13 +114,6 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             <p className="text-[10px] text-white/40 uppercase tracking-wider font-[var(--font-bebas)]">Créateur</p>
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-sm font-bold text-white/70 shrink-0">P</div>
-          <div className="min-w-0">
-            <p className="text-sm font-medium text-white/90 truncate">Pierrot</p>
-            <p className="text-[10px] text-white/40 uppercase tracking-wider font-[var(--font-bebas)]">Stratège</p>
-          </div>
-        </div>
       </div>
     </nav>
   )
