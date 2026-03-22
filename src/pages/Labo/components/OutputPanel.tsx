@@ -11,6 +11,16 @@ interface OutputPanelProps {
   loading: boolean
 }
 
+function computeHookCoherence(title: string, hook: string): number {
+  if (!title || !hook) return 0
+  const titleWords = new Set(title.toLowerCase().replace(/[^a-zàâäéèêëïîôùûüÿç0-9\s]/g, '').split(/\s+/).filter((w) => w.length > 2))
+  const hookWords = hook.toLowerCase().replace(/[^a-zàâäéèêëïîôùûüÿç0-9\s]/g, '').split(/\s+/).filter((w) => w.length > 2)
+  if (titleWords.size === 0 || hookWords.length === 0) return 50
+  const overlap = hookWords.filter((w) => titleWords.has(w)).length
+  const ratio = overlap / Math.max(titleWords.size, hookWords.length)
+  return Math.min(100, Math.round(30 + ratio * 70))
+}
+
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false)
   const handleCopy = async () => {
@@ -228,19 +238,36 @@ export default function OutputPanel({ result, formData, loading }: OutputPanelPr
               <span className="text-xs font-bold text-text-secondary font-[var(--font-clash)]">
                 Hook — les 3 premieres secondes
               </span>
-              {result.hook_suggestions.map((hook, i) => (
-                <div key={i} className="p-3 rounded-xl bg-dark text-white">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[10px] font-bold text-primary font-[var(--font-bebas)] tracking-wider">
-                      HOOK {i + 1}
-                    </span>
-                    <CopyButton text={hook} />
+              {result.hook_suggestions.map((hook, i) => {
+                const coherence = computeHookCoherence(displayTitle, hook)
+                const coherenceColor = coherence >= 70 ? 'text-success' : coherence >= 40 ? 'text-warning' : 'text-error'
+                return (
+                  <div key={i} className="p-3 rounded-xl bg-dark text-white">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[10px] font-bold text-primary font-[var(--font-bebas)] tracking-wider">
+                        HOOK {i + 1}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className={`text-[10px] font-bold font-[var(--font-space-grotesk)] ${coherenceColor}`} title="Coherence hook/titre">
+                          {coherence}%
+                        </span>
+                        <CopyButton text={hook} />
+                      </div>
+                    </div>
+                    <p className="text-sm font-[var(--font-satoshi)] text-white/90 italic">
+                      "{hook}"
+                    </p>
+                    <div className="mt-1.5 h-1 bg-white/10 rounded-full overflow-hidden">
+                      <motion.div
+                        className={`h-full rounded-full ${coherence >= 70 ? 'bg-success' : coherence >= 40 ? 'bg-warning' : 'bg-error'}`}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${coherence}%` }}
+                        transition={{ duration: 0.5, delay: 0.1 }}
+                      />
+                    </div>
                   </div>
-                  <p className="text-sm font-[var(--font-satoshi)] text-white/90 italic">
-                    "{hook}"
-                  </p>
-                </div>
-              ))}
+                )
+              })}
             </motion.div>
           )}
 
