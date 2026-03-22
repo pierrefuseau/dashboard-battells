@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Trash2 } from 'lucide-react'
+import { X, Trash2, FlaskConical } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import type { ContentCalendarItem } from '@/types/database'
 import { FORMAT_TAGS } from '@/lib/constants'
 
@@ -40,6 +41,7 @@ export default function CalendarModal({
   const [notes, setNotes] = useState('')
   const [platforms, setPlatforms] = useState<string[]>(['youtube'])
   const [saving, setSaving] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (editItem) {
@@ -285,7 +287,7 @@ export default function CalendarModal({
 
               {/* Footer */}
               <div className="flex items-center justify-between p-5 border-t border-border">
-                <div>
+                <div className="flex items-center gap-2">
                   {editItem && (
                     <button
                       onClick={handleDelete}
@@ -294,6 +296,15 @@ export default function CalendarModal({
                     >
                       <Trash2 size={14} />
                       Supprimer
+                    </button>
+                  )}
+                  {title.trim() && (
+                    <button
+                      onClick={() => navigate(`/labo?title=${encodeURIComponent(title.trim())}${editItem ? `&calendar_id=${editItem.id}` : ''}${formatTag && formatTag !== 'other' ? `&format=${formatTag}` : ''}`)}
+                      className="flex items-center gap-2 px-3 py-2 rounded-[var(--radius-button)] bg-primary/10 text-primary hover:bg-primary/20 transition-all text-sm font-bold font-[var(--font-clash)]"
+                    >
+                      <FlaskConical className="w-4 h-4" />
+                      Le Labo
                     </button>
                   )}
                 </div>

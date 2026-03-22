@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
-import { Play, Eye, Clock, Trash2, ShieldCheck } from 'lucide-react'
+import { Play, Eye, Clock, Trash2, ShieldCheck, FlaskConical } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import type { VideoIdea } from '@/types/database'
 
 interface SavedIdeaCardProps {
@@ -9,6 +10,8 @@ interface SavedIdeaCardProps {
 }
 
 export default function SavedIdeaCard({ idea, onClick, onArchive }: SavedIdeaCardProps) {
+  const navigate = useNavigate()
+
   return (
     <motion.div
       layout
@@ -46,14 +49,26 @@ export default function SavedIdeaCard({ idea, onClick, onArchive }: SavedIdeaCar
           </span>
         </div>
         
-        {/* Quick Delete/Archive Button */}
-        <button
-          onClick={(e) => onArchive(idea, e)}
-          className="p-1.5 rounded-md text-text-tertiary hover:text-red-500 hover:bg-red-500/10 opacity-0 group-hover:opacity-100 transition-all focus:opacity-100"
-          title="Retirer de la sélection"
-        >
-          <Trash2 className="w-4 h-4" />
-        </button>
+        {/* Action Buttons */}
+        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all focus-within:opacity-100">
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              navigate(`/labo?title=${encodeURIComponent(idea.title)}&idea_id=${idea.id}${idea.format_tag ? `&format=${idea.format_tag}` : ''}`)
+            }}
+            className="p-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-all"
+            title="Optimiser dans Le Labo"
+          >
+            <FlaskConical className="w-3.5 h-3.5" />
+          </button>
+          <button
+            onClick={(e) => onArchive(idea, e)}
+            className="p-1.5 rounded-md text-text-tertiary hover:text-red-500 hover:bg-red-500/10 transition-all"
+            title="Retirer de la sélection"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
       {/* Idea Title */}
