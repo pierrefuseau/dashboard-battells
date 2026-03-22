@@ -195,3 +195,94 @@ export interface FormatTag {
   color: string
   description: string | null
 }
+
+export interface TitleOptimization {
+  id: number
+  original_title: string
+  optimized_title: string | null
+  description_generated: string | null
+  tags_generated: string[]
+  hashtags: {
+    youtube?: string[]
+    tiktok?: string[]
+    instagram?: string[]
+  }
+  platform: string[]
+  format_tag: string | null
+  content_type: string | null
+  score: number | null
+  score_breakdown: {
+    length?: number
+    emotion?: number
+    curiosity?: number
+    seo?: number
+    clickbait?: number
+    brand_coherence?: number
+  } | null
+  variants: TitleVariant[]
+  ab_test_result: {
+    winner_index: number
+    confidence: number
+    reasoning: string
+    comparison: {
+      estimated_ctr: number
+      estimated_engagement: number
+      estimated_retention: number
+      estimated_reach: number
+    }[]
+  } | null
+  hook_suggestions: string[]
+  title_gaps: {
+    keyword: string
+    volume_estimate: number
+    opportunity_score: number
+    video_suggestion: string
+  }[]
+  pattern_insights: {
+    top_keywords?: { word: string; avg_views: number; count: number }[]
+    optimal_length?: { min: number; max: number; sweet_spot: number }
+    best_structures?: { type: string; avg_views: number; example: string }[]
+    competitor_titles?: { title: string; views: number; channel: string }[]
+  } | null
+  video_idea_id: number | null
+  calendar_item_id: number | null
+  youtube_video_id: string | null
+  published_title: string | null
+  actual_ctr: number | null
+  actual_views: number | null
+  prediction_accuracy: number | null
+  created_at: string
+  published_at: string | null
+}
+
+export interface TitleVariant {
+  title: string
+  score: number
+  style: 'emotional' | 'seo' | 'clickbait' | 'narrative' | 'minimal'
+  reasoning: string
+}
+
+export interface OptimizeTitleRequest {
+  title: string
+  description?: string
+  format_tag?: string
+  content_type?: string
+  platforms: string[]
+  keyword?: string
+  has_gustavo: boolean
+  video_idea_id?: number
+  calendar_item_id?: number
+}
+
+export interface OptimizeTitleResponse {
+  score: number
+  score_breakdown: TitleOptimization['score_breakdown']
+  optimized_title: string
+  variants: TitleVariant[]
+  description_generated: string
+  tags_generated: string[]
+  hashtags: TitleOptimization['hashtags']
+  hook_suggestions: string[]
+  title_gaps: TitleOptimization['title_gaps']
+  pattern_insights: TitleOptimization['pattern_insights']
+}
