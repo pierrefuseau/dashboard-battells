@@ -2,7 +2,7 @@ import { useLocation, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { X, Home, Video, BarChart3, Calendar, Lightbulb, Image, Recycle,
   MessageCircle, MessageSquare, TrendingUp, Users, Handshake,
-  Calculator, Upload, ScatterChart,
+  Calculator, Upload, ScatterChart, FlaskConical,
 } from 'lucide-react'
 import { NAV_SECTIONS } from '@/lib/constants'
 
@@ -12,6 +12,7 @@ const iconMap: Record<string, React.ElementType> = {
   'message-circle': MessageCircle, 'message-square': MessageSquare,
   'trending-up': TrendingUp, users: Users, handshake: Handshake,
   calculator: Calculator, upload: Upload, 'scatter-chart': ScatterChart,
+  'flask-conical': FlaskConical,
 }
 
 interface SidebarProps {

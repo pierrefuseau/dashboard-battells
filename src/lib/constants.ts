@@ -45,6 +45,7 @@ export const NAV_SECTIONS = [
     label: 'PRODUCTION',
     items: [
       { id: 'ideas', label: 'Boite a idees', icon: 'lightbulb', path: '/idees' },
+      { id: 'labo', label: 'Le Labo', icon: 'flask-conical', path: '/labo' },
       { id: 'calendar', label: 'Calendrier', icon: 'calendar', path: '/calendrier' },
     ],
   },

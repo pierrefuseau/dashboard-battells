@@ -13,6 +13,7 @@ import Audience from '@/pages/Audience'
 import Traffic from '@/pages/Traffic'
 import Calendar from '@/pages/Calendar'
 import Ideas from '@/pages/Ideas'
+import Labo from '@/pages/Labo'
 
 export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -59,6 +60,7 @@ export default function App() {
               <Route path="/simulateur" element={<Simulator />} />
               <Route path="/import" element={<Import />} />
               <Route path="/idees" element={<Ideas />} />
+              <Route path="/labo" element={<Labo />} />
             </Routes>
           </AnimatePresence>
         </main>
