@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
+import { Handshake } from 'lucide-react'
 import { formatEuros, formatCompact } from '@/lib/formatters'
 import DarkCard from '@/components/ui/DarkCard'
 
@@ -107,7 +108,7 @@ export default function SponsorPricing() {
         </div>
 
         <DarkCard
-          emoji="🤝"
+          icon={Handshake}
           title="Négociation"
           subtitle={`Ne descendez jamais sous les ${formatEuros(suggestedPrice * 0.8)}. C'est votre "Walk-away price".`}
         />

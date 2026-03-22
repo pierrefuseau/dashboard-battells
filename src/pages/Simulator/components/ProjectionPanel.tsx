@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { useSpring, animated } from '@react-spring/web'
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
+import { Rocket } from 'lucide-react'
 import { formatEuros } from '@/lib/formatters'
 import DarkCard from '@/components/ui/DarkCard'
 import type { SimulatorInputs } from './SliderPanel'
@@ -173,7 +174,7 @@ export default function ProjectionPanel({ inputs }: ProjectionPanelProps) {
 
       {/* Motivational DarkCard */}
       <DarkCard
-        emoji="🚀"
+        icon={Rocket}
         title="Objectif revenus"
         subtitle={getMotivationalText(total)}
         lexiconWord={total > 100_000 ? 'Dinguerie' : total > 50_000 ? 'Banger' : 'Pépite'}

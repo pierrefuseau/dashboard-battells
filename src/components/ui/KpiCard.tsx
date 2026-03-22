@@ -41,7 +41,7 @@ function AnimatedValue({ value, format }: { value: number; format: FormatType })
 export default function KpiCard({ label, value, previousValue, format, sparklineData, loading = false }: KpiCardProps) {
   if (loading) {
     return (
-      <div className="card p-5">
+      <div className="card p-6">
         <div className="skeleton h-3 w-20 mb-3 rounded" />
         <div className="skeleton h-8 w-28 mb-2 rounded" />
         <div className="skeleton h-3 w-16 rounded" />
@@ -54,7 +54,7 @@ export default function KpiCard({ label, value, previousValue, format, sparkline
 
   return (
     <motion.div
-      className="card p-5 flex flex-col gap-2 transition-all duration-200 hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-0.5"
+      className="card p-6 flex flex-col gap-2 transition-all duration-200 hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-0.5"
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, ease: 'easeOut' }}

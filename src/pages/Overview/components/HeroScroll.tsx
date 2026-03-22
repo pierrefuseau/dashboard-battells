@@ -7,10 +7,10 @@ const UPLOADS_PLAYLIST_ID = YOUTUBE_CONFIG.channelId.replace(/^UC/, 'UU')
 
 export default function HeroScroll() {
   return (
-    <div className="flex flex-col overflow-hidden -mx-4 sm:-mx-6 lg:-mx-8 -mt-4 sm:-mt-5 lg:-mt-6">
+    <div className="flex flex-col overflow-hidden -mx-4 sm:-mx-6 lg:-mx-8">
       <ContainerScroll
         titleComponent={
-          <div className="relative flex flex-col items-center">
+          <div className="relative flex flex-col items-center -mt-8 md:-mt-16">
             {/* Sparkles background */}
             <div className="absolute inset-0 w-full h-full">
               <SparklesCore
@@ -30,7 +30,7 @@ export default function HeroScroll() {
               <span className="font-[var(--font-bebas)] text-sm sm:text-base tracking-[0.3em] text-text-tertiary uppercase">
                 Centre de commande
               </span>
-              <h1 className="font-[var(--font-clash)] text-4xl sm:text-5xl md:text-[5.5rem] font-bold leading-none bg-clip-text text-transparent bg-gradient-to-b from-text-primary to-text-secondary">
+              <h1 className="font-[var(--font-clash)] text-4xl sm:text-5xl md:text-[5.5rem] font-bold leading-none text-text-primary">
                 BATTELLS
               </h1>
 

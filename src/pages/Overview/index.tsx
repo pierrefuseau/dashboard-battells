@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { TrendingUp } from 'lucide-react'
 import KpiCard from '@/components/ui/KpiCard'
 import ChannelHeader from './components/ChannelHeader'
 import HeroScroll from './components/HeroScroll'
@@ -36,7 +37,7 @@ export default function Overview() {
   const revenueSparkline = kpis.revenueSparkline
 
   const subscribersValue = kpis.latestSubscribers > 0 ? kpis.latestSubscribers : YOUTUBE_CONFIG.subscriberCount
-  const subscribersPrev = 0
+  const subscribersPrev = subscribersValue // No delta available — show 0% change
   const subscribersSparkline: number[] = []
 
   // RPM moyen (revenu / 1000 vues)
@@ -126,7 +127,7 @@ export default function Overview() {
       {/* Dark Card — real data summary */}
       <motion.div variants={fadeUp} className="mb-6 sm:mb-8">
         <DarkCard
-          emoji="📊"
+          icon={TrendingUp}
           title={darkCardTitle}
           subtitle={darkCardSubtitle}
           detail={darkCardDetail}

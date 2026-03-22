@@ -82,8 +82,8 @@ export default function TopVideos() {
   const displayVideos = videos.map(v => ({ id: v.video_id, title: v.title, views: v.total_views, revenue: v.total_revenue, thumbnail: v.thumbnail_url }))
 
   return (
-    <div className="card p-6 h-full">
-      <h2 className="font-[var(--font-clash)] text-xl font-semibold text-text-primary mb-4">
+    <div className="card p-6 h-full flex flex-col">
+      <h2 className="font-[var(--font-clash)] text-xl font-semibold text-text-primary mb-4 shrink-0">
         Top Vidéos
       </h2>
 
@@ -92,7 +92,7 @@ export default function TopVideos() {
           Chargement...
         </div>
       ) : (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 flex-1 justify-between">
           {displayVideos.map((video, i) => (
             <div
               key={video.id}

@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
+import { Target } from 'lucide-react'
 import { formatEuros, formatCompact } from '@/lib/formatters'
 import DarkCard from '@/components/ui/DarkCard'
 
@@ -134,7 +135,7 @@ export default function ReverseSimulator() {
         </div>
 
         <DarkCard
-          emoji="🎯"
+          icon={Target}
           title="Stratégie"
           subtitle={
             requiredVideos > 6 

@@ -1,4 +1,6 @@
 import { motion } from 'framer-motion'
+import type { LucideIcon } from 'lucide-react'
+import { BarChart3 } from 'lucide-react'
 
 const BATTELLS_LEXICON = [
   'Dinguerie', 'Banger', 'Magnificus', 'Zinzin', 'Pépite',
@@ -6,14 +8,14 @@ const BATTELLS_LEXICON = [
 ] as const
 
 interface DarkCardProps {
-  emoji: string
+  icon?: LucideIcon
   title: string
   subtitle: string
   detail?: string
   lexiconWord?: string
 }
 
-export default function DarkCard({ emoji, title, subtitle, detail, lexiconWord }: DarkCardProps) {
+export default function DarkCard({ icon: Icon = BarChart3, title, subtitle, detail, lexiconWord }: DarkCardProps) {
   const word = lexiconWord ?? BATTELLS_LEXICON[Math.floor(Math.random() * BATTELLS_LEXICON.length)]
 
   return (
@@ -33,7 +35,9 @@ export default function DarkCard({ emoji, title, subtitle, detail, lexiconWord }
       />
 
       <div className="relative z-10 flex flex-col gap-2">
-        <span className="text-2xl">{emoji}</span>
+        <div className="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center">
+          <Icon size={20} className="text-primary" />
+        </div>
         <h3 className="text-lg font-bold font-[var(--font-clash)] text-white leading-snug">
           {title}
         </h3>

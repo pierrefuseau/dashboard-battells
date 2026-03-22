@@ -31,7 +31,7 @@ export default function ChannelHeader() {
 
   if (channelLoading) {
     return (
-      <div className="card p-5 mb-6">
+      <div className="card p-6 mb-6">
         <div className="flex items-center gap-4">
           <div className="skeleton w-14 h-14 rounded-full" />
           <div className="flex-1">
@@ -45,7 +45,7 @@ export default function ChannelHeader() {
 
   return (
     <motion.div
-      className="card p-5 mb-6"
+      className="card p-6 mb-6"
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, ease: 'easeOut' }}

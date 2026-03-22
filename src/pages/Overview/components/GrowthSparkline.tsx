@@ -30,14 +30,16 @@ export default function GrowthSparkline() {
   const isPositive = delta >= 0
 
   if (loading) {
-    return <div className="card p-5 h-[120px] skeleton rounded-xl" />
+    return <div className="card p-6 h-[120px] skeleton rounded-xl" />
   }
 
   return (
-    <button
-      type="button"
+    <div
+      role="button"
+      tabIndex={0}
       onClick={() => navigate('/croissance')}
-      className="card p-5 w-full text-left cursor-pointer transition-all duration-200 hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-0.5"
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/croissance') }}
+      className="card p-6 w-full text-left cursor-pointer transition-all duration-200 hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
     >
       {/* Top row */}
       <div className="flex items-center justify-between mb-3">
@@ -86,6 +88,6 @@ export default function GrowthSparkline() {
         </span>
         <span className="text-[11px] text-text-tertiary">vs 1er semestre</span>
       </div>
-    </button>
+    </div>
   )
 }

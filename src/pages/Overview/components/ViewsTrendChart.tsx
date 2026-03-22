@@ -58,7 +58,7 @@ export default function ViewsTrendChart() {
   const data = period === '7j' ? chartData.slice(-7) : chartData
 
   return (
-    <div className="card p-6 h-full">
+    <div className="card p-6 h-full flex flex-col">
       <div className="flex items-center justify-between mb-6">
         <h2 className="font-[var(--font-clash)] text-xl font-semibold text-text-primary">
           Tendance des vues
@@ -66,7 +66,7 @@ export default function ViewsTrendChart() {
         <TimePeriodToggle periods={PERIODS} activePeriod={period} onChange={setPeriod} />
       </div>
 
-      <div className="h-[280px]">
+      <div className="flex-1 min-h-[280px] w-full">
         {loading ? (
           <div className="flex items-center justify-center h-full text-text-secondary font-[var(--font-satoshi)]">
             Chargement...
