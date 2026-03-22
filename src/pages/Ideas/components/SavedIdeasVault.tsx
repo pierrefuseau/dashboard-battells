@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Sparkles, FolderOpen } from 'lucide-react'
 import type { VideoIdea } from '@/types/database'
-import SavedIdeaCard from './SavedIdeaCard'
+import AnimatedIdeaStack from '@/components/ui/AnimatedIdeaStack'
 
 interface SavedIdeasVaultProps {
   ideas: VideoIdea[]
@@ -15,24 +15,14 @@ export default function SavedIdeasVault({
   ideas,
   loading,
   onCardClick,
-  onArchiveIdea
 }: SavedIdeasVaultProps) {
   const approvedIdeas = useMemo(() => {
-    // Only show ideas that have been approved (saved)
     return ideas.filter((idea) => idea.status === 'approved')
-      // Sort by estimated views or newest first
       .sort((a, b) => {
         const potentialDiff = (b.ai_analysis?.estimated_views || 0) - (a.ai_analysis?.estimated_views || 0)
         return potentialDiff !== 0 ? potentialDiff : new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
       })
   }, [ideas])
-
-  const handleArchive = async (idea: VideoIdea, e: React.MouseEvent) => {
-    e.stopPropagation()
-    if (window.confirm('Voulez-vous vraiment retirer cette idée de la sélection ?')) {
-      await onArchiveIdea(idea.id)
-    }
-  }
 
   if (loading) {
     return (
@@ -55,7 +45,7 @@ export default function SavedIdeasVault({
               La Sélection
             </h2>
             <p className="text-sm text-text-tertiary font-medium">
-              Veuillez retrouver vos meilleures idées approuvées, prêtes à être transformées en vidéos.
+              Parcourez vos meilleures idées approuvées, prêtes à devenir des vidéos.
             </p>
           </div>
         </div>
@@ -65,31 +55,19 @@ export default function SavedIdeasVault({
         </div>
       </div>
 
-      {/* Grid of Ideas */}
+      {/* Animated Card Stack */}
       {approvedIdeas.length > 0 ? (
-        <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6"
-          layout
-        >
-          <AnimatePresence mode="popLayout">
-            {approvedIdeas.map((idea) => (
-              <SavedIdeaCard
-                key={idea.id}
-                idea={idea}
-                onClick={onCardClick}
-                onArchive={handleArchive}
-              />
-            ))}
-          </AnimatePresence>
-        </motion.div>
+        <AnimatedIdeaStack
+          ideas={approvedIdeas}
+          onCardClick={onCardClick}
+        />
       ) : (
-        /* Empty State */
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="flex flex-col items-center justify-center py-24 px-4 text-center border-2 border-dashed border-border/30 rounded-[var(--radius-panel)] bg-surface-light/30"
+          className="flex flex-col items-center justify-center py-24 px-4 text-center border-2 border-dashed border-border/30 rounded-[var(--radius-card-lg)] bg-page/30"
         >
-          <div className="w-16 h-16 rounded-full bg-surface-light border border-border/40 flex items-center justify-center mb-4 text-text-tertiary">
+          <div className="w-16 h-16 rounded-full bg-page border border-border/40 flex items-center justify-center mb-4 text-text-tertiary">
             <FolderOpen className="w-8 h-8" />
           </div>
           <h3 className="text-xl font-[var(--font-clash)] font-bold text-text-primary mb-2">
