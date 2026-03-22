@@ -38,8 +38,8 @@ export default function HeroScroll() {
               <div className="w-[30rem] max-w-full h-20 relative -mt-2">
                 <div className="absolute inset-x-16 top-0 bg-gradient-to-r from-transparent via-primary to-transparent h-[2px] w-3/4 blur-sm" />
                 <div className="absolute inset-x-16 top-0 bg-gradient-to-r from-transparent via-primary to-transparent h-px w-3/4" />
-                <div className="absolute inset-x-32 top-0 bg-gradient-to-r from-transparent via-orange-400 to-transparent h-[5px] w-1/4 blur-sm" />
-                <div className="absolute inset-x-32 top-0 bg-gradient-to-r from-transparent via-orange-400 to-transparent h-px w-1/4" />
+                <div className="absolute inset-x-32 top-0 bg-gradient-to-r from-transparent via-primary-light to-transparent h-[5px] w-1/4 blur-sm" />
+                <div className="absolute inset-x-32 top-0 bg-gradient-to-r from-transparent via-primary-light to-transparent h-px w-1/4" />
 
                 {/* Extra sparkles under the glow lines */}
                 <SparklesCore
