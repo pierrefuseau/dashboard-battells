@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
+import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Eye, Hash, Zap, FileText, Youtube, Instagram } from 'lucide-react'
+import { Eye, Hash, Zap, FileText, Youtube, Instagram, Brush } from 'lucide-react'
 import { CopyButton } from '@/components/ui'
 import { tokenizeFrenchText, coherenceTier } from '@/lib/formatters'
 import type { OptimizeTitleRequest, OptimizeTitleResponse } from '@/types/database'
@@ -263,6 +264,19 @@ export default function OutputPanel({ result, formData, loading }: OutputPanelPr
                   </div>
                 )
               })}
+            </motion.div>
+          )}
+
+          {/* Link to thumbnail generator */}
+          {result && (
+            <motion.div key="thumbnail-link" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+              <Link
+                to={`/miniatures?title=${encodeURIComponent(result.optimized_title)}&format=${formData.format_tag || ''}`}
+                className="flex items-center gap-2 w-full py-2.5 px-4 rounded-xl bg-primary/10 border border-primary/20 text-primary hover:bg-primary/15 transition-all text-sm font-bold font-[var(--font-clash)]"
+              >
+                <Brush className="w-4 h-4" />
+                Generer une miniature
+              </Link>
             </motion.div>
           )}
 

@@ -46,6 +46,7 @@ export const NAV_SECTIONS = [
     items: [
       { id: 'ideas', label: 'Boite a idees', icon: 'lightbulb', path: '/idees' },
       { id: 'labo', label: 'Le Labo', icon: 'flask-conical', path: '/labo' },
+      { id: 'thumbnails', label: 'Miniatures', icon: 'brush', path: '/miniatures' },
       { id: 'calendar', label: 'Calendrier', icon: 'calendar', path: '/calendrier' },
     ],
   },
