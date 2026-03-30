@@ -167,6 +167,19 @@ export const THUMBNAIL_TEMPLATES: ThumbnailTemplate[] = [
     tags: ['street-food', 'marche', 'mouvement', 'tiktok'],
     icon: 'MapPin',
   },
+  {
+    id: 'ultra-photorealistic',
+    name: 'Ultra Realiste',
+    category: 'food',
+    platforms: ['youtube', 'tiktok'],
+    basePrompt: 'Baptiste (a young French YouTuber) in a dramatic YouTube thumbnail pose reacting to {subject}. Ultra photorealistic, shot on Sony A7IV with 85mm f/1.4 lens, shallow depth of field, professional studio lighting with rim light and key light, skin texture visible, catchlights in eyes, 8K resolution. Cinematic color grading with warm tones. The food ({subject}) is styled by a professional food stylist with steam, glistening sauce, perfect plating.',
+    variables: ['subject'],
+    previewImage: '/templates/template-ultra-photorealistic.jpeg',
+    aspectRatio: '16:9',
+    suggestedSize: '4K',
+    tags: ['ultra', 'photorealiste', 'baptiste', '4K', 'studio'],
+    icon: 'Focus',
+  },
 ]
 
 export function buildPrompt(templateId: string, variables: Record<string, string>): string {

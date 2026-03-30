@@ -147,7 +147,7 @@ export default function PromptBuilder({
             Qualite
           </label>
           <div className="flex gap-2">
-            {(['1K', '2K'] as const).map((q) => (
+            {(['1K', '2K', '4K'] as const).map((q) => (
               <button
                 key={q}
                 onClick={() => setQuality(q)}

@@ -1,6 +1,6 @@
 export type ThumbnailPlatform = 'youtube' | 'tiktok'
 export type ThumbnailCategory = 'food' | 'challenge' | 'cartoon' | 'cinematic' | 'typography' | 'comparison'
-export type ThumbnailQuality = '1K' | '2K'
+export type ThumbnailQuality = '1K' | '2K' | '4K'
 
 export interface ThumbnailTemplate {
   id: string
