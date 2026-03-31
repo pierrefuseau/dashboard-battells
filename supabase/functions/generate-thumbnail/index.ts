@@ -65,15 +65,27 @@ ABSOLUTE PROHIBITIONS: No plastic-smooth skin. No perfect bilateral symmetry. No
 // LAYER 3: COMPOSITION & FORMAT RULES
 // ═══════════════════════════════════════════════════════════════
 const YOUTUBE_COMPOSITION = `[YOUTUBE THUMBNAIL COMPOSITION — 16:9]
-This is a HIGH-VIRALITY YouTube thumbnail. Design for MAXIMUM click-through rate (CTR) viewed at small scales:
+This is a standard YouTube thumbnail. Design for high click-through rate (CTR) viewed at small scales:
 
-- VISUAL STYLE: Hyper-vibrant, extreme clarity, "MrBeast" aesthetic. High Dynamic Range (HDR) look with over-the-top contrast.
+- VISUAL STYLE: Vibrant, extreme clarity. High Dynamic Range (HDR) look with over-the-top contrast.
 - LIGHTING: Explosive rim lighting on the subject (bright glow around the edges), separating them completely from the background.
 - PRIMARY SUBJECT: Occupies 50-70% of frame area. Massive, in-your-face perspective (slight wide-angle or fisheye distortion for dynamic feel).
 - BACKGROUND: Slightly blurred (bokeh) to make the subject pop, but the theme must remain completely recognizable and epic.
 - COLOR PSYCHOLOGY: Maximum saturation. Vibrant jewel tones. Use complementary colors clashing to grab attention (e.g., Orange/Teal, Red/Cyan).
-- EXPECTATION OVERRIDE: Do not make this look like a standard "professional food photo". It must look like a crazy, high-budget YouTube challenge thumbnail.
+- EXPECTATION OVERRIDE: Do not make this look like a standard "professional food photo". It must look like a high-budget YouTube challenge thumbnail.
 - SCALE: Exaggerated proportions. The food or object of interest must look incredibly huge, epic, or dangerous.`
+
+const YOUTUBE_BANGER_COMPOSITION = `[YOUTUBE THUMBNAIL BANGER COMPOSITION — 16:9]
+This is an EXTREME-VIRALITY YouTube thumbnail. Design for MAXIMUM click-through rate (CTR) viewed at small scales:
+
+- VISUAL STYLE: Hyper-vibrant, extreme clarity, "MrBeast" aesthetic. High Dynamic Range (HDR) look with over-the-top contrast.
+- LIGHTING: Explosive rim lighting on the subject (bright glow around the edges), separating them completely from the background.
+- RULE OF 3 (MINIMALISM): The composition MUST contain strictly 3 visual elements: The massive face, the massive food, and an ultra-minimalist, distraction-free solid gradient background. Delete all background clutter.
+- PRIMARY SUBJECT CROP: EXTREME CLOSE-UP portrait, cropped above the shoulders. The face must feel uncomfortably close and massive in the frame.
+- HYPER-PERSPECTIVE: The {subject} should be thrust violently toward the camera lens, breaking the fourth wall, making it appear grotesquely huge in the extreme foreground.
+- COLOR PSYCHOLOGY: Maximum saturation. Vibrant jewel tones. Use complementary colors clashing to grab attention (e.g., Orange/Teal, Red/Cyan).
+- EXPECTATION OVERRIDE: Do not make this look like a standard "professional food photo". It must look like a crazy, high-budget YouTube challenge thumbnail.
+- MID-ACTION: Captured in a high-speed mid-action freeze frame (e.g., ingredients violently suspended in mid-air, flying sauce droplets).`
 
 const TIKTOK_COMPOSITION = `[TIKTOK COVER COMPOSITION — 9:16]
 Vertical format for mobile-first consumption:
@@ -510,6 +522,8 @@ function assemblePrompt(
   formatTag?: string,
   customPrompt?: string,
   emotion?: string,
+  gazeDirection?: 'camera' | 'subject',
+  bangerMode?: boolean,
 ): { prompt: string; needsBaptiste: boolean } {
   // Custom prompt bypass — still add anti-AI and no-text
   if (customPrompt) {
@@ -578,8 +592,17 @@ function assemblePrompt(
     console.log(`Emotion override "${emotion}" — stripped conflicting expression lines from scene template`)
   }
 
+  // ── CRITICAL: Gaze Direction ──
+  const gazeDirective = (template?.needsBaptiste && gazeDirection)
+    ? `[CRITICAL — GAZE DIRECTION]\n${gazeDirection === 'camera' ? 'Looking directly into the camera lens with intense eye contact.' : `Looking directly at the ${subject} with intense focus, directing the viewer's eye to the food.`}\nThe above gaze direction MUST be respected. Any conflicting gaze descriptions are VOID.`
+    : ''
+
   // Assemble ALL layers — theme and emotion FIRST (highest priority for Gemini)
-  const compositionLayer = platform === 'youtube' ? YOUTUBE_COMPOSITION : TIKTOK_COMPOSITION
+  let baseComp = TIKTOK_COMPOSITION
+  if (platform === 'youtube') {
+    baseComp = bangerMode ? YOUTUBE_BANGER_COMPOSITION : YOUTUBE_COMPOSITION
+  }
+  const compositionLayer = baseComp.replace(/\{subject\}/g, subject)
   const cameraProfile = getCameraProfile(quality)
   const formatContext = getFormatEnrichment(formatTag)
 
@@ -587,6 +610,7 @@ function assemblePrompt(
     // Priority layers FIRST — Gemini weighs early instructions more heavily
     themeEnrichment ? `[CRITICAL — HIGHEST PRIORITY DIRECTIVE]\n${themeEnrichment}\nThe above thematic universe MUST define the visual setting, props, atmosphere, and color palette. Any conflicting environment descriptions below are VOID.` : '',
     emotionDirective ? `[CRITICAL — EXPRESSION OVERRIDE]\n${emotionDirective}\nThe above expression MUST be used for Baptiste. Any conflicting facial expression descriptions below are VOID.` : '',
+    gazeDirective,
     // Scene template (with conflicting lines already stripped)
     scenePrompt,
     formatContext,
@@ -597,6 +621,8 @@ function assemblePrompt(
   ].filter(Boolean).join('\n\n')
 
   const layerNames = ['scene']
+  if (bangerMode) layerNames.unshift('BANGER-MODE')
+  if (gazeDirective) layerNames.unshift(`gaze(${gazeDirection})`)
   if (emotionDirective) layerNames.unshift(`emotion(${emotion})`)
   if (themeEnrichment) layerNames.unshift('THEME-OVERRIDE')
   layerNames.push('composition', 'camera', 'no_text', 'anti_ai')
@@ -622,6 +648,8 @@ Deno.serve(async (req) => {
       custom_prompt,
       format_tag,
       emotion,
+      banger_mode,
+      gaze_direction,
       quality = '2K',
       video_idea_id,
       calendar_item_id,
@@ -638,7 +666,7 @@ Deno.serve(async (req) => {
 
     // Assemble the multi-layered prompt
     const { prompt: assembledPrompt, needsBaptiste } = assemblePrompt(
-      template_id, title, subject, platform, quality, format_tag, custom_prompt, emotion,
+      template_id, title, subject, platform, quality, format_tag, custom_prompt, emotion, gaze_direction, banger_mode
     )
 
     // Build multimodal content parts
@@ -755,7 +783,9 @@ Deno.serve(async (req) => {
         baptiste_ref: needsBaptiste,
         prompt_layers: activeLayers,
         prompt_length: assembledPrompt.length,
+        banger_mode: banger_mode || false,
         emotion: emotion || null,
+        gaze_direction: gaze_direction || null,
         theme_override: themeDetected,
       },
       video_idea_id: video_idea_id || null,

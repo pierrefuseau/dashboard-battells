@@ -14,6 +14,7 @@ export interface ThumbnailTemplate {
   suggestedSize: ThumbnailQuality
   tags: string[]
   icon: string  // lucide icon name
+  description?: string  // short description for UI display
 }
 
 export interface GenerateThumbnailRequest {
@@ -21,6 +22,9 @@ export interface GenerateThumbnailRequest {
   title?: string
   subject: string
   platform: ThumbnailPlatform
+  banger_mode?: boolean
+  emotion?: string
+  gaze_direction?: 'camera' | 'subject'
   custom_prompt?: string
   format_tag?: string
   quality?: ThumbnailQuality

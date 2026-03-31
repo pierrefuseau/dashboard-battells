@@ -26,7 +26,9 @@ export default function PromptBuilder({
 }: PromptBuilderProps) {
   const [title, setTitle] = useState(initialTitle)
   const [subject, setSubject] = useState('')
+  const [bangerMode, setBangerMode] = useState(false)
   const [emotion, setEmotion] = useState('')
+  const [gazeDirection, setGazeDirection] = useState<'camera' | 'subject'>('camera')
   const [formatTag, setFormatTag] = useState(initialFormat)
   const [quality, setQuality] = useState<ThumbnailQuality>('2K')
   const [showAdvanced, setShowAdvanced] = useState(false)
@@ -48,7 +50,10 @@ export default function PromptBuilder({
       title: title || undefined,
       subject,
       platform,
+      banger_mode: bangerMode,
       quality,
+      emotion: emotion || undefined,
+      gaze_direction: gazeDirection,
       format_tag: formatTag || undefined,
       custom_prompt: showAdvanced && customPrompt.trim() ? customPrompt : undefined,
     }
@@ -142,6 +147,36 @@ export default function PromptBuilder({
             ))}
           </select>
         </div>
+        
+        {/* Gaze Direction (Direction du regard) */}
+        <div>
+          <label className="text-xs font-bold text-text-secondary font-[var(--font-clash)] mb-1 block">
+            Direction du regard
+          </label>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setGazeDirection('camera')}
+              className={`flex-1 py-2 rounded-[var(--radius-input)] text-xs font-bold font-[var(--font-clash)] transition-all ${
+                gazeDirection === 'camera'
+                  ? 'bg-primary/15 text-primary border border-primary/30'
+                  : 'bg-page text-text-tertiary border border-border/60 hover:text-text-secondary'
+              }`}
+            >
+              Vers la caméra
+            </button>
+            <button
+              onClick={() => setGazeDirection('subject')}
+              className={`flex-1 py-2 rounded-[var(--radius-input)] text-xs font-bold font-[var(--font-clash)] transition-all ${
+                gazeDirection === 'subject'
+                  ? 'bg-primary/15 text-primary border border-primary/30'
+                  : 'bg-page text-text-tertiary border border-border/60 hover:text-text-secondary'
+              }`}
+            >
+              Vers le plat
+            </button>
+          </div>
+        </div>
+
         <div>
           <label className="text-xs font-bold text-text-secondary font-[var(--font-clash)] mb-1 block">
             Qualite
@@ -161,6 +196,28 @@ export default function PromptBuilder({
               </button>
             ))}
           </div>
+        </div>
+      </div>
+
+      {/* Mode Banger (virality toggle) */}
+      <div 
+        onClick={() => setBangerMode(!bangerMode)}
+        className={`flex items-center justify-between p-4 rounded-[var(--radius-card-sm)] border cursor-pointer transition-all ${
+          bangerMode 
+            ? 'bg-gradient-to-r from-orange-500/10 to-red-500/10 border-orange-500/40 shadow-[inset_0_0_20px_rgba(249,115,22,0.1)]' 
+            : 'bg-page border-border/60 hover:border-border'
+        }`}
+      >
+        <div>
+          <h3 className={`text-sm font-bold font-[var(--font-clash)] flex items-center gap-2 ${bangerMode ? 'text-orange-500' : 'text-text-primary'}`}>
+            Mode Banger (Max CTR) <span className={bangerMode ? 'animate-pulse' : 'opacity-50 grayscale'}>🔥</span>
+          </h3>
+          <p className="text-[11px] text-text-tertiary mt-1 font-[var(--font-satoshi)]">
+            Amasse le plat, force le regard de Baptiste, et écrase la compo avec la règle des 3 éléments.
+          </p>
+        </div>
+        <div className={`w-10 h-5 rounded-full p-1 transition-colors ${bangerMode ? 'bg-orange-500' : 'bg-surface border border-border'}`}>
+          <div className={`w-3 h-3 rounded-full bg-white transition-transform ${bangerMode ? 'translate-x-5' : ''}`} />
         </div>
       </div>
 
