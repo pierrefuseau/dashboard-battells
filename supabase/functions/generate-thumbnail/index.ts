@@ -465,11 +465,18 @@ async function fetchBaptistePhotos(): Promise<Array<{ base64: string; mimeType: 
     const fetchPromises = BAPTISTE_PHOTO_URLS.map(async (url) => {
       try {
         const res = await fetch(url)
-        if (!res.ok) { console.error('Failed to fetch photo:', url, res.status); return null }
+        const mimeType = res.headers.get('content-type') || 'image/jpeg'
+        
+        // Prevent Netlify SPA fallback (index.html) from crashing Gemini
+        if (!res.ok || mimeType.includes('text/html')) {
+          console.error(`Skipping invalid photo ${url} - Status: ${res.status}, MIME: ${mimeType}`)
+          return null
+        }
+        
         const buffer = await res.arrayBuffer()
         return {
           base64: arrayBufferToBase64(buffer),
-          mimeType: res.headers.get('content-type') || 'image/jpeg',
+          mimeType: mimeType,
           byteLength: buffer.byteLength,
           url
         }
@@ -672,6 +679,18 @@ Deno.serve(async (req) => {
     if (!geminiRes.ok) {
       const errText = await geminiRes.text()
       console.error('Gemini error:', geminiRes.status, errText.slice(0, 500))
+      
+      // LOG IT TO DB SO WE CAN SEE IT LOCALLY!
+      await supabase.from('thumbnail_generations').insert({
+        template_id: template_id || 'error',
+        title: title || 'Error',
+        prompt_used: `ERROR ${geminiRes.status}: ${errText.slice(0, 500)}`,
+        platform: 'youtube',
+        image_url: 'error',
+        image_path: 'error',
+        quality: quality,
+      })
+
       return new Response(
         JSON.stringify({ error: `Gemini API Error: ${geminiRes.status}`, details: errText.slice(0, 300) }),
         { status: 503, headers: CORS_HEADERS },
