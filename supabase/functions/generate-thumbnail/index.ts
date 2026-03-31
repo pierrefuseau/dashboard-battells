@@ -21,11 +21,7 @@ const BAPTISTE_PHOTO_URLS = [
   'https://dashboard-battells.netlify.app/baptiste/ref5.jpeg',
   'https://dashboard-battells.netlify.app/baptiste/ref6.jpeg',
   'https://dashboard-battells.netlify.app/baptiste/ref7.jpeg',
-  'https://dashboard-battells.netlify.app/baptiste/ref8.jpeg',
-  'https://dashboard-battells.netlify.app/baptiste/ref9.jpeg',
-  'https://dashboard-battells.netlify.app/baptiste/ref10.jpeg',
-  'https://dashboard-battells.netlify.app/baptiste/ref11.jpeg',
-  'https://dashboard-battells.netlify.app/baptiste/ref12.jpeg'
+  'https://dashboard-battells.netlify.app/baptiste/ref8.jpeg'
 ]
 
 // ═══════════════════════════════════════════════════════════════
@@ -465,24 +461,37 @@ function arrayBufferToBase64(buffer: ArrayBuffer): string {
 }
 
 async function fetchBaptistePhotos(): Promise<Array<{ base64: string; mimeType: string }>> {
-  const photos = []
-  // Process sequentially to limit peak memory usage since edge functions have low RAM
-  for (const url of BAPTISTE_PHOTO_URLS) {
-    try {
-      const res = await fetch(url)
-      if (!res.ok) { console.error('Failed to fetch photo:', url, res.status); continue }
-      const buffer = await res.arrayBuffer()
-      
-      photos.push({
-        base64: arrayBufferToBase64(buffer),
-        mimeType: res.headers.get('content-type') || 'image/jpeg',
-      })
-      console.log(`Baptiste ref loaded: ${buffer.byteLength} bytes from ${url}`)
-    } catch (err) {
-      console.error('Error fetching photo:', url, err)
-    }
+  try {
+    const fetchPromises = BAPTISTE_PHOTO_URLS.map(async (url) => {
+      try {
+        const res = await fetch(url)
+        if (!res.ok) { console.error('Failed to fetch photo:', url, res.status); return null }
+        const buffer = await res.arrayBuffer()
+        return {
+          base64: arrayBufferToBase64(buffer),
+          mimeType: res.headers.get('content-type') || 'image/jpeg',
+          byteLength: buffer.byteLength,
+          url
+        }
+      } catch (err) {
+        console.error('Error fetching photo:', url, err)
+        return null
+      }
+    })
+
+    const results = await Promise.all(fetchPromises)
+    
+    // Filter out nulls and log successes
+    const photos = results.filter(p => p !== null).map(p => {
+      console.log(`Baptiste ref loaded: ${p!.byteLength} bytes from ${p!.url}`)
+      return { base64: p!.base64, mimeType: p!.mimeType }
+    })
+    
+    return photos
+  } catch (err) {
+    console.error('Fatal error in fetchBaptistePhotos:', err)
+    return []
   }
-  return photos
 }
 
 function assemblePrompt(
@@ -664,8 +673,8 @@ Deno.serve(async (req) => {
       const errText = await geminiRes.text()
       console.error('Gemini error:', geminiRes.status, errText.slice(0, 500))
       return new Response(
-        JSON.stringify({ error: `Gemini: ${geminiRes.status}`, details: errText.slice(0, 300) }),
-        { status: 502, headers: CORS_HEADERS },
+        JSON.stringify({ error: `Gemini API Error: ${geminiRes.status}`, details: errText.slice(0, 300) }),
+        { status: 503, headers: CORS_HEADERS },
       )
     }
 
@@ -678,7 +687,7 @@ Deno.serve(async (req) => {
       console.error('No image in response:', txt)
       return new Response(
         JSON.stringify({ error: 'No image generated', details: txt }),
-        { status: 502, headers: CORS_HEADERS },
+        { status: 504, headers: CORS_HEADERS },
       )
     }
 
