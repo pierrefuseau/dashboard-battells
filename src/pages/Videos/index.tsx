@@ -78,13 +78,16 @@ export default function Videos() {
       }
 
       const mapped: VideoWithStats[] = (data ?? []).map((v: any) => {
-        const stats = v.yt_daily_stats?.[0]
-        const totalViews = stats?.views ?? 0
-        const totalRevenue = stats?.estimated_revenue ?? 0
-        const totalLikes = stats?.likes ?? 0
-        const comments = stats?.comments ?? 0
+        const allStats = v.yt_daily_stats ?? []
+        const totalViews = allStats.reduce((sum: number, s: any) => sum + (s.views ?? 0), 0)
+        const totalRevenue = allStats.reduce((sum: number, s: any) => sum + (s.estimated_revenue ?? 0), 0)
+        const totalLikes = allStats.reduce((sum: number, s: any) => sum + (s.likes ?? 0), 0)
+        const comments = allStats.reduce((sum: number, s: any) => sum + (s.comments ?? 0), 0)
         const rpm = totalViews > 0 ? (totalRevenue / totalViews) * 1000 : 0
         const engagement = totalViews > 0 ? ((totalLikes + comments) / totalViews) * 100 : 0
+        const avgDuration = allStats.length > 0
+          ? allStats.reduce((sum: number, s: any) => sum + (s.avg_view_duration_seconds ?? 0), 0) / allStats.length
+          : 0
 
         return {
           id: v.id,
@@ -104,7 +107,7 @@ export default function Videos() {
           totalRevenue,
           rpm: +rpm.toFixed(2),
           engagement: +engagement.toFixed(2),
-          avgViewDuration: stats?.avg_view_duration_seconds ?? 0,
+          avgViewDuration: Math.round(avgDuration),
           dailyStats: [],
         }
       })
