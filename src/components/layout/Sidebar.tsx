@@ -1,13 +1,13 @@
 import { useLocation, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { X, Home, Video, BarChart3, Calendar, Lightbulb, Image, Recycle,
+import { X, Home, Video, BarChart3, Lightbulb, Image, Recycle,
   MessageCircle, MessageSquare, TrendingUp, Users, Handshake,
   Calculator, Upload, ScatterChart, FlaskConical,
 } from 'lucide-react'
 import { NAV_SECTIONS } from '@/lib/constants'
 
 const iconMap: Record<string, React.ElementType> = {
-  home: Home, video: Video, 'bar-chart-3': BarChart3, calendar: Calendar,
+  home: Home, video: Video, 'bar-chart-3': BarChart3,
   lightbulb: Lightbulb, image: Image, recycle: Recycle,
   'message-circle': MessageCircle, 'message-square': MessageSquare,
   'trending-up': TrendingUp, users: Users, handshake: Handshake,

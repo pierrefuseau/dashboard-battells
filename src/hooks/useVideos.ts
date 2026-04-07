@@ -52,8 +52,25 @@ export function useVideos(params: UseVideosParams = {}): UseVideosReturn {
       return
     }
 
-    setVideos((data as YtVideo[]) ?? [])
-    setTotal(count ?? 0)
+    let finalData = (data as YtVideo[]) ?? []
+    
+    // Si c'est sans offset (première page) et qu'on a moins de recents, on merge le flux RSS in-memory pour compenser la panne N8N
+    if (offset === 0) {
+      const { fetchDirectRssVideos } = await import('@/lib/youtube.ts')
+      const rssVideos = await fetchDirectRssVideos()
+      const merged = [...finalData]
+      for (const rv of rssVideos) {
+        if (!merged.find(m => m.id === rv.id)) {
+          merged.push(rv as any)
+        }
+      }
+      // Re-trier le flux consolidé
+      merged.sort((a,b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime())
+      finalData = merged
+    }
+
+    setVideos(finalData)
+    setTotal(Math.max(count ?? 0, finalData.length))
     setLoading(false)
   }, [isShort, formatTag, language, search, limit, offset])
 

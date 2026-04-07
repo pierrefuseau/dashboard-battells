@@ -1,12 +1,15 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
+import { fetchDirectRssVideos } from '@/lib/youtube'
 import type { YouTubeSyncStatus } from '@/lib/youtube'
 
 interface UseYouTubeSyncReturn {
   syncStatus: YouTubeSyncStatus
   loading: boolean
+  isSyncingDirectly: boolean
   error: string | null
   refetch: () => void
+  forceApiSync: () => Promise<boolean>
 }
 
 const emptySyncStatus: YouTubeSyncStatus = {
@@ -22,6 +25,7 @@ const STALE_THRESHOLD_MS = 24 * 60 * 60 * 1000 // 24 hours
 export function useYouTubeSync(): UseYouTubeSyncReturn {
   const [syncStatus, setSyncStatus] = useState<YouTubeSyncStatus>(emptySyncStatus)
   const [loading, setLoading] = useState(true)
+  const [isSyncingDirectly, setIsSyncingDirectly] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const fetchId = useRef(0)
 
@@ -80,9 +84,28 @@ export function useYouTubeSync(): UseYouTubeSyncReturn {
     }
   }, [])
 
+  const forceApiSync = useCallback(async () => {
+    try {
+      setIsSyncingDirectly(true)
+      setError(null)
+      // Teste simplement la connexion (optionnel) ou recharge via la nouvelle fonction globale
+      await fetchDirectRssVideos()
+      
+      // Force une relecture locale pour actualiser le status principal
+      await fetch()
+      return true
+    } catch (err) {
+      console.error(err)
+      setError(err instanceof Error ? err.message : 'Erreur inconnue')
+      return false
+    } finally {
+      setIsSyncingDirectly(false)
+    }
+  }, [fetch])
+
   useEffect(() => {
     fetch()
   }, [fetch])
 
-  return { syncStatus, loading, error, refetch: fetch }
+  return { syncStatus, loading, isSyncingDirectly, error, refetch: fetch, forceApiSync }
 }

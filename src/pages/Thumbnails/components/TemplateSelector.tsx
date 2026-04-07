@@ -108,6 +108,12 @@ export default function TemplateSelector({
                 {template.name}
               </span>
 
+              {template.description && (
+                <p className="text-[10px] text-text-tertiary font-[var(--font-satoshi)] leading-tight line-clamp-2 w-full">
+                  {template.description}
+                </p>
+              )}
+
               <div className="flex gap-1">
                 {template.platforms.map((p) => (
                   <span

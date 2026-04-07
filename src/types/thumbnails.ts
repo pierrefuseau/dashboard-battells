@@ -23,13 +23,13 @@ export interface GenerateThumbnailRequest {
   subject: string
   platform: ThumbnailPlatform
   banger_mode?: boolean
+  force_face?: boolean
   emotion?: string
   gaze_direction?: 'camera' | 'subject'
   custom_prompt?: string
   format_tag?: string
   quality?: ThumbnailQuality
   video_idea_id?: number
-  calendar_item_id?: number
 }
 
 export interface GenerateThumbnailResponse {
@@ -53,6 +53,5 @@ export interface ThumbnailGeneration {
   metadata: Record<string, unknown>
   is_favorite: boolean
   video_idea_id: number | null
-  calendar_item_id: number | null
   created_at: string
 }

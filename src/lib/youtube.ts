@@ -62,3 +62,62 @@ export function formatViewCount(count: number): string {
   }
   return count.toString()
 }
+
+/**
+ * Fetch recent videos directly from YouTube RSS using allorigins
+ */
+export async function fetchDirectRssVideos() {
+  try {
+    const feedUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${YOUTUBE_CONFIG.channelId}`
+    const response = await window.fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(feedUrl)}`)
+    if (!response.ok) return []
+    const data = await response.json()
+    
+    const parser = new DOMParser()
+    const xmlDoc = parser.parseFromString(data.contents, "text/xml")
+    const entries = xmlDoc.querySelectorAll('entry')
+    const newVideos = []
+    
+    for (const entry of Array.from(entries)) {
+      const videoIdTag = Array.from(entry.children).find(c => c.nodeName === 'yt:videoId' || c.tagName === 'yt:videoId')
+      const videoId = videoIdTag ? videoIdTag.textContent : null;
+      const title = entry.querySelector('title')?.textContent
+      const publishedAt = entry.querySelector('published')?.textContent
+      
+      let description = ''
+      const mediaGroup = entry.querySelector('group, media\\:group')
+      if (mediaGroup) {
+        const descTag = mediaGroup.querySelector('description, media\\:description')
+        if (descTag) description = descTag.textContent || ''
+      }
+      
+      if (videoId && title && publishedAt) {
+        newVideos.push({
+          id: videoId,
+          title,
+          published_at: publishedAt,
+          description,
+          thumbnail_url: `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`,
+          duration_seconds: 0,
+          is_short: false,
+          language: 'fr',
+          format_tag: 'react', // par défaut pour afficher un badge
+          tags: [],
+          platform: 'youtube',
+          totalViews: 0,
+          totalLikes: 0,
+          totalRevenue: 0,
+          rpm: 0,
+          engagement: 0,
+          avgViewDuration: 0,
+          dailyStats: [],
+          created_at: publishedAt
+        })
+      }
+    }
+    return newVideos
+  } catch (err) {
+    console.error('RSS fetch error:', err)
+    return []
+  }
+}

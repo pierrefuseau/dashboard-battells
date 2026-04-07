@@ -27,7 +27,6 @@ export default function Labo() {
   useEffect(() => {
     const title = searchParams.get('title')
     const ideaId = searchParams.get('idea_id')
-    const calendarId = searchParams.get('calendar_id')
     const format = searchParams.get('format')
 
     if (title) {
@@ -35,7 +34,6 @@ export default function Labo() {
         ...prev,
         title: decodeURIComponent(title),
         video_idea_id: ideaId ? Number(ideaId) : undefined,
-        calendar_item_id: calendarId ? Number(calendarId) : undefined,
         format_tag: format || prev.format_tag,
       }))
     }

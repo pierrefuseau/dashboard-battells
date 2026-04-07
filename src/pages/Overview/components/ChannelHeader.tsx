@@ -21,9 +21,9 @@ function formatRelativeTime(dateStr: string): string {
 
 export default function ChannelHeader() {
   const { channelInfo, loading: channelLoading } = useChannelInfo()
-  const { syncStatus, loading: syncLoading } = useYouTubeSync()
+  const { syncStatus, loading: syncLoading, isSyncingDirectly, forceApiSync } = useYouTubeSync()
 
-  const syncIndicatorStatus = syncLoading
+  const syncIndicatorStatus = (syncLoading || isSyncingDirectly)
     ? 'syncing'
     : syncStatus.isStale
       ? 'stale'
@@ -91,6 +91,7 @@ export default function ChannelHeader() {
           <SyncIndicator
             status={syncIndicatorStatus}
             lastSync={syncStatus.lastSync}
+            onSync={forceApiSync}
           />
           {syncStatus.lastSync && (
             <span className="text-[10px] text-text-tertiary font-[var(--font-satoshi)]">

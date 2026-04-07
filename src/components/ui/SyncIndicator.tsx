@@ -1,10 +1,12 @@
 import { useState } from 'react'
+import { RefreshCw } from 'lucide-react'
 
 type SyncStatus = 'ok' | 'syncing' | 'stale' | 'error'
 
 interface SyncIndicatorProps {
   status: SyncStatus
   lastSync?: string | null
+  onSync?: () => void
 }
 
 const STATUS_CONFIG: Record<SyncStatus, { color: string; pulseColor: string; label: string }> = {
@@ -45,28 +47,41 @@ function formatRelativeTime(dateStr: string): string {
   return `il y a ${diffDays} jours`
 }
 
-export default function SyncIndicator({ status, lastSync }: SyncIndicatorProps) {
+export default function SyncIndicator({ status, lastSync, onSync }: SyncIndicatorProps) {
   const [showTooltip, setShowTooltip] = useState(false)
   const config = STATUS_CONFIG[status]
 
   return (
     <div
-      className="relative inline-flex items-center gap-1.5"
+      className="relative inline-flex items-center gap-2 group"
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
     >
-      {/* Pulsing dot */}
-      <span className="relative flex h-2 w-2">
-        <span
-          className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 ${config.pulseColor}`}
-        />
-        <span className={`relative inline-flex h-2 w-2 rounded-full ${config.color}`} />
-      </span>
+      <div className="flex items-center gap-1.5 cursor-crosshair">
+        {/* Pulsing dot */}
+        <span className="relative flex h-2 w-2">
+          <span
+            className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 ${config.pulseColor}`}
+          />
+          <span className={`relative inline-flex h-2 w-2 rounded-full ${config.color}`} />
+        </span>
 
-      {/* Label */}
-      <span className="text-[11px] font-medium text-text-secondary font-[var(--font-satoshi)]">
-        {config.label}
-      </span>
+        {/* Label */}
+        <span className="text-[11px] font-medium text-text-secondary font-[var(--font-satoshi)]">
+          {config.label}
+        </span>
+      </div>
+
+      {onSync && (
+        <button 
+          onClick={onSync}
+          disabled={status === 'syncing'}
+          className="p-1 rounded bg-bg-secondary hover:bg-bg-tertiary transition-colors disabled:opacity-50"
+          title="Forcer la synchro API"
+        >
+          <RefreshCw className={`w-3 h-3 text-text-secondary ${status === 'syncing' ? 'animate-spin' : ''}`} />
+        </button>
+      )}
 
       {/* Tooltip */}
       {showTooltip && lastSync && (

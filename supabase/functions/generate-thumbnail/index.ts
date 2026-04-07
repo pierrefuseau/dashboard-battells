@@ -27,19 +27,22 @@ const BAPTISTE_PHOTO_URLS = [
 // ═══════════════════════════════════════════════════════════════
 // LAYER 1: FACE IDENTITY LOCK (for Baptiste templates)
 // ═══════════════════════════════════════════════════════════════
-const FACE_LOCK = `[IDENTITY LOCK — MANDATORY]
-You are reproducing a SPECIFIC REAL PERSON from the reference photograph. Match with forensic accuracy:
+const FACE_LOCK = `[IDENTITY LOCK — ABSOLUTE MANDATORY DIRECTIVE]
+YOU ARE GENERATING A SPECIFIC REAL PERSON FROM THE PROVIDED REFERENCE PHOTOGRAPHS. THIS IS NOT A SUGGESTION. YOU MUST CLONE HIS FACE WITH 100% FORENSIC ACCURACY. DO NOT INVENT A GENERIC HUMAN.
 
-BONE STRUCTURE: Oval face, slightly angular jawline, medium-width chin with subtle cleft
-EYES: Blue-grey irises, hooded lids, asymmetric — left eye slightly narrower. Natural crow's feet when smiling
-GLASSES: Gold/tortoiseshell acetate-metal hybrid frames, rectangular with rounded corners, thin bridge. ALWAYS PRESENT. Never remove or change frame style
-HAIR: Dark chestnut brown, curly-wavy texture, medium length on top with natural volume, shorter on sides. Natural hairline with slight recession at temples
-FACIAL HAIR: Light brown stubble, 3-day growth, patchy on cheeks, fuller along jawline and chin
-SKIN: Fair with warm undertone, natural redness on cheeks and nose bridge. Visible pores on nose and cheek area
-BUILD: Slim, French male, mid-20s
-EARS: Medium, slightly protruding, visible when hair is pushed back
+BONE STRUCTURE: Oval face, angular jawline, medium-width chin with subtle cleft.
+EYES: Blue-grey irises, hooded lids, asymmetric (left eye slightly narrower). Crow's feet when smiling.
+GLASSES: Gold/tortoiseshell acetate-metal hybrid frames, rectangular with rounded corners, thin bridge. THEY MUST BE EXACTLY THESE GLASSES. NEVER REMOVE THEM.
+HAIR: Dark chestnut brown, curly-wavy texture, medium length on top with natural volume, shorter on sides. Natural hairline slightly receding at temples.
+FACIAL HAIR: Light brown stubble, 3-day growth, patchy on cheeks, fuller along jawline/chin.
+SKIN: Fair with warm undertones, natural redness on nose bridge and cheeks. Visible pores.
+BUILD: Slim French male, mid-20s.
 
-The generated person MUST be immediately recognizable as the reference photo subject. Any deviation = failure.`
+IF YOU GENERATE A GENERIC AI FACE OR ANY OTHER PERSON, IT IS A CATASTROPHIC FAILURE. REPRODUCE BAPTISTE EXACTLY AS SEEN IN THE IMAGES.`
+
+const NO_FACE_LOCK = `[NO HUMANS ALLOWED]
+DO NOT GENERATE ANY HUMAN FACES, PEOPLE, HANDS, OR CHARACTERS IN THIS IMAGE. 
+The image must focus entirely on the food, objects, and environment.`
 
 // ═══════════════════════════════════════════════════════════════
 // LAYER 2: ANTI-AI PHOTOREALISM ENGINE
@@ -524,6 +527,7 @@ function assemblePrompt(
   emotion?: string,
   gazeDirection?: 'camera' | 'subject',
   bangerMode?: boolean,
+  forceFace?: boolean,
 ): { prompt: string; needsBaptiste: boolean } {
   // Custom prompt bypass — still add anti-AI and no-text
   if (customPrompt) {
@@ -548,7 +552,13 @@ function assemblePrompt(
 
   // Detect theme and emotion BEFORE assembling
   const themeEnrichment = getThemeEnrichment(title, subject)
-  const emotionDirective = template.needsBaptiste ? getEmotionDirective(emotion) : ''
+  
+  // If Banger mode is enabled, it forces a massive face into the composition.
+  // We MUST provide Baptiste's face to prevent Gemini from hallucinating a random person.
+  // The UI now sends `forceFace` which should override default behaviors.
+  const isBaptisteInScene = forceFace !== undefined ? forceFace : (template.needsBaptiste || !!bangerMode)
+  
+  const emotionDirective = isBaptisteInScene ? getEmotionDirective(emotion) : ''
 
   // ── CRITICAL: When theme is detected, STRIP conflicting environment lines from template ──
   if (themeEnrichment) {
@@ -593,7 +603,7 @@ function assemblePrompt(
   }
 
   // ── CRITICAL: Gaze Direction ──
-  const gazeDirective = (template?.needsBaptiste && gazeDirection)
+  const gazeDirective = (isBaptisteInScene && gazeDirection)
     ? `[CRITICAL — GAZE DIRECTION]\n${gazeDirection === 'camera' ? 'Looking directly into the camera lens with intense eye contact.' : `Looking directly at the ${subject} with intense focus, directing the viewer's eye to the food.`}\nThe above gaze direction MUST be respected. Any conflicting gaze descriptions are VOID.`
     : ''
 
@@ -601,6 +611,11 @@ function assemblePrompt(
   let baseComp = TIKTOK_COMPOSITION
   if (platform === 'youtube') {
     baseComp = bangerMode ? YOUTUBE_BANGER_COMPOSITION : YOUTUBE_COMPOSITION
+    if (bangerMode && !isBaptisteInScene) {
+      baseComp = baseComp
+        .replace('The massive face, the massive food', 'The massive food')
+        .replace('EXTREME CLOSE-UP portrait, cropped above the shoulders. The face must feel', 'EXTREME CLOSE-UP of the food. It must feel')
+    }
   }
   const compositionLayer = baseComp.replace(/\{subject\}/g, subject)
   const cameraProfile = getCameraProfile(quality)
@@ -611,6 +626,7 @@ function assemblePrompt(
     themeEnrichment ? `[CRITICAL — HIGHEST PRIORITY DIRECTIVE]\n${themeEnrichment}\nThe above thematic universe MUST define the visual setting, props, atmosphere, and color palette. Any conflicting environment descriptions below are VOID.` : '',
     emotionDirective ? `[CRITICAL — EXPRESSION OVERRIDE]\n${emotionDirective}\nThe above expression MUST be used for Baptiste. Any conflicting facial expression descriptions below are VOID.` : '',
     gazeDirective,
+    !isBaptisteInScene ? NO_FACE_LOCK : '',
     // Scene template (with conflicting lines already stripped)
     scenePrompt,
     formatContext,
@@ -629,7 +645,7 @@ function assemblePrompt(
   if (formatContext) layerNames.push('format')
   console.log(`Prompt layers: ${layerNames.join(' → ')} | Total: ${assembledPrompt.length} chars`)
 
-  return { prompt: assembledPrompt, needsBaptiste: template.needsBaptiste }
+  return { prompt: assembledPrompt, needsBaptiste: isBaptisteInScene }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -649,6 +665,7 @@ Deno.serve(async (req) => {
       format_tag,
       emotion,
       banger_mode,
+      force_face,
       gaze_direction,
       quality = '2K',
       video_idea_id,
@@ -666,7 +683,7 @@ Deno.serve(async (req) => {
 
     // Assemble the multi-layered prompt
     const { prompt: assembledPrompt, needsBaptiste } = assemblePrompt(
-      template_id, title, subject, platform, quality, format_tag, custom_prompt, emotion, gaze_direction, banger_mode
+      template_id, title, subject, platform, quality, format_tag, custom_prompt, emotion, gaze_direction, banger_mode, force_face
     )
 
     // Build multimodal content parts
@@ -784,6 +801,7 @@ Deno.serve(async (req) => {
         prompt_layers: activeLayers,
         prompt_length: assembledPrompt.length,
         banger_mode: banger_mode || false,
+        force_face: force_face,
         emotion: emotion || null,
         gaze_direction: gaze_direction || null,
         theme_override: themeDetected,

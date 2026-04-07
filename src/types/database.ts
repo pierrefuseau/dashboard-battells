@@ -95,19 +95,6 @@ export interface Alert {
   created_at: string
 }
 
-export interface ContentCalendarItem {
-  id: number
-  title: string
-  format_tag: string | null
-  is_long_form: boolean
-  planned_date: string | null
-  status: 'idea' | 'planned' | 'scripted' | 'filmed' | 'editing' | 'scheduled' | 'published' | 'cancelled'
-  youtube_video_id: string | null
-  notes: string | null
-  platforms: string[]
-  created_at: string
-}
-
 export interface Sponsor {
   id: number
   brand_name: string
@@ -130,7 +117,7 @@ export interface VideoIdea {
   rationale: string | null
   estimated_views: number | null
   is_long_form: boolean
-  status: 'backlog' | 'approved' | 'writing' | 'filmed' | 'editing' | 'published' | 'rejected' | 'in_calendar'
+  status: 'backlog' | 'approved' | 'writing' | 'filmed' | 'editing' | 'published' | 'rejected'
   detected_video_id: number | null
   ai_analysis: {
     why_it_works?: string[]
@@ -245,7 +232,6 @@ export interface TitleOptimization {
     competitor_titles?: { title: string; views: number; channel: string }[]
   } | null
   video_idea_id: number | null
-  calendar_item_id: number | null
   youtube_video_id: string | null
   published_title: string | null
   actual_ctr: number | null
@@ -271,7 +257,6 @@ export interface OptimizeTitleRequest {
   keyword?: string
   has_gustavo: boolean
   video_idea_id?: number
-  calendar_item_id?: number
 }
 
 export interface OptimizeTitleResponse {

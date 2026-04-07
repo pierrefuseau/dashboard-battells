@@ -109,7 +109,18 @@ export default function Videos() {
         }
       })
 
-      setVideos(mapped)
+      // Fusion in-memory avec les vidéos récentes RSS
+      const { fetchDirectRssVideos } = await import('@/lib/youtube.ts')
+      const rssVideos = await fetchDirectRssVideos()
+      
+      const merged = [...mapped]
+      for (const rv of rssVideos) {
+        if (!merged.find(m => m.id === rv.id)) {
+          merged.push(rv as any)
+        }
+      }
+
+      setVideos(merged)
       setLoading(false)
 
       // Auto-select video from ?video= query param

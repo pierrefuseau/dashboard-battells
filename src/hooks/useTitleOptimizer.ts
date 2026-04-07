@@ -73,7 +73,6 @@ export function useTitleOptimizer(): UseTitleOptimizerReturn {
         title_gaps: data.title_gaps,
         pattern_insights: data.pattern_insights,
         video_idea_id: req.video_idea_id || null,
-        calendar_item_id: req.calendar_item_id || null,
       })
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error')

@@ -27,6 +27,7 @@ export default function PromptBuilder({
   const [title, setTitle] = useState(initialTitle)
   const [subject, setSubject] = useState('')
   const [bangerMode, setBangerMode] = useState(false)
+  const [forceFace, setForceFace] = useState(true)
   const [emotion, setEmotion] = useState('')
   const [gazeDirection, setGazeDirection] = useState<'camera' | 'subject'>('camera')
   const [formatTag, setFormatTag] = useState(initialFormat)
@@ -51,6 +52,7 @@ export default function PromptBuilder({
       subject,
       platform,
       banger_mode: bangerMode,
+      force_face: forceFace,
       quality,
       emotion: emotion || undefined,
       gaze_direction: gazeDirection,
@@ -218,6 +220,28 @@ export default function PromptBuilder({
         </div>
         <div className={`w-10 h-5 rounded-full p-1 transition-colors ${bangerMode ? 'bg-orange-500' : 'bg-surface border border-border'}`}>
           <div className={`w-3 h-3 rounded-full bg-white transition-transform ${bangerMode ? 'translate-x-5' : ''}`} />
+        </div>
+      </div>
+
+      {/* Force Face toggle */}
+      <div 
+        onClick={() => setForceFace(!forceFace)}
+        className={`flex items-center justify-between p-4 rounded-[var(--radius-card-sm)] border cursor-pointer transition-all ${
+          forceFace 
+            ? 'bg-primary/5 border-primary/30' 
+            : 'bg-page border-border/60 hover:border-border'
+        }`}
+      >
+        <div>
+          <h3 className={`text-sm font-bold font-[var(--font-clash)] flex items-center gap-2 ${forceFace ? 'text-primary' : 'text-text-primary'}`}>
+            Afficher le visage (Baptiste)
+          </h3>
+          <p className="text-[11px] text-text-tertiary mt-1 font-[var(--font-satoshi)]">
+            Oblige l&apos;IA à reproduire fidèlement le visage. Décoche pour une miniature sans personne.
+          </p>
+        </div>
+        <div className={`w-10 h-5 rounded-full p-1 transition-colors ${forceFace ? 'bg-primary' : 'bg-surface border border-border'}`}>
+          <div className={`w-3 h-3 rounded-full bg-white transition-transform ${forceFace ? 'translate-x-5' : ''}`} />
         </div>
       </div>
 

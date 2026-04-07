@@ -11,7 +11,6 @@ import Quadrant from '@/pages/Quadrant'
 import Growth from '@/pages/Growth'
 import Audience from '@/pages/Audience'
 import Traffic from '@/pages/Traffic'
-import Calendar from '@/pages/Calendar'
 import Ideas from '@/pages/Ideas'
 import Labo from '@/pages/Labo'
 import Thumbnails from '@/pages/Thumbnails'
@@ -57,7 +56,6 @@ export default function App() {
               <Route path="/croissance" element={<Growth />} />
               <Route path="/audience" element={<Audience />} />
               <Route path="/trafic" element={<Traffic />} />
-              <Route path="/calendrier" element={<Calendar />} />
               <Route path="/simulateur" element={<Simulator />} />
               <Route path="/import" element={<Import />} />
               <Route path="/idees" element={<Ideas />} />
